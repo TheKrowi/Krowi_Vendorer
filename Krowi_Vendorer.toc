@@ -1,0 +1,21 @@
+## Interface: 100005
+## Title: Krowi's |cFF1D92C2Vendorer|r
+## Version: 0.1-alpha1
+## Author: Krowi-Frostmane EU
+## LoadWith: Blizzard_MerchantFrame
+## SavedVariables: Options, SavedData
+## Notes: Enhances your vendoring.
+
+Libs\Files.xml
+
+MetaData.lua
+
+Localization\Files.xml
+
+Krowi_Vendorer.lua
+
+Options\Files.xml
+
+Objects\Files.xml
+
+GUI\Files.xml

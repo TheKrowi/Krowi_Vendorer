@@ -1,0 +1,34 @@
+{
+    "Lua.diagnostics.globals": [
+        "hooksecurefunc",
+        "GetAddOnMetadata",
+        "GetBuildInfo",
+        "CreateFrame",
+        "UIMenuButtonStretchMixin",
+        "PlaySound",
+        "SOUNDKIT",
+        "LibStub",
+        "MerchantFrame",
+        "GAMEOPTIONS_MENU",
+        "GetLocale",
+        "geterrorhandler",
+        "GAME_LOCALE",
+        "strmatch",
+        "GetRealmName",
+        "UnitName",
+        "UnitClass",
+        "UnitRace",
+        "UnitFactionGroup",
+        "GetCurrentRegion"
+    ],
+    "fsdeploy.nodes": [
+        {
+            "source":"C:\\World of Warcraft Addon Development\\Krowi_Vendorer",
+            "target":"F:\\World of Warcraft\\_retail_\\Interface\\AddOns\\Krowi_Vendorer",
+            "include":"**/*.{lua,toc,blp,tga,xml,md}",
+            "exclude":"**/{.git,.github,.vscode,Changelogs,Descriptions}/**",
+            "deleteTargetOnDeploy": true
+        }
+    ],
+    "fsdeploy.deployWorkspaceOnSave": true,
+}
