@@ -19,7 +19,14 @@
         "UnitClass",
         "UnitRace",
         "UnitFactionGroup",
-        "GetCurrentRegion"
+        "GetCurrentRegion",
+        "tinsert",
+        "abs",
+        "MerchantItem1",
+        "AchievementButton_ResetTable",
+        "MerchantBuyBackItem",
+        "MerchantFrameInset",
+        "MerchantFrame_Update"
     ],
     "fsdeploy.nodes": [
         {

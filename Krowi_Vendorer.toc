@@ -3,7 +3,7 @@
 ## Version: 0.1-alpha1
 ## Author: Krowi-Frostmane EU
 ## LoadWith: Blizzard_MerchantFrame
-## SavedVariables: Options, SavedData
+## SavedVariables: KrowiV_Options, KrowiV_SavedData
 ## Notes: Enhances your vendoring.
 
 Libs\Files.xml
