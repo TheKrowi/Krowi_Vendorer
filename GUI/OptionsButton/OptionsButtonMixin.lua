@@ -1,17 +1,3 @@
--- hooksecurefunc("MerchantFrame_Update", function()
--- 	if (MerchantFrame.selectedTab == 1) then
--- 		-- Addon:UpdateExtensionPanel();
--- 		MerchantFrameLootFilter:SetPoint("TOPRIGHT", MerchantFrame, "TOPRIGHT", -35, -28);
--- 		VendorerToggleExtensionFrameButtons:Show();
--- 	else
--- 		MerchantFrame_UpdateBuybackInfo();
--- 		-- Addon:HideExtensionPanel();
--- 		MerchantFrameLootFilter:SetPoint("TOPRIGHT", MerchantFrame, "TOPRIGHT", 0, -28);
--- 		VendorerToggleExtensionFrameButtons:Hide();
--- 		-- VendorerStackSplitFrame:Cancel();
--- 	end
--- end);
-
 -- [[ Namespaces ]] --
 local _, addon = ...;
 

@@ -26,7 +26,20 @@
         "AchievementButton_ResetTable",
         "MerchantBuyBackItem",
         "MerchantFrameInset",
-        "MerchantFrame_Update"
+        "MerchantFrame_Update",
+        "GetMerchantNumItems",
+        "SetMerchantFilter",
+        "LE_LOOT_FILTER_ALL",
+        "MerchantPageText",
+        "MERCHANT_PAGE_NUMBER",
+        "GetMerchantItemInfo",
+        "CurrencyContainerUtil",
+        "CanAffordMerchantItem",
+        "SetItemButtonCount",
+        "SetItemButtonStock",
+        "SetItemButtonTexture",
+        "MerchantFrame_UpdateMerchantInfo",
+        "MerchantFrame_UpdateBuybackInfo"
     ],
     "fsdeploy.nodes": [
         {

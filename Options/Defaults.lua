@@ -4,7 +4,7 @@ local options = addon.Options;
 
 options.Defaults = {
     profile = {
-        Rows = 5,
-        Columns = 2
+        NumRows = 5,
+        NumColumns = 2
     }
 };
