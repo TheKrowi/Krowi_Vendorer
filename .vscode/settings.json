@@ -39,7 +39,8 @@
         "SetItemButtonStock",
         "SetItemButtonTexture",
         "MerchantFrame_UpdateMerchantInfo",
-        "MerchantFrame_UpdateBuybackInfo"
+        "MerchantFrame_UpdateBuybackInfo",
+        "MerchantFrameBottomRightBorder"
     ],
     "fsdeploy.nodes": [
         {

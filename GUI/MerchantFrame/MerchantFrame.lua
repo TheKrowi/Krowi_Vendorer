@@ -35,3 +35,23 @@ hooksecurefunc("MerchantFrame_UpdateFilterString", PrepareMerchantFrame);
 hooksecurefunc(MerchantFrame, "Show", function(self)
 	SetMerchantFilter(LE_LOOT_FILTER_ALL);
 end);
+
+MerchantFrameBottomRightBorder:SetTexCoord(91 / 256, (91 + 76) / 256, 0, 0.4765625);
+
+local bottomExtensionRightBorder = MerchantFrame:CreateTexture();
+bottomExtensionRightBorder:SetSize(76, 61);
+bottomExtensionRightBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
+bottomExtensionRightBorder:SetTexCoord(0, 0.296875, 0.4765625, 0.953125);
+bottomExtensionRightBorder:SetPoint("BOTTOMRIGHT", MerchantFrameInset, "BOTTOMRIGHT", 3, 0);
+
+local bottomExtensionLeftBorder = MerchantFrame:CreateTexture();
+bottomExtensionLeftBorder:SetSize(89, 61);
+bottomExtensionLeftBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
+bottomExtensionLeftBorder:SetTexCoord((91 + 76) / 256, 1, 0, 0.4765625);
+bottomExtensionLeftBorder:SetPoint("TOPLEFT", MerchantFrameBottomRightBorder, "TOPRIGHT", 0, 0);
+
+local bottomExtensionMidBorder = MerchantFrame:CreateTexture();
+bottomExtensionMidBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
+bottomExtensionMidBorder:SetTexCoord(8 / 256, (8 + 151) / 256, 0, 0.4765625);
+bottomExtensionMidBorder:SetPoint("TOPLEFT", bottomExtensionLeftBorder, "TOPRIGHT", 0, 0);
+bottomExtensionMidBorder:SetPoint("BOTTOMRIGHT", bottomExtensionRightBorder, "BOTTOMLEFT", 0, 0);
