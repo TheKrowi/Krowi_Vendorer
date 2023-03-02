@@ -40,7 +40,13 @@
         "SetItemButtonTexture",
         "MerchantFrame_UpdateMerchantInfo",
         "MerchantFrame_UpdateBuybackInfo",
-        "MerchantFrameBottomRightBorder"
+        "MerchantFrameBottomRightBorder",
+        "MerchantFrameBottomLeftBorder",
+        "MerchantPrevPageButton",
+        "MerchantNextPageButton",
+        "KrowiV_BottomExtensionRightBorder",
+        "KrowiV_BottomExtensionLeftBorder",
+        "KrowiV_BottomExtensionMidBorder"
     ],
     "fsdeploy.nodes": [
         {

@@ -5,7 +5,7 @@
 	<DropDownToggleButton name="KrowiV_OptionsButton" mixin="KrowiV_OptionsButtonMixin" inherits="UIMenuButtonStretchTemplate" text="GAMEOPTIONS_MENU" parent="MerchantFrame">
 		<Size x="100" y="22"/>
         <Anchors>
-        	<Anchor point="RIGHT" relativeKey="$parent.lootFilter" relativePoint="LEFT" x="10" y="2" />
+        	<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="61" y="-31" />
         </Anchors>
 		<Layers>
 			<Layer level="ARTWORK">
