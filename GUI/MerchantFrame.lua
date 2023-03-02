@@ -28,5 +28,10 @@ local function PrepareMerchantFrame()
 		merchantItemsContainer:PrepareBuybackInfo();
 	end
     merchantItemsContainer.LoadMaxNumItemSlots(); -- Make sure MerchantFrame_Update can set all items
+	-- print("I got this many back:", GetMerchantNumItems())
 end
 hooksecurefunc("MerchantFrame_UpdateFilterString", PrepareMerchantFrame);
+
+hooksecurefunc(MerchantFrame, "Show", function(self)
+	SetMerchantFilter(LE_LOOT_FILTER_ALL);
+end);

@@ -37,7 +37,6 @@ end
 
 function merchantItemsContainer:PrepareMerchantInfo()
     infoNumRows, infoNumColumns = addon.Options.db.NumRows, addon.Options.db.NumColumns;
-    SetMerchantFilter(LE_LOOT_FILTER_ALL);
 end
 
 function merchantItemsContainer:PrepareBuybackInfo()
@@ -54,19 +53,31 @@ function merchantItemsContainer.LoadMaxNumItemSlots()
     end
 end
 
+function merchantItemsContainer:DrawItemSlot(index, row, column, offsetX, offsetY)
+    local itemSlot = GetItemSlot(index);
+    local calculatedOffsetX = self.FirstOffsetX + (column - 1) * (offsetX + self.ItemWidth);
+    local calculatedOffsetY = self.FirstOffsetY - (row - 1) * (offsetY + self.ItemHeight);
+    itemSlot:ClearAllPoints();
+    itemSlot:SetPoint("TOPLEFT", MerchantFrame, "TOPLEFT", calculatedOffsetX, calculatedOffsetY);
+    itemSlot:Show();
+end
+
 function merchantItemsContainer:DrawItemSlots(numRows, numColumns, offsetX, offsetY)
-    local calculatedOffsetX, calculatedOffsetY = 0, 0;
-	for column = 1, numColumns, 1 do
-		for row = 1, numRows, 1 do
-			local index = (row - 1) * numColumns + column;
-			local itemSlot = GetItemSlot(index);
-            calculatedOffsetX = self.FirstOffsetX + (column - 1) * (offsetX + self.ItemWidth);
-            calculatedOffsetY = self.FirstOffsetY - (row - 1) * (offsetY + self.ItemHeight);
-			itemSlot:ClearAllPoints();
-			itemSlot:SetPoint("TOPLEFT", MerchantFrame, "TOPLEFT", calculatedOffsetX, calculatedOffsetY);
-			itemSlot:Show();
-		end
-	end
+    if addon.Options.db.Direction == addon.L["Columns first"] then
+        for row = 1, numRows, 1 do
+            for column = 1, numColumns, 1 do
+                local index = (column - 1) * numRows + row;
+                self:DrawItemSlot(index, row, column, offsetX, offsetY);
+            end
+        end
+    else
+        for column = 1, numColumns, 1 do
+            for row = 1, numRows, 1 do
+                local index = (row - 1) * numColumns + column;
+                self:DrawItemSlot(index, row, column, offsetX, offsetY);
+            end
+        end
+    end
 end
 
 local function DrawMerchantBuyBackItem(show)
@@ -96,3 +107,28 @@ end
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
 	merchantItemsContainer:DrawForBuybackInfo();
 end);
+
+local orgGetMerchantNumItems = GetMerchantNumItems;
+local orgGetMerchantItemInfo = GetMerchantItemInfo;
+local customItemIndices = {};
+GetMerchantNumItems = function()
+    -- Uncomment this when we implement custom filters as now the existing ones still work
+    -- SetMerchantFilter(LE_LOOT_FILTER_ALL);
+	local numItems = orgGetMerchantNumItems();
+    customItemIndices = {};
+    for i = 1, numItems, 1 do
+        -- Add filtering here cause now they're just all added
+        -- if (i % 2 == 0) then
+            tinsert(customItemIndices, i);
+        -- end
+    end
+    -- print("Total:", numItems, "Shown:", #customItemIndices)
+    return #customItemIndices;
+end
+
+GetMerchantItemInfo = function(index)
+    index = customItemIndices[index];
+    local name, texture, price, stackCount, numAvailable, isPurchasable, isUsable, extendedCost, currencyID, spellID = orgGetMerchantItemInfo(index);
+
+    return name, texture, price, stackCount, numAvailable, isPurchasable, isUsable, extendedCost, currencyID, spellID;
+end

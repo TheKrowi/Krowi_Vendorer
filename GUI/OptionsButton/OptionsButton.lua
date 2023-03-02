@@ -13,6 +13,11 @@ function KrowiV_OptionsButton_OnMouseDown(self)
     -- Reset menu
 	menu:Clear();
 
+	local direction = addon.Objects.MenuItem:New({Text = addon.L["Direction"]});
+	self:AddRadioButton(menu, direction, addon.L["Rows first"], addon.Options.db, {"Direction"}, UpdateView);
+	self:AddRadioButton(menu, direction, addon.L["Columns first"], addon.Options.db, {"Direction"}, UpdateView);
+	menu:Add(direction);
+
 	local rows = addon.Objects.MenuItem:New({Text = addon.L["Rows"]});
 	for i = 1, 10, 1 do
 		self:AddRadioButton(menu, rows, i, addon.Options.db, {"NumRows"}, UpdateView);
