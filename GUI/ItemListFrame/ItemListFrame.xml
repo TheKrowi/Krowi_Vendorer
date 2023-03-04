@@ -1,0 +1,94 @@
+<Ui>
+    <Script file="ItemListFrame.lua"/>
+    <Script file="ItemListFrameMixin.lua"/>
+    <Script file="ScrollableListMixin.lua"/>
+    <Script file="ScrollableListItemMixin.lua"/>
+
+    <Button name="ScrollableListItemTemplate" mixin="KrowiV_ScrollableListItemMixin" registerForClicks="RightButtonUp" virtual="true">
+        <Size y="38"/>
+        <Layers>
+            <Layer level="BORDER">
+                <Texture parentKey="Icon">
+                    <Size x="38" y="38"/>
+                    <Anchors>
+                        <Anchor point="LEFT" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <Texture parentKey="IconBorder" file="Interface\Common\WhiteIconFrame">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.Icon"/>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.Icon"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Background" atlas="PetList-ButtonBackground">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeKey="$parent.Icon" x="0" y="0"/>
+                        <Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <FontString inherits="GameFontNormal" justifyH="LEFT" parentKey="Name">
+                    <Size x="147" y="25"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativePoint="RIGHT" relativeKey="$parent.Icon" x="10" y="0"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <HighlightTexture atlas="PetList-ButtonHighlight"/>
+        <Scripts>
+            <OnClick method="OnClick"/>
+        </Scripts>
+    </Button>
+
+    <Frame name="KrowiV_ScrollableListTemplate" mixin="KrowiV_ScrollableListMixin" virtual="true">
+        <Frames>
+            <Frame parentKey="ScrollBox" inherits="WowScrollBoxList"/>
+            <EventFrame parentKey="ScrollBar" inherits="WowTrimScrollBar">
+                <Anchors>
+                    <Anchor point="TOPRIGHT"/>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+            </EventFrame>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Frame>
+
+    <Frame name="KrowiV_ItemListFrame" mixin="KrowiV_ItemListFrameMixin" inherits="ButtonFrameTemplate" toplevel="true" movable="true" enableMouse="true" parent="UIParent" hidden="true">
+        <Size x="336" y="444"/>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Frames>
+            <Frame parentKey="ListFrame" inherits="KrowiV_ScrollableListTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+                </Anchors>
+            </Frame>
+            <EventButton parentKey="AddButton" inherits="MagicButtonTemplate" text="Add Item">
+                <Size x="125" y="22"/>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+            </EventButton>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnMouseDown>
+				self:StartMoving();
+				self.anchorframe = nil;
+			</OnMouseDown>
+			<OnMouseUp>
+				self:StopMovingOrSizing();
+			</OnMouseUp>
+        </Scripts>
+    </Frame>
+</Ui>
