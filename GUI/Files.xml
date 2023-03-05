@@ -2,5 +2,9 @@
     <Include file="OptionsButton/OptionsButton.xml"/>
     <Script file="MerchantItemsContainer.lua"/>
     <Include file="MerchantFrame/MerchantFrame.xml"/>
-    <Include file="ItemListFrame/ItemListFrame.xml"/>
+    <Include file="ScrollableListItem/ScrollableListItem.xml"/>
+    <Include file="ScrollableList/ScrollableList.xml"/>
+    <Include file="DualItemList/DualItemList.xml"/>
+    <Include file="DualItemListFrameMixin/DualItemListFrameMixin.xml"/>
+    <Include file="ItemList/Files.xml"/>
 </Ui>

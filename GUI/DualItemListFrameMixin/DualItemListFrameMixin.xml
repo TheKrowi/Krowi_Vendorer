@@ -1,0 +1,45 @@
+<Ui>
+    <Script file="DualItemListFrameMixin.lua"/>
+
+    <Frame name="KrowiV_DualItemListFrame" mixin="KrowiV_DualItemListFrameMixin" inherits="ButtonFrameTemplate" toplevel="true" movable="true" enableMouse="true" parent="MerchantFrame" hidden="true">
+        <Size x="612" y="444"/>
+        <Frames>
+            <Frame name="$parentEmbeddedItemList" parentKey="EmbeddedItemList" inherits="KrowiV_DualItemList_Template" hidden="false" setAllPoints="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+                </Anchors>
+            </Frame>
+        </Frames>
+        <Layers>
+            <Layer level="BORDER">
+                <FontString inherits="GameFontNormal" justifyH="CENTER" parentKey="LeftItemListInfo">
+                <Size x="100" y="100"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.TopTileStreaks" x="75"/>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent..LeftFrame.ListFrame" x="-75"/>
+                    </Anchors>
+                </FontString>
+                <FontString inherits="GameFontNormal" justifyH="CENTER" parentKey="RightItemListInfo">
+                <Size x="100" y="100"/>
+                    <Anchors>
+                        <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.TopTileStreaks" x="75"/>
+                        <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeKey="$parent.RightFrame.ListFrame" x="-75"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnMouseDown>
+				self:StartMoving();
+				self.anchorframe = nil;
+			</OnMouseDown>
+			<OnMouseUp>
+				self:StopMovingOrSizing();
+			</OnMouseUp>
+        </Scripts>
+    </Frame>
+
+    <!-- <Frame name="KrowiV_EmbeddedItemList" inherits="KrowiV_ItemList_Template" parent="MerchantFrame" hidden="true"/> -->
+</Ui>

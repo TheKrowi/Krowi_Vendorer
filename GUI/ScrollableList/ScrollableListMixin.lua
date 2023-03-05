@@ -5,13 +5,14 @@ KrowiV_ScrollableListMixin = {};
 
 function KrowiV_ScrollableListMixin:OnLoad()
     self.DataProvider = CreateDataProvider();
+    self.DataProvider:SetSortComparator(function (a, b) return a.Name < b.Name end, true);
 
-    local elementExtent = 38; -- Better performance if hardcoded, must be same as ScrollableListItemTemplate
+    local elementExtent = 30; -- Better performance if hardcoded, must be same as KrowiV_ScrollableListItem_Template
 
     self.ScrollView = CreateScrollBoxListLinearView();
     self.ScrollView:SetDataProvider(self.DataProvider);
     self.ScrollView:SetElementExtent(elementExtent);
-    self.ScrollView:SetElementInitializer("ScrollableListItemTemplate", function(frame, elementData)
+    self.ScrollView:SetElementInitializer("KrowiV_ScrollableListItem_Template", function(frame, elementData)
         frame:Init(elementData);
     end);
 
@@ -19,7 +20,7 @@ function KrowiV_ScrollableListMixin:OnLoad()
     local paddingB = 0;
     local paddingL = 0;
     local paddingR = 0;
-    local spacing = 5;
+    local spacing = 1;
 
     self.ScrollView:SetPadding(paddingT, paddingB, paddingL, paddingR, spacing);
 
@@ -38,20 +39,34 @@ function KrowiV_ScrollableListMixin:OnLoad()
     ScrollUtil.AddManagedScrollBarVisibilityBehavior(self.ScrollBox, self.ScrollBar, anchorsWithBar, anchorsWithoutBar);
 end
 
-function KrowiV_ScrollableListMixin:AppendListItem(id, icon, color, name)
+function KrowiV_ScrollableListMixin:AppendListItem(id, icon, color, name, onClick, ...)
     local elementData =
     {
         Id = id,
         Icon = icon,
         Color = color,
         Name = name,
+        OnClick = onClick and onClick or self.ListItemsOnClick,
+        MouseButtons = ... and ... or self.ListItemsMouseButtons
     };
 
     self.DataProvider:Insert(elementData);
-    self.ScrollBox:ScrollToEnd(ScrollBoxConstants.NoScrollInterpolation);
+    self.DataProvider:Sort();
 end
 
 function KrowiV_ScrollableListMixin:RemoveListItem(elementData)
     local index = self.DataProvider:FindIndex(elementData);
     self.DataProvider:RemoveIndex(index);
+end
+
+function KrowiV_ScrollableListMixin:SetListItemsOnClick(func)
+    self.ListItemsOnClick = func;
+end
+
+function KrowiV_ScrollableListMixin:RegisterListItemsForClicks(...)
+    self.ListItemsMouseButtons = {...};
+end
+
+function KrowiV_ScrollableListMixin:ClearListItems()
+    self.DataProvider:Flush();
 end

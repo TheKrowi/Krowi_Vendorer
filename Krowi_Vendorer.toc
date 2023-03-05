@@ -13,6 +13,7 @@ MetaData.lua
 Localization\Files.xml
 
 Krowi_Vendorer.lua
+Globals.lua
 
 Options\Files.xml
 

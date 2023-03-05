@@ -73,3 +73,37 @@ bottomExtensionMidBorder:SetPoint("BOTTOMRIGHT", bottomExtensionRightBorder, "BO
 
 MerchantPrevPageButton:SetPoint("BOTTOMLEFT", MerchantFrameBottomLeftBorder, "TOPLEFT", 8, -5);
 MerchantNextPageButton:SetPoint("BOTTOMRIGHT", KrowiV_BottomExtensionRightBorder, "TOPRIGHT", -7, -5);
+
+function KrowiV_ShowJunkList_OnLoad(self)
+	self:SetText(addon.L["Junk List"]);
+end
+
+function KrowiV_ShowJunkList_OnClick()
+	addon.ItemList.JunkListFrame.Show();
+end
+
+function KrowiV_ShowIgnoreList_OnLoad(self)
+	self:SetText(addon.L["Ignore List"]);
+	PanelTemplates_SetNumTabs(MerchantFrame, 4);
+end
+
+function KrowiV_ShowIgnoreList_OnClick()
+	addon.ItemList.IgnoreListFrame.Show();
+end
+
+function MerchantFrame_Update()
+	if MerchantFrame.lastTab ~= MerchantFrame.selectedTab then
+		MerchantFrame_CloseStackSplitFrame();
+		MerchantFrame.lastTab = MerchantFrame.selectedTab;
+	end
+	MerchantFrame_UpdateFilterString()
+	if MerchantFrame.selectedTab == 1 then
+		MerchantFrame_UpdateMerchantInfo();
+	elseif MerchantFrame.selectedTab == 3 then
+		addon.ItemList.ShowJunkList();
+	elseif MerchantFrame.selectedTab == 4 then
+		-- addon.ItemList.ShowIgnoreList();
+	else
+		MerchantFrame_UpdateBuybackInfo();
+	end
+end

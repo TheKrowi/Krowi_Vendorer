@@ -67,7 +67,18 @@
         "ButtonFrameTemplate_ShowPortrait",
         "GetItemInfo",
         "GetItemQualityColor",
-        "CreateColorFromHexString"
+        "CreateColorFromHexString",
+        "Enum",
+        "C_Container",
+        "KrowiV_SavedData",
+        "GameTooltip",
+        "C_NewItems",
+        "KrowiV_ShowJunkListButton",
+        "MerchantFrameTab3",
+        "PanelTemplates_SetNumTabs",
+        "MerchantFrame_CloseStackSplitFrame",
+        "MerchantFrame_UpdateFilterString",
+        "KrowiV_DualItemListFrame"
     ],
     "fsdeploy.nodes": [
         {
@@ -79,4 +90,7 @@
         }
     ],
     "fsdeploy.deployWorkspaceOnSave": true,
+    "Lua.diagnostics.disable": [
+        "deprecated"
+    ],
 }
