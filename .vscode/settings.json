@@ -78,7 +78,12 @@
         "PanelTemplates_SetNumTabs",
         "MerchantFrame_CloseStackSplitFrame",
         "MerchantFrame_UpdateFilterString",
-        "KrowiV_DualItemListFrame"
+        "KrowiV_DualItemListFrame",
+        "KrowiV_EmbeddedDualItemListFrame",
+        "MerchantRepairAllButton",
+        "MerchantRepairItemButton",
+        "MerchantRepairText",
+        "MerchantGuildBankRepairButton"
     ],
     "fsdeploy.nodes": [
         {

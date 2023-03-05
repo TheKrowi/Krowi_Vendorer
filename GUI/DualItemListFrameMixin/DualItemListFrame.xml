@@ -2,9 +2,9 @@
     <Script file="DualItemListFrameMixin.lua"/>
 
     <Frame name="KrowiV_DualItemListFrame" mixin="KrowiV_DualItemListFrameMixin" inherits="ButtonFrameTemplate" toplevel="true" movable="true" enableMouse="true" parent="MerchantFrame" hidden="true">
-        <Size x="612" y="444"/>
+        <Size x="610" y="444"/>
         <Frames>
-            <Frame name="$parentEmbeddedItemList" parentKey="EmbeddedItemList" inherits="KrowiV_DualItemList_Template" hidden="false" setAllPoints="true">
+            <Frame name="$parentEmbeddedItemList" parentKey="EmbeddedItemList" inherits="KrowiV_DualItemList_Template" setAllPoints="true">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
                     <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
@@ -40,6 +40,4 @@
 			</OnMouseUp>
         </Scripts>
     </Frame>
-
-    <!-- <Frame name="KrowiV_EmbeddedItemList" inherits="KrowiV_ItemList_Template" parent="MerchantFrame" hidden="true"/> -->
 </Ui>

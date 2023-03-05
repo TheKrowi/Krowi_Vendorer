@@ -1,5 +1,5 @@
 <Ui>
-    <Script file="ItemList.lua"/>
-    <Script file="JunkListFrame.lua"/>
-    <Script file="IgnoreListFrame.lua"/>
+    <Script file="ItemListFrame.lua"/>
+    <Script file="JunkList.lua"/>
+    <Script file="IgnoreList.lua"/>
 </Ui>

@@ -1,0 +1,10 @@
+<Ui>
+    <Script file="EmbeddedDualItemListFrameMixin.lua"/>
+
+    <Frame name="KrowiV_EmbeddedDualItemListFrame" inherits="KrowiV_DualItemList_Template" parent="MerchantFrame" hidden="true">
+        <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+        </Anchors>
+    </Frame>
+</Ui>

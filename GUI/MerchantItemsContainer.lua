@@ -26,6 +26,10 @@ local function ResetItemSlots()
 	end
 end
 
+function merchantItemsContainer:HideAll()
+    ResetItemSlots();
+end
+
 local function GetItemSlot(index)
 	if itemSlotTable[index] then
 		return itemSlotTable[index];

@@ -37,7 +37,7 @@
         </Scripts>
     </Button>
     
-    <Button name="KrowiV_ShowJunkListButton" parent="MerchantFrame" inherits="UIPanelButtonTemplate">
+    <!-- <Button name="KrowiV_ShowJunkListButton" parent="MerchantFrame" inherits="UIPanelButtonTemplate">
         <Size x="125" y="22"/>
         <Anchors>
             <Anchor point="LEFT" relativeTo="$parentTab4" relativePoint="RIGHT" x="10"/>
@@ -57,5 +57,5 @@
             <OnLoad function="KrowiV_ShowIgnoreList_OnLoad"/>
             <OnClick function="KrowiV_ShowIgnoreList_OnClick"/>
         </Scripts>
-    </Button>
+    </Button> -->
 </Ui>

@@ -7,6 +7,8 @@ local merchantItemsContainer = addon.MerchantItemsContainer;
 local originalWidth, originalHeight = MerchantFrame:GetSize();
 
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
+	addon.EmbeddedItemListFrame.JunkList.Hide();
+	addon.EmbeddedItemListFrame.IgnoreList.Hide();
 	local numColumns = addon.Options.db.NumColumns - merchantItemsContainer.DefaultMerchantInfoNumColumns;
 	local numRows = addon.Options.db.NumRows - merchantItemsContainer.DefaultMerchantInfoNumRows;
 	local itemWidth = merchantItemsContainer.OffsetX + merchantItemsContainer.ItemWidth;
@@ -30,6 +32,8 @@ hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
 end);
 
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
+	addon.EmbeddedItemListFrame.JunkList.Hide();
+	addon.EmbeddedItemListFrame.IgnoreList.Hide();
 	MerchantFrame:SetSize(originalWidth, originalHeight);
 	KrowiV_BottomExtensionRightBorder:Hide();
 	KrowiV_BottomExtensionLeftBorder:Hide();
@@ -79,7 +83,7 @@ function KrowiV_ShowJunkList_OnLoad(self)
 end
 
 function KrowiV_ShowJunkList_OnClick()
-	addon.ItemList.JunkListFrame.Show();
+	addon.ItemListFrame.JunkList.Show();
 end
 
 function KrowiV_ShowIgnoreList_OnLoad(self)
@@ -88,7 +92,7 @@ function KrowiV_ShowIgnoreList_OnLoad(self)
 end
 
 function KrowiV_ShowIgnoreList_OnClick()
-	addon.ItemList.IgnoreListFrame.Show();
+	addon.ItemListFrame.IgnoreList.Show();
 end
 
 function MerchantFrame_Update()
@@ -100,10 +104,50 @@ function MerchantFrame_Update()
 	if MerchantFrame.selectedTab == 1 then
 		MerchantFrame_UpdateMerchantInfo();
 	elseif MerchantFrame.selectedTab == 3 then
-		addon.ItemList.ShowJunkList();
+		merchantFrame.UpdateJunkInfo();
 	elseif MerchantFrame.selectedTab == 4 then
-		-- addon.ItemList.ShowIgnoreList();
+		merchantFrame.UpdateIgnoreInfo();
 	else
 		MerchantFrame_UpdateBuybackInfo();
 	end
+end
+
+function merchantFrame.UpdateJunkInfo()
+	merchantItemsContainer:HideAll();
+	MerchantFrameBottomRightBorder:Hide();
+	KrowiV_BottomExtensionRightBorder:Hide();
+	KrowiV_BottomExtensionLeftBorder:Hide();
+	KrowiV_BottomExtensionMidBorder:Hide();
+	MerchantRepairAllButton:Hide();
+	MerchantRepairItemButton:Hide();
+	MerchantBuyBackItem:Hide();
+	MerchantPrevPageButton:Hide();
+	MerchantNextPageButton:Hide();
+	MerchantFrameBottomLeftBorder:Hide();
+	MerchantFrameBottomRightBorder:Hide();
+	MerchantRepairText:Hide();
+	MerchantPageText:Hide();
+	MerchantGuildBankRepairButton:Hide();
+	MerchantFrame:SetWidth(610);
+	addon.EmbeddedItemListFrame.JunkList.Show();
+end
+
+function merchantFrame.UpdateIgnoreInfo()
+	merchantItemsContainer:HideAll();
+	MerchantFrameBottomRightBorder:Hide();
+	KrowiV_BottomExtensionRightBorder:Hide();
+	KrowiV_BottomExtensionLeftBorder:Hide();
+	KrowiV_BottomExtensionMidBorder:Hide();
+	MerchantRepairAllButton:Hide();
+	MerchantRepairItemButton:Hide();
+	MerchantBuyBackItem:Hide();
+	MerchantPrevPageButton:Hide();
+	MerchantNextPageButton:Hide();
+	MerchantFrameBottomLeftBorder:Hide();
+	MerchantFrameBottomRightBorder:Hide();
+	MerchantRepairText:Hide();
+	MerchantPageText:Hide();
+	MerchantGuildBankRepairButton:Hide();
+	MerchantFrame:SetWidth(610);
+	addon.EmbeddedItemListFrame.IgnoreList.Show();
 end
