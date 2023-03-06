@@ -8,5 +8,4 @@
     <Include file="DualItemListFrameMixin/DualItemListFrame.xml"/>
     <Include file="EmbeddedDualItemListFrame/EmbeddedDualItemListFrame.xml"/>
     <Include file="ItemList/Files.xml"/>
-    <Include file="EmbeddedItemList/Files.xml"/>
 </Ui>

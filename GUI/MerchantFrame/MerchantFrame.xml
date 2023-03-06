@@ -14,7 +14,6 @@
             <OnClick>
                 PanelTemplates_SetTab(MerchantFrame, self:GetID());
                 MerchantFrame_Update();
-                <!-- EventRegistry:TriggerEvent("MerchantFrame.BuyBackTabShow"); -->
             </OnClick>
         </Scripts>
     </Button>
@@ -32,7 +31,6 @@
             <OnClick>
                 PanelTemplates_SetTab(MerchantFrame, self:GetID());
                 MerchantFrame_Update();
-                <!-- EventRegistry:TriggerEvent("MerchantFrame.BuyBackTabShow"); -->
             </OnClick>
         </Scripts>
     </Button>

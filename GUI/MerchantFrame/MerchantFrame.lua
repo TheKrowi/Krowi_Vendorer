@@ -7,8 +7,8 @@ local merchantItemsContainer = addon.MerchantItemsContainer;
 local originalWidth, originalHeight = MerchantFrame:GetSize();
 
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
-	addon.EmbeddedItemListFrame.JunkList.Hide();
-	addon.EmbeddedItemListFrame.IgnoreList.Hide();
+	addon.ItemListFrame.JunkList.Hide();
+	addon.ItemListFrame.IgnoreList.Hide();
 	local numColumns = addon.Options.db.NumColumns - merchantItemsContainer.DefaultMerchantInfoNumColumns;
 	local numRows = addon.Options.db.NumRows - merchantItemsContainer.DefaultMerchantInfoNumRows;
 	local itemWidth = merchantItemsContainer.OffsetX + merchantItemsContainer.ItemWidth;
@@ -32,8 +32,8 @@ hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
 end);
 
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
-	addon.EmbeddedItemListFrame.JunkList.Hide();
-	addon.EmbeddedItemListFrame.IgnoreList.Hide();
+	addon.ItemListFrame.JunkList.Hide();
+	addon.ItemListFrame.IgnoreList.Hide();
 	MerchantFrame:SetSize(originalWidth, originalHeight);
 	KrowiV_BottomExtensionRightBorder:Hide();
 	KrowiV_BottomExtensionLeftBorder:Hide();
@@ -47,7 +47,6 @@ local function PrepareMerchantFrame()
 		merchantItemsContainer:PrepareBuybackInfo();
 	end
     merchantItemsContainer.LoadMaxNumItemSlots(); -- Make sure MerchantFrame_Update can set all items
-	-- print("I got this many back:", GetMerchantNumItems())
 end
 hooksecurefunc("MerchantFrame_UpdateFilterString", PrepareMerchantFrame);
 
@@ -82,18 +81,18 @@ function KrowiV_ShowJunkList_OnLoad(self)
 	self:SetText(addon.L["Junk List"]);
 end
 
-function KrowiV_ShowJunkList_OnClick()
-	addon.ItemListFrame.JunkList.Show();
-end
-
 function KrowiV_ShowIgnoreList_OnLoad(self)
 	self:SetText(addon.L["Ignore List"]);
 	PanelTemplates_SetNumTabs(MerchantFrame, 4);
 end
 
-function KrowiV_ShowIgnoreList_OnClick()
-	addon.ItemListFrame.IgnoreList.Show();
-end
+-- function KrowiV_ShowJunkList_OnClick()
+-- 	addon.ItemListFrame.JunkList.Show();
+-- end
+
+-- function KrowiV_ShowIgnoreList_OnClick()
+-- 	addon.ItemListFrame.IgnoreList.Show();
+-- end
 
 function MerchantFrame_Update()
 	if MerchantFrame.lastTab ~= MerchantFrame.selectedTab then
@@ -129,7 +128,7 @@ function merchantFrame.UpdateJunkInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
-	addon.EmbeddedItemListFrame.JunkList.Show();
+	addon.ItemListFrame.JunkList.Show();
 end
 
 function merchantFrame.UpdateIgnoreInfo()
@@ -149,5 +148,5 @@ function merchantFrame.UpdateIgnoreInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
-	addon.EmbeddedItemListFrame.IgnoreList.Show();
+	addon.ItemListFrame.IgnoreList.Show();
 end

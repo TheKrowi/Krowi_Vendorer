@@ -24,8 +24,8 @@ function loadHelper:OnEvent(event, arg1, arg2)
         if arg1 == "Krowi_Vendorer" then -- This always needs to load
             -- LoadKrowi_AchievementFilter();
             addon.Options.Load();
-            addon.ItemListFrame.JunkList.Init();
-            addon.ItemListFrame.IgnoreList.Init();
+            addon.ItemListFrame.JunkList.Init(true);
+            addon.ItemListFrame.IgnoreList.Init(true);
         -- elseif arg1 == "Blizzard_AchievementUI" then -- This needs the Blizzard_AchievementUI addon available to load
         --     LoadBlizzard_AchievementUI();
         -- elseif arg1 == "Blizzard_Calendar" then

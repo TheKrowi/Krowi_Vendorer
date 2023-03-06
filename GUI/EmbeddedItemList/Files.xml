@@ -1,5 +1,0 @@
-<Ui>
-    <Script file="EmbeddedItemListFrame.lua"/>
-    <Script file="EmbeddedJunkList.lua"/>
-    <Script file="EmbeddedIgnoreList.lua"/>
-</Ui>

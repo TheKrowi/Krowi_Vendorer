@@ -5,20 +5,26 @@ local dualItemListSide = addon.Objects.DualItemListSide;
 itemListFrame.IgnoreList = {};
 local ignoreList = itemListFrame.IgnoreList;
 local frame = KrowiV_DualItemListFrame;
+local isEmbedded = false;
 
-function ignoreList.Init()
+function ignoreList.Init(_isEmbedded)
     KrowiV_SavedData = KrowiV_SavedData or {};
     KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
+
+    isEmbedded = _isEmbedded;
+    if isEmbedded then
+        frame = KrowiV_EmbeddedDualItemListFrame
+    end
 end
 
-local function LeftJunkItemOnClick(self, button)
+local function LeftJunkItemOnClick(self)
     KrowiV_SavedData.IgnoredItems[self.ElementData.Id] = true;
-    itemListFrame.LeftItemOnClick(self, button);
+    itemListFrame.LeftItemOnClick(self, frame);
 end
 
-local function RightJunkItemOnClick(self, button)
+local function RightJunkItemOnClick(self)
     KrowiV_SavedData.IgnoredItems[self.ElementData.Id] = nil;
-    itemListFrame.RightItemOnClick(self, button);
+    itemListFrame.RightItemOnClick(self, frame);
 end
 
 local function PopulateLeftListFrame()
@@ -41,11 +47,15 @@ local function PopulateRightListFrame()
 end
 
 function ignoreList.Show()
-    frame:ClearAllPoints();
-    frame:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
-    frame:SetHeight(MerchantFrame:GetHeight());
-    frame:SetTitle(addon.L["Ignore List"]);
-    frame:SetIcon("Interface/Icons/inv_shield_1h_newplayer_a_02");
+    if not isEmbedded then
+        frame:ClearAllPoints();
+        frame:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
+        frame:SetHeight(MerchantFrame:GetHeight());
+        frame:SetTitle(addon.L["Ignore List"]);
+        frame:SetIcon("Interface/Icons/inv_shield_1h_newplayer_a_02");
+        frame:SetListInfo(dualItemListSide.Left, addon.L["Left-click an item to add it to the ignore list."]);
+        frame:SetListInfo(dualItemListSide.Right, addon.L["Right-click an item to remove it from the ignore list."]);
+    end
     frame:ClearListItems(dualItemListSide.Left);
     frame:RegisterListItemsForClicks(dualItemListSide.Left, "LeftButtonUp");
     frame:SetListItemsOnClick(dualItemListSide.Left, LeftJunkItemOnClick);
@@ -54,7 +64,11 @@ function ignoreList.Show()
     frame:SetListItemsOnClick(dualItemListSide.Right, RightJunkItemOnClick);
     PopulateLeftListFrame();
     PopulateRightListFrame();
-    frame:SetListInfo(dualItemListSide.Left, addon.L["Left-click an item to add it to the ignore list."]);
-    frame:SetListInfo(dualItemListSide.Right, addon.L["Right-click an item to remove it from the ignore list."]);
     frame:Show();
+end
+
+function ignoreList.Hide()
+    if isEmbedded then
+        frame:Hide();
+    end
 end
