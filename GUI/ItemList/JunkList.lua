@@ -18,7 +18,7 @@ function junkList.Init(_isEmbedded)
 end
 
 local function LeftJunkItemOnClick(self)
-    KrowiV_SavedData.JunkItems[self.ElementData.Id] = true;
+    KrowiV_SavedData.JunkItems[self.ElementData.Id] = -1;
     itemListFrame.LeftItemOnClick(self, frame);
 end
 
@@ -52,7 +52,7 @@ function junkList.Show()
         frame:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
         frame:SetHeight(MerchantFrame:GetHeight());
         frame:SetTitle(addon.L["Junk List"]);
-        frame:SetIcon("Interface/Icons/inv_gizmo_03");
+        frame:SetIcon("Interface/Icons/Inv_Gizmo_03");
         frame:SetListInfo(dualItemListSide.Left, addon.L["Left-click an item to add it to the junk list."]);
         frame:SetListInfo(dualItemListSide.Right, addon.L["Right-click an item to remove it from the junk list."]);
     end

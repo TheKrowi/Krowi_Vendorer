@@ -1,0 +1,4 @@
+<Ui>
+    <Script file="Data.lua" />
+    <Script file="AutoJunk.lua" />
+</Ui>

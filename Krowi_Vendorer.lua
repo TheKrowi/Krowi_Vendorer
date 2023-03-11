@@ -22,14 +22,17 @@ loadHelper:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL");
 function loadHelper:OnEvent(event, arg1, arg2)
     if event == "ADDON_LOADED" then
         if arg1 == "Krowi_Vendorer" then -- This always needs to load
-            -- LoadKrowi_AchievementFilter();
+            KrowiV_InjectOptions:SetOptionsTable(addon.Options.OptionsTable);
+            KrowiV_InjectOptions:SetOptions(addon.Options.Defaults.profile);
+
+            addon.Data.AutoJunk.Load();
+
             addon.Options.Load();
+
             addon.ItemListFrame.JunkList.Init(true);
             addon.ItemListFrame.IgnoreList.Init(true);
-        -- elseif arg1 == "Blizzard_AchievementUI" then -- This needs the Blizzard_AchievementUI addon available to load
-        --     LoadBlizzard_AchievementUI();
-        -- elseif arg1 == "Blizzard_Calendar" then
-        --     LoadBlizzard_Calendar();
+
+            addon.Icon.Load();
         end
     elseif event == "MERCHANT_UPDATE" then
     --     print("MERCHANT_UPDATE");

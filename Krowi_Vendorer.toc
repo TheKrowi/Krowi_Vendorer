@@ -5,6 +5,16 @@
 ## LoadWith: Blizzard_MerchantFrame
 ## SavedVariables: KrowiV_Options, KrowiV_SavedData
 ## Notes: Enhances your vendoring.
+## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
+## X-Discord-Server-Name: Krowi's Addons
+## X-CurseForge: https://www.curseforge.com/wow/addons/krowi-achievement-filter
+## X-Curse-Project-ID: 413582
+## X-Wago: https://addons.wago.io/addons/krowi-achievement-filter
+## X-Wago-Project-ID: XrNkx46a
+## X-WoWInterface: https://www.wowinterface.com/downloads/info26229-KrowisAchievementFilter
+## X-WoWInterface-Project-ID: 26229
+
+API.lua
 
 Libs\Files.xml
 
@@ -16,7 +26,10 @@ Krowi_Vendorer.lua
 Globals.lua
 
 Options\Files.xml
+Icon.lua
 
 Objects\Files.xml
+
+Data\Files.xml
 
 GUI\Files.xml

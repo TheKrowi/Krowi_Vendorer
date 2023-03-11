@@ -19,6 +19,7 @@ end
 
 local function LeftJunkItemOnClick(self)
     KrowiV_SavedData.IgnoredItems[self.ElementData.Id] = true;
+    KrowiV_SavedData.JunkItems[self.ElementData.Id] = nil;
     itemListFrame.LeftItemOnClick(self, frame);
 end
 
@@ -52,7 +53,7 @@ function ignoreList.Show()
         frame:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
         frame:SetHeight(MerchantFrame:GetHeight());
         frame:SetTitle(addon.L["Ignore List"]);
-        frame:SetIcon("Interface/Icons/inv_shield_1h_newplayer_a_02");
+        frame:SetIcon("Interface/Icons/Inv_Shield_1h_NewPlayer_a_02");
         frame:SetListInfo(dualItemListSide.Left, addon.L["Left-click an item to add it to the ignore list."]);
         frame:SetListInfo(dualItemListSide.Right, addon.L["Right-click an item to remove it from the ignore list."]);
     end
