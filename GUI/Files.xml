@@ -1,11 +1,13 @@
 <Ui>
+    <Script file="GUI.lua"/>
     <Include file="OptionsButton/OptionsButton.xml"/>
     <Script file="MerchantItemsContainer.lua"/>
     <Include file="MerchantFrame/MerchantFrame.xml"/>
     <Include file="ScrollableListItem/ScrollableListItem.xml"/>
     <Include file="ScrollableList/ScrollableList.xml"/>
     <Include file="DualItemList/DualItemList.xml"/>
-    <Include file="DualItemListFrameMixin/DualItemListFrame.xml"/>
+    <Include file="DualItemListFrame/DualItemListFrame.xml"/>
     <Include file="EmbeddedDualItemListFrame/EmbeddedDualItemListFrame.xml"/>
     <Include file="ItemList/Files.xml"/>
+    <Include file="ItemTooltip/Files.xml"/>
 </Ui>

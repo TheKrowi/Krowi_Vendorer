@@ -1,6 +1,6 @@
 -- [[ Namespaces ]] --
 local _, addon = ...;
-local itemListFrame = addon.ItemListFrame;
+local itemListFrame = addon.GUI.ItemListFrame;
 local dualItemListSide = addon.Objects.DualItemListSide;
 itemListFrame.JunkList = {};
 local junkList = itemListFrame.JunkList;

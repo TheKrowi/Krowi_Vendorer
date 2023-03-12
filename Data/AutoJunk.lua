@@ -61,7 +61,6 @@ local function AddToJunkIfComply(loot)
     return -1;
 end
 
-
 local loadHelper = CreateFrame("Frame");
 loadHelper:RegisterEvent("PLAYER_ENTERING_WORLD");
 

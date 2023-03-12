@@ -1,8 +1,8 @@
 -- [[ Namespaces ]] --
 local _, addon = ...;
 local dualItemListSide = addon.Objects.DualItemListSide;
-addon.ItemListFrame = {};
-local itemList = addon.ItemListFrame;
+addon.GUI.ItemListFrame = {};
+local itemList = addon.GUI.ItemListFrame;
 
 function itemList.LeftItemOnClick(self, frame)
     frame:AppendListItem(dualItemListSide.Right, self.ElementData.Id, self.ElementData.Icon, self.ElementData.Color, self.ElementData.Name);

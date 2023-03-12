@@ -77,25 +77,6 @@ options.OptionsTable.args["AutoJunk"] = {
                     }
                 }
             }
-        },
-        -- Dungeons = {
-        --     order = OrderPP(), type = "group",
-        --     name = addon.L["Dungeons"],
-        --     args = {
-        --         Minimap = {
-        --             order = OrderPP(), type = "group", inline = true,
-        --             name = addon.L["Minimap"],
-        --             args = {
-        --                 ShowMinimapIcon = {
-        --                     order = OrderPP(), type = "toggle", width = AdjustedWidth(),
-        --                     name = addon.L["Show minimap icon"],
-        --                     desc = addon.L["Show minimap icon Desc"]:AddDefaultValueText_KV("ShowMinimapIcon"),
-        --                     get = function() return addon.Options.db.ShowMinimapIcon; end,
-        --                     set = MinimapShowMinimapIconSet
-        --                 }
-        --             }
-        --         }
-        --     }
-        -- }
+        }
     }
 };

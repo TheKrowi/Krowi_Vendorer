@@ -1,14 +1,14 @@
 -- [[ Namespaces ]] --
 local _, addon = ...;
-addon.MerchantFrame = {};
-local merchantFrame = addon.MerchantFrame;
-local merchantItemsContainer = addon.MerchantItemsContainer;
+addon.GUI.MerchantFrame = {};
+local merchantFrame = addon.GUI.MerchantFrame;
+local merchantItemsContainer = addon.GUI.MerchantItemsContainer;
 
 local originalWidth, originalHeight = MerchantFrame:GetSize();
 
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
-	addon.ItemListFrame.JunkList.Hide();
-	addon.ItemListFrame.IgnoreList.Hide();
+	addon.GUI.ItemListFrame.JunkList.Hide();
+	addon.GUI.ItemListFrame.IgnoreList.Hide();
 	local numColumns = addon.Options.db.NumColumns - merchantItemsContainer.DefaultMerchantInfoNumColumns;
 	local numRows = addon.Options.db.NumRows - merchantItemsContainer.DefaultMerchantInfoNumRows;
 	local itemWidth = merchantItemsContainer.OffsetX + merchantItemsContainer.ItemWidth;
@@ -32,8 +32,8 @@ hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
 end);
 
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
-	addon.ItemListFrame.JunkList.Hide();
-	addon.ItemListFrame.IgnoreList.Hide();
+	addon.GUI.ItemListFrame.JunkList.Hide();
+	addon.GUI.ItemListFrame.IgnoreList.Hide();
 	MerchantFrame:SetSize(originalWidth, originalHeight);
 	KrowiV_BottomExtensionRightBorder:Hide();
 	KrowiV_BottomExtensionLeftBorder:Hide();
@@ -128,7 +128,7 @@ function merchantFrame.UpdateJunkInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
-	addon.ItemListFrame.JunkList.Show();
+	addon.GUI.ItemListFrame.JunkList.Show();
 end
 
 function merchantFrame.UpdateIgnoreInfo()
@@ -148,5 +148,5 @@ function merchantFrame.UpdateIgnoreInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
-	addon.ItemListFrame.IgnoreList.Show();
+	addon.GUI.ItemListFrame.IgnoreList.Show();
 end

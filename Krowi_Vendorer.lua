@@ -29,10 +29,12 @@ function loadHelper:OnEvent(event, arg1, arg2)
 
             addon.Options.Load();
 
-            addon.ItemListFrame.JunkList.Init(true);
-            addon.ItemListFrame.IgnoreList.Init(true);
+            addon.GUI.ItemListFrame.JunkList.Init(true);
+            addon.GUI.ItemListFrame.IgnoreList.Init(true);
 
             addon.Icon.Load();
+
+            addon.GUI.ItemTooltip.Load();
         end
     elseif event == "MERCHANT_UPDATE" then
     --     print("MERCHANT_UPDATE");

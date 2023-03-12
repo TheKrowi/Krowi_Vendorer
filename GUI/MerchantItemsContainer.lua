@@ -1,7 +1,7 @@
 -- [[ Namespaces ]] --
 local _, addon = ...;
-addon.MerchantItemsContainer = {};
-local merchantItemsContainer = addon.MerchantItemsContainer;
+addon.GUI.MerchantItemsContainer = {};
+local merchantItemsContainer = addon.GUI.MerchantItemsContainer;
 
 merchantItemsContainer.FirstOffsetX = 11;
 merchantItemsContainer.FirstOffsetY = -69;

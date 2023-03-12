@@ -119,7 +119,15 @@
         "IsInInstance",
         "GetInstanceInfo",
         "strsplit",
-        "ITEM_QUALITY_COLORS"
+        "ITEM_QUALITY_COLORS",
+        "TooltipDataProcessor",
+        "AddTooltipLine",
+        "StaticPopupDialogs",
+        "OKAY",
+        "StaticPopup_Show",
+        "strtrim",
+        "GameTooltip_AddBlankLinesToTooltip",
+        "GetDetailedItemLevelInfo"
     ],
     "fsdeploy.nodes": [
         {
@@ -133,6 +141,7 @@
     "fsdeploy.deployWorkspaceOnSave": true,
     "Lua.diagnostics.disable": [
         "deprecated",
-        "undefined-field"
+        "undefined-field",
+        "unused-function"
     ],
 }

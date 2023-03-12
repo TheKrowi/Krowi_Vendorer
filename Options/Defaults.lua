@@ -19,6 +19,17 @@ options.Defaults = {
                 true, -- Rare
                 true -- Epic
             }
+        },
+        AutoSell = {
+            Quality = {
+                false, -- Poor
+                false, -- Common
+                false, -- Uncommon
+                true, -- Rare
+                true -- Epic
+            },
+            ItemLevel = 0,
+            Operator = "and"
         }
     }
 };

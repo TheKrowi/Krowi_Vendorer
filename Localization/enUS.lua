@@ -16,3 +16,7 @@ addon.GlobalStrings.Load(L);
 
 
 L["AutoJunkQualityDesc"] = "These qualities apply to all auto junk rules. If for example Epic quality and The Stockades (Classic - Dungeons) are checked, finding a Rare quality item will not be added to the junk list while an Epic item would be added to the junk list.\n\nCheck all qualities to ignore this rule.";
+L["ItemLevel is not a valid item level."] = "'{itemLevel}' is not a valid item level.";
+
+L["Auto Sell Quality Desc"] = "Taking other rules into account, if the item's quality is one of the selected qualities, sell the item.";
+L["Auto Sell Item Level Desc"] = "Taking other rules into account, if the item's item level is lower than this value, sell the item.";
