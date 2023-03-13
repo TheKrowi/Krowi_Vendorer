@@ -20,3 +20,7 @@ L["ItemLevel is not a valid item level."] = "'{itemLevel}' is not a valid item l
 
 L["Auto Sell Quality Desc"] = "Taking other rules into account, if the item's quality is one of the selected qualities, sell the item.";
 L["Auto Sell Item Level Desc"] = "Taking other rules into account, if the item's item level is lower than this value, sell the item.";
+
+L["Auto Repair Is Enabled"] = "Repair all items automatically when you visit a vendor that can do it.";
+L["Auto Repair Is Guild Enabled"] = "Partially or fully repair items with guild funds, if available.";
+L["Auto Repair Print Chat Message"] = "Enable to print auto repair messages in the chat.";

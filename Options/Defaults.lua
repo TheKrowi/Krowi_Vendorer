@@ -30,6 +30,11 @@ options.Defaults = {
             },
             ItemLevel = 0,
             Operator = "and"
+        },
+        AutoRepair = {
+            IsEnabled = true,
+            IsGuildEnabled = true,
+            PrintChatMessage = true
         }
     }
 };
