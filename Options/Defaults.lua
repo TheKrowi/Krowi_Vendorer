@@ -29,7 +29,7 @@ options.Defaults = {
                 true -- Epic
             },
             ItemLevel = 0,
-            Operator = "and"
+            Operator = 1
         }
     }
 };

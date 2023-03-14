@@ -41,7 +41,7 @@ end
 
 options.OptionsTable.args["AutoSell"] = {
     type = "group", childGroups = "tab",
-    name = addon.L["Auto Junk"],
+    name = addon.L["Auto Sell"],
     args = {
         General = {
             order = OrderPP(), type = "group",
@@ -115,6 +115,20 @@ options.OptionsTable.args["AutoSell"] = {
                         }
                     }
                 }
+            }
+        },
+        Tooltip = {
+            order = OrderPP(), type = "group",
+            name = addon.L["Tooltip"],
+            args = {
+                Operator = {
+                    order = OrderPP(), type = "select", width = AdjustedWidth(),
+                    name = addon.L["Operator"],
+                    desc = addon.L["Operator Desc"]:AddDefaultValueText_KV("AutoSell.Operator", addon.Operators),
+                    values = addon.Operators,
+                    get = function() return addon.Options.db.AutoSell.Operator; end,
+                    set = function(_, value) addon.Options.db.AutoSell.Operator = value; end
+                },
             }
         }
     }

@@ -7,3 +7,8 @@ function addon.GetPartialItemInfo(id)
     local color = CreateColorFromHexString(hex);
     return itemTexture, color, itemName;
 end
+
+addon.Operators = {
+    addon.L["and"],
+    addon.L["or"]
+};
