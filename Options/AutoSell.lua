@@ -114,6 +114,25 @@ options.OptionsTable.args["AutoSell"] = {
                             set = ItemLevelSet
                         }
                     }
+                },
+                Artifactrelic = {
+                    order = OrderPP(), type = "group", inline = true,
+                    name = addon.L["Artifact relic"],
+                    args = {
+                        Description = {
+                            order = OrderPP(), type = "description", width = "full",
+                            name = addon.L["Auto Sell Artifact Relic Desc"],
+                            fontSize = "medium"
+                        },
+                        Epic = {
+                            order = OrderPP(), type = "toggle", width = AdjustedWidth(0.5),
+                            name = addon.L["Sell"],
+                            get = function() return addon.Options.db.AutoSell.Artifactrelic; end,
+                            set = function()
+                                addon.Options.db.AutoSell.Artifactrelic = not addon.Options.db.AutoSell.Artifactrelic;
+                            end
+                        }
+                    }
                 }
             }
         },
