@@ -1,6 +1,6 @@
 ## Interface: 100005
 ## Title: Krowi's |cFF1D92C2Vendorer|r
-## Version: 0.1-alpha2
+## Version: 0.1-alpha3
 ## Author: Krowi-Frostmane EU
 ## LoadWith: Blizzard_MerchantFrame
 ## SavedVariables: KrowiV_Options, KrowiV_SavedData

@@ -20,3 +20,5 @@ L["ItemLevel is not a valid item level."] = "'{itemLevel}' is not a valid item l
 
 L["Auto Sell Quality Desc"] = "Taking other rules into account, if the item's quality is one of the selected qualities, sell the item.";
 L["Auto Sell Item Level Desc"] = "Taking other rules into account, if the item's item level is lower than this value, sell the item.";
+L["Rule x"] = "Rule {x}";
+L["Condition x"] = "Condition {x}";

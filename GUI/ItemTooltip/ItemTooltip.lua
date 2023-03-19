@@ -60,7 +60,8 @@ local itemClassMatrix = {
             [Enum.ItemWeaponSubclass.Staff] = true,
             [Enum.ItemWeaponSubclass.Unarmed] = true,
             [Enum.ItemWeaponSubclass.Dagger] = true
-        }},
+        }
+    },
     ["HUNTER"] = {
         [Enum.ItemClass.Armor] = {
             [Enum.ItemArmorSubclass.Mail] = true

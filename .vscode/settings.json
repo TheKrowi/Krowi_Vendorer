@@ -127,7 +127,12 @@
         "StaticPopup_Show",
         "strtrim",
         "GameTooltip_AddBlankLinesToTooltip",
-        "GetDetailedItemLevelInfo"
+        "GetDetailedItemLevelInfo",
+        "tremove",
+        "EnumUtil",
+        "tInvert",
+        "GetItemClassInfo",
+        "GetOptionsMemberValue"
     ],
     "fsdeploy.nodes": [
         {
@@ -142,6 +147,7 @@
     "Lua.diagnostics.disable": [
         "deprecated",
         "undefined-field",
-        "unused-function"
+        "unused-function",
+        "assign-type-mismatch"
     ],
 }
