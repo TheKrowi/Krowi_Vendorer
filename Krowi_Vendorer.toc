@@ -25,10 +25,10 @@ Localization\Files.xml
 Krowi_Vendorer.lua
 Globals.lua
 
+Objects\Files.xml
+
 Options\Files.xml
 Icon.lua
-
-Objects\Files.xml
 
 Data\Files.xml
 

@@ -5,6 +5,8 @@ options.AutoSell = {};
 local autoSell = options.AutoSell;
 tinsert(options.OptionsTables, autoSell);
 
+local criteriaType = addon.Objects.CriteriaType;
+
 local OrderPP = KrowiV_InjectOptions.AutoOrderPlusPlus;
 local AdjustedWidth = KrowiV_InjectOptions.AdjustedWidth;
 
@@ -15,75 +17,57 @@ end
 
 local removedFlag = "REMOVED";
 
-local itemClass = tInvert(Enum.ItemClass);
-local obsoleteIds = {5, 6, 10, 11, 13, 14};
-for _, id in next, obsoleteIds do
-    itemClass[id] = nil;
-end
-for id, _ in next, itemClass do
-    itemClass[id] = GetItemClassInfo(id);
+local function ConditionCriteriaTypeSet_ItemLevel(numRule, numCondition)
+    KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Operator", {
+        order = OrderPP(), type = "select", width = AdjustedWidth(0.5),
+        name = "",
+        values = addon.Operators,
+        get = function() return addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator; end,
+        set = function(_, _value) addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator = _value; end
+    });
+    KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Value", {
+        order = OrderPP(), type = "input", width = AdjustedWidth(0.4),
+        name = "",
+        get = function() return addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value; end,
+        set = function(_, _value) addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value = _value; end
+    });
+    options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Blank1 = nil;
 end
 
-local criteriaType = {
-    addon.L["Item level"],
-    addon.L["Soulbound"]
-};
+local function ConditionCriteriaTypeSet_Soulbound(numRule, numCondition)
+    KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Blank1", {
+        order = OrderPP(), type = "description", width = AdjustedWidth(0.9), name = ""
+    });
+    addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator = nil;
+    addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value = nil;
+    options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Operator = nil;
+    options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Value = nil;
+end
 
-local operators = {
-    "<",
-    "<=",
-    "==",
-    ">=",
-    ">"
-};
+local function ConditionCriteriaTypeSet_Other(numRule, numCondition)
+    KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Blank1", {
+        order = OrderPP(), type = "description", width = AdjustedWidth(0.9), name = ""
+    });
+    addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator = nil;
+    addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value = nil;
+    options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Operator = nil;
+    options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Value = nil;
+end
 
 local function ConditionCriteriaTypeSet(numRule, numCondition, value)
-    print(value)
     addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].CriteriaType = value;
-    if value == 1 then -- Item level
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Operator", {
-            order = OrderPP(), type = "select", width = AdjustedWidth(0.5),
-            name = "",
-            values = operators,
-            get = function() return addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator; end,
-            set = function(_, _value) addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator = _value; end
-        });
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Value", {
-            order = OrderPP(), type = "input", width = AdjustedWidth(0.4),
-            name = "",
-            get = function() return addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value; end,
-            set = function(_, _value) addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value = _value; end
-        });
-        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Blank1 = nil;
-    elseif value == 2 then -- Soulbound
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Blank1", {
-            order = OrderPP(), type = "description", width = AdjustedWidth(0.9), name = ""
-        });
-        addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator = nil;
-        addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value = nil;
-        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Operator = nil;
-        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Value = nil;
+    if value == criteriaType.Enum.ItemLevel then -- Item level
+        ConditionCriteriaTypeSet_ItemLevel(numRule, numCondition);
+    elseif value == criteriaType.Enum.Soulbound then -- Soulbound
+        ConditionCriteriaTypeSet_Soulbound(numRule, numCondition);
     else
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Blank1", {
-            order = OrderPP(), type = "description", width = AdjustedWidth(0.9), name = ""
-        });
-        addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator = nil;
-        addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value = nil;
-        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Operator = nil;
-        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Value = nil;
+        ConditionCriteriaTypeSet_Other(numRule, numCondition);
     end
     local deleteConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args.DeleteCondition");
     deleteConditionTable.order = OrderPP();
 end
 
-local AddNewConditionFunc;
 local function AddConditionTable(numRule, numCondition)
-    if not KrowiV_InjectOptions:TableExists("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.ConditionsHeader") then
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args", "ConditionsHeader", {
-            order = OrderPP(), type = "header",
-            name = addon.L["Conditions"]
-        });
-    end
     KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args", "Condition" .. tostring(numCondition), {
         order = OrderPP(), type = "group", inline = true,
         name = "",
@@ -95,7 +79,7 @@ local function AddConditionTable(numRule, numCondition)
             CriteriaType = {
                 order = OrderPP(), type = "select", width = AdjustedWidth(0.6),
                 name = "",
-                values = criteriaType,
+                values = criteriaType.List,
                 get = function() return addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].CriteriaType; end,
                 set = function(_, value) ConditionCriteriaTypeSet(numRule, numCondition, value); end
             },
@@ -110,31 +94,14 @@ local function AddConditionTable(numRule, numCondition)
         }
     });
     ConditionCriteriaTypeSet(numRule, numCondition, addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].CriteriaType);
-    if not KrowiV_InjectOptions:TableExists("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.AddNewCondition") then
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args", "AddNewCondition", {
-            order = OrderPP(), type = "execute",
-            name = addon.L["Add new condition"],
-            func = function() AddNewConditionFunc(numRule) end
-        });
-    else
-        local addNewConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.AddNewCondition");
-        addNewConditionTable.order = OrderPP();
-    end
+    local addNewConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.AddNewCondition");
+    addNewConditionTable.order = OrderPP();
 end
 
-local function AddItemClassTable(numRule)
-    KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args", "ItemClassesHeader", {
-        order = OrderPP(), type = "header",
-        name = addon.L["Sell selected item types"]
-    });
-    KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args", "ItemClasses", {
-        order = OrderPP(), type = "multiselect", width = "full",
-        name = "",
-        values = itemClass,
-        get = function(_, index) return addon.Options.db.AutoSell.Rules[numRule].ItemClasses[index]; end,
-        set = function(_, index, value) addon.Options.db.AutoSell.Rules[numRule].ItemClasses[index] = value; end,
-        control = "Dropdown"
-    });
+function AddNewConditionFunc(numRule)
+    tinsert(addon.Options.db.AutoSell.Rules[numRule].Conditions, {});
+    local numConditions = #addon.Options.db.AutoSell.Rules[numRule].Conditions;
+    AddConditionTable(numRule, numConditions);
 end
 
 local function AddRuleTable(numRule)
@@ -142,10 +109,6 @@ local function AddRuleTable(numRule)
         order = OrderPP(), type = "group",
         name = addon.Options.db.AutoSell.Rules[numRule].Name,
         args = {
-            -- Header = {
-            --     order = OrderPP(), type = "header",
-            --     name = addon.L["General"]
-            -- },
             Name = {
                 order = OrderPP(), type = "input", width = AdjustedWidth(1.5),
                 name = addon.L["Name"],
@@ -163,17 +126,30 @@ local function AddRuleTable(numRule)
                     options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule] = nil;
                     addon.Options.db.AutoSell.Rules[numRule] = removedFlag;
                 end
+            },
+            ItemClassesHeader = {
+                order = OrderPP(), type = "header",
+                name = addon.L["Sell selected item types"]
+            },
+            ItemClasses = {
+                order = OrderPP(), type = "multiselect", width = "full",
+                name = "",
+                values = addon.ItemClass,
+                get = function(_, index) return addon.Options.db.AutoSell.Rules[numRule].ItemClasses[index]; end,
+                set = function(_, index, value) addon.Options.db.AutoSell.Rules[numRule].ItemClasses[index] = value; end,
+                control = "Dropdown"
+            },
+            ConditionsHeader = {
+                order = OrderPP(), type = "header",
+                name = addon.L["Conditions"]
+            },
+            AddNewCondition = {
+                order = OrderPP(), type = "execute",
+                name = addon.L["Add new condition"],
+                func = function() AddNewConditionFunc(numRule) end
             }
         }
     });
-    local addNewRuleTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.AddNewRule");
-    addNewRuleTable.order = OrderPP();
-end
-
-function AddNewConditionFunc(numRule)
-    tinsert(addon.Options.db.AutoSell.Rules[numRule].Conditions, {});
-    local numConditions = #addon.Options.db.AutoSell.Rules[numRule].Conditions;
-    AddConditionTable(numRule, numConditions);
 end
 
 local function AddNewRuleFunc()
@@ -181,12 +157,11 @@ local function AddNewRuleFunc()
     tinsert(addon.Options.db.AutoSell.Rules, {
         Name = "Rule " .. addon.Options.db.AutoSell.RulesHistoryCounter,
         ItemClasses = {},
-        Conditions = {{}}
+        Conditions = {}
     });
     local numRules = #addon.Options.db.AutoSell.Rules;
     AddRuleTable(numRules);
-    AddItemClassTable(numRules);
-    AddConditionTable(numRules, 1);
+    AddNewConditionFunc(numRules);
 end
 
 function autoSell.PostLoad()
@@ -199,7 +174,6 @@ function autoSell.PostLoad()
 
     for i, _ in next, addon.Options.db.AutoSell.Rules do
         AddRuleTable(i);
-        AddItemClassTable(i);
         -- Clean up deleted conditions during previous session
         for j = #addon.Options.db.AutoSell.Rules[i].Conditions, 1, -1 do
             if addon.Options.db.AutoSell.Rules[i].Conditions[j] == removedFlag then
@@ -333,14 +307,14 @@ options.OptionsTable.args["AutoSell"] = {
             order = OrderPP(), type = "group",
             name = addon.L["Tooltip"],
             args = {
-                Operator = {
-                    order = OrderPP(), type = "select", width = AdjustedWidth(),
-                    name = addon.L["Operator"],
-                    desc = addon.L["Operator Desc"]:AddDefaultValueText_KV("AutoSell.Operator", addon.Operators),
-                    values = addon.Operators,
-                    get = function() return addon.Options.db.AutoSell.Operator; end,
-                    set = function(_, value) addon.Options.db.AutoSell.Operator = value; end
-                },
+                -- Operator = {
+                --     order = OrderPP(), type = "select", width = AdjustedWidth(),
+                --     name = addon.L["Operator"],
+                --     desc = addon.L["Operator Desc"]:AddDefaultValueText_KV("AutoSell.Operator", addon.Operators),
+                --     values = addon.Operators,
+                --     get = function() return addon.Options.db.AutoSell.Operator; end,
+                --     set = function(_, value) addon.Options.db.AutoSell.Operator = value; end
+                -- },
             }
         },
         Rules = {
