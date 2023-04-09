@@ -6,6 +6,8 @@ local autoSell = options.AutoSell;
 tinsert(options.OptionsTables, autoSell);
 
 local criteriaType = addon.Objects.CriteriaType;
+local equalityOperator = addon.Objects.EqualityOperator;
+local removedElementPending;
 
 local OrderPP = KrowiV_InjectOptions.AutoOrderPlusPlus;
 local AdjustedWidth = KrowiV_InjectOptions.AdjustedWidth;
@@ -17,19 +19,70 @@ end
 
 local removedFlag = "REMOVED";
 
+local function CheckIfRuleIsValid(numRule)
+    print(addon.Options.db.AutoSell.Rules[numRule].Name, addon.Options.db.AutoSell.Rules[numRule].NumSelectedItemClasses, #addon.Options.db.AutoSell.Rules[numRule].Conditions, addon.Options.db.AutoSell.Rules[numRule].IsValid)
+    local isValid = addon.Options.db.AutoSell.Rules[numRule].NumSelectedItemClasses > 0;
+    for _, condition in next, addon.Options.db.AutoSell.Rules[numRule].Conditions do
+        if condition ~= removedFlag then
+            isValid = isValid and (criteriaType.CheckIfValid(condition));
+        end
+    end
+    addon.Options.db.AutoSell.Rules[numRule].IsValid = isValid;
+
+    local invalidRuleTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.InvalidRule");
+    invalidRuleTable.hidden = isValid;
+end
+
+local function CheckIfConditionIsValid(numRule, numCondition)
+    local isValid, desc = criteriaType.CheckIfValid(addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition]);
+    addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].IsValid = isValid;
+
+    local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args.InvalidCondition");
+    invalidConditionTable.hidden = isValid;
+    invalidConditionTable.name = desc:SetColorLightRed();
+
+    CheckIfRuleIsValid(numRule);
+end
+
+local function ShowAlert(message)
+	StaticPopupDialogs["KROWIV_ALERT"] = {
+		text = message,
+		button1 = OKAY,
+		hideOnEscape = true,
+		timeout = 0,
+		exclusive = true,
+		whileDead = true,
+	}
+	StaticPopup_Show("KROWIV_ALERT")
+end
+
+local function ConditionItemLevelValueSet(numRule, numCondition, value)
+    if strtrim(value) == "" then
+        addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value = 0;
+    elseif tonumber(value) == nil then
+        ShowAlert(addon.L["ItemLevel is not a valid item level."]:ReplaceVars(value));
+    else
+        addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value = tonumber(value);
+    end
+    CheckIfConditionIsValid(numRule, numCondition);
+end
+
 local function ConditionCriteriaTypeSet_ItemLevel(numRule, numCondition)
     KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Operator", {
         order = OrderPP(), type = "select", width = AdjustedWidth(0.5),
         name = "",
-        values = addon.Operators,
+        values = equalityOperator.List,
         get = function() return addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator; end,
-        set = function(_, _value) addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator = _value; end
+        set = function(_, _value)
+            addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Operator = _value;
+            CheckIfConditionIsValid(numRule, numCondition);
+        end
     });
     KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args", "Value", {
         order = OrderPP(), type = "input", width = AdjustedWidth(0.4),
         name = "",
-        get = function() return addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value; end,
-        set = function(_, _value) addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value = _value; end
+        get = function() return tostring(addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].Value or ""); end,
+        set = function(_, _value) ConditionItemLevelValueSet(numRule, numCondition, _value); end
     });
     options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition].args.Blank1 = nil;
 end
@@ -65,6 +118,9 @@ local function ConditionCriteriaTypeSet(numRule, numCondition, value)
     end
     local deleteConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args.DeleteCondition");
     deleteConditionTable.order = OrderPP();
+    CheckIfConditionIsValid(numRule, numCondition);
+    local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Condition" .. numCondition .. ".args.InvalidCondition");
+    invalidConditionTable.order = OrderPP();
 end
 
 local function AddConditionTable(numRule, numCondition)
@@ -89,7 +145,14 @@ local function AddConditionTable(numRule, numCondition)
                 func = function()
                     options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args["Condition" .. numCondition] = nil;
                     addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition] = removedFlag;
+                    CheckIfRuleIsValid(numRule);
+                    removedElementPending = true;
                 end
+            },
+            InvalidCondition = {
+                order = OrderPP(), type = "description", width = "full",
+                name = addon.L["InvalidCondition"]:SetColorLightRed(),
+                fontSize = "medium"
             }
         }
     });
@@ -102,6 +165,16 @@ function AddNewConditionFunc(numRule)
     tinsert(addon.Options.db.AutoSell.Rules[numRule].Conditions, {});
     local numConditions = #addon.Options.db.AutoSell.Rules[numRule].Conditions;
     AddConditionTable(numRule, numConditions);
+end
+
+local function RuleItemClassesSet(numRule, index, value)
+    if value then
+        addon.Options.db.AutoSell.Rules[numRule].NumSelectedItemClasses = addon.Options.db.AutoSell.Rules[numRule].NumSelectedItemClasses + 1;
+    else
+        addon.Options.db.AutoSell.Rules[numRule].NumSelectedItemClasses = addon.Options.db.AutoSell.Rules[numRule].NumSelectedItemClasses - 1;
+    end
+    addon.Options.db.AutoSell.Rules[numRule].ItemClasses[index] = value;
+    CheckIfRuleIsValid(numRule);
 end
 
 local function AddRuleTable(numRule)
@@ -125,7 +198,13 @@ local function AddRuleTable(numRule)
                 func = function()
                     options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule] = nil;
                     addon.Options.db.AutoSell.Rules[numRule] = removedFlag;
+                    removedElementPending = true;
                 end
+            },
+            InvalidRule = {
+                order = OrderPP(), type = "description", width = "full",
+                name = addon.L["InvalidRule"]:SetColorLightRed(),
+                fontSize = "medium"
             },
             ItemClassesHeader = {
                 order = OrderPP(), type = "header",
@@ -135,9 +214,18 @@ local function AddRuleTable(numRule)
                 order = OrderPP(), type = "multiselect", width = "full",
                 name = "",
                 values = addon.ItemClass,
-                get = function(_, index) return addon.Options.db.AutoSell.Rules[numRule].ItemClasses[index]; end,
-                set = function(_, index, value) addon.Options.db.AutoSell.Rules[numRule].ItemClasses[index] = value; end,
+                get = function(_, index)
+                    local atLeastOneItemClassTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.AtLeastOneItemClass");
+                    atLeastOneItemClassTable.hidden = addon.Options.db.AutoSell.Rules[numRule].NumSelectedItemClasses > 0;
+                    return addon.Options.db.AutoSell.Rules[numRule].ItemClasses[index];
+                end,
+                set = function(_, index, value) RuleItemClassesSet(numRule, index, value); end,
                 control = "Dropdown"
+            },
+            AtLeastOneItemClass = {
+                order = OrderPP(), type = "description", width = "full",
+                name = addon.L["AtLeastOneItemClass"]:SetColorLightRed(),
+                fontSize = "medium"
             },
             ConditionsHeader = {
                 order = OrderPP(), type = "header",
@@ -150,12 +238,15 @@ local function AddRuleTable(numRule)
             }
         }
     });
+    CheckIfRuleIsValid(numRule);
 end
 
 local function AddNewRuleFunc()
     addon.Options.db.AutoSell.RulesHistoryCounter = addon.Options.db.AutoSell.RulesHistoryCounter + 1;
     tinsert(addon.Options.db.AutoSell.Rules, {
         Name = "Rule " .. addon.Options.db.AutoSell.RulesHistoryCounter,
+        IsValid = false,
+        NumSelectedItemClasses = 0,
         ItemClasses = {},
         Conditions = {}
     });
@@ -164,38 +255,33 @@ local function AddNewRuleFunc()
     AddNewConditionFunc(numRules);
 end
 
-function autoSell.PostLoad()
+local function CleanUpRemovedRules()
     -- Clean up deleted rules during previous session
     for i = #addon.Options.db.AutoSell.Rules, 1, -1 do
         if addon.Options.db.AutoSell.Rules[i] == removedFlag then
             tremove(addon.Options.db.AutoSell.Rules, i);
         end
     end
+end
 
-    for i, _ in next, addon.Options.db.AutoSell.Rules do
-        AddRuleTable(i);
-        -- Clean up deleted conditions during previous session
-        for j = #addon.Options.db.AutoSell.Rules[i].Conditions, 1, -1 do
-            if addon.Options.db.AutoSell.Rules[i].Conditions[j] == removedFlag then
-                tremove(addon.Options.db.AutoSell.Rules[i].Conditions, j);
-            end
-        end
-        for j, _ in next, addon.Options.db.AutoSell.Rules[i].Conditions do
-            AddConditionTable(i, j);
+local function CleanUpRemovedConditions(numRule)
+    -- Clean up deleted conditions during previous session
+    for i = #addon.Options.db.AutoSell.Rules[numRule].Conditions, 1, -1 do
+        if addon.Options.db.AutoSell.Rules[numRule].Conditions[i] == removedFlag then
+            tremove(addon.Options.db.AutoSell.Rules[numRule].Conditions, i);
         end
     end
 end
 
-local function ShowAlert(message)
-	StaticPopupDialogs["KROWIV_ALERT"] = {
-		text = message,
-		button1 = OKAY,
-		hideOnEscape = true,
-		timeout = 0,
-		exclusive = true,
-		whileDead = true,
-	}
-	StaticPopup_Show("KROWIV_ALERT")
+function autoSell.PostLoad()
+    CleanUpRemovedRules();
+    for i, _ in next, addon.Options.db.AutoSell.Rules do
+        AddRuleTable(i);
+        CleanUpRemovedConditions(i);
+        for j, _ in next, addon.Options.db.AutoSell.Rules[i].Conditions do
+            AddConditionTable(i, j);
+        end
+    end
 end
 
 local function ItemLevelSet(_, value)
@@ -206,6 +292,41 @@ local function ItemLevelSet(_, value)
     else
         addon.Options.db.AutoSell.ItemLevel = tonumber(value);
     end
+end
+
+hooksecurefunc(SettingsPanel, "Hide", function()
+    if not removedElementPending then
+        return;
+    end
+
+    CleanUpRemovedRules();
+    for i, _ in next, addon.Options.db.AutoSell.Rules do
+        CleanUpRemovedConditions(i);
+    end
+    removedElementPending = nil;
+end);
+
+-- local function OpenBackpack()
+--     if ContainerFrameSettingsManager:IsUsingCombinedBags() then
+-- 		OpenBag(Enum.BagIndex.Backpack);
+-- 		return;
+-- 	end
+-- 	if not GetBackpackFrame() then
+-- 		ToggleBackpack();
+-- 	end
+-- end
+
+local function GetUIPanelAttribute(frame, name)
+	if not frame:GetAttribute("UIPanelLayout-defined") then
+	    local attributes = UIPanelWindows[frame:GetName()];
+	    if not attributes then
+			return;
+	    end
+		SetFrameAttributes(frame, attributes);
+	end
+    print(name)
+    print(frame:GetName())
+	return frame:GetAttribute("UIPanelLayout-"..name);
 end
 
 options.OptionsTable.args["AutoSell"] = {
@@ -326,6 +447,16 @@ options.OptionsTable.args["AutoSell"] = {
                     name = addon.L["Add new rule"],
                     desc = addon.L["Add new rule Desc"],
                     func = AddNewRuleFunc
+                },
+                OpenInventory = {
+                    order = OrderPP(), type = "execute", width = AdjustedWidth(),
+                    name = addon.L["Open inventory"],
+                    desc = addon.L["Open inventory Desc"],
+                    func = function()
+                        SettingsPanel:SetAttribute("UIPanelLayout-allowOtherPanels", 1);
+                        OpenAllBags(SettingsPanel);
+                        SettingsPanel:SetAttribute("UIPanelLayout-allowOtherPanels", nil);
+                    end
                 }
             }
         }
