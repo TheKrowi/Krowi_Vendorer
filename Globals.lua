@@ -8,40 +8,6 @@ function addon.GetPartialItemInfo(id)
     return itemTexture, color, itemName;
 end
 
-addon.Operators = {
-    "<",
-    "<=",
-    "==",
-    ">=",
-    ">"
-};
-
-addon.OperatorsEnum = addon.Util.Enum2{
-    "<",
-    "<=",
-    "==",
-    ">=",
-    ">"
-};
-
-addon.Operators = {
-    "<",
-    "<=",
-    "==",
-    ">=",
-    ">"
-};
-
-addon.CriteriaType = {
-    addon.L["Item level"],
-    addon.L["Soulbound"]
-};
-
-addon.CriteriaTypeEnum = addon.Util.Enum2{
-    "ItemLevel",
-    "Soulbound"
-};
-
 addon.ItemClass = tInvert(Enum.ItemClass);
 local obsoleteIds = {5, 6, 10, 11, 13, 14};
 for _, id in next, obsoleteIds do

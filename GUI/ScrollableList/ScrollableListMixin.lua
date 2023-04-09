@@ -7,7 +7,7 @@ function KrowiV_ScrollableListMixin:OnLoad()
     self.DataProvider = CreateDataProvider();
     self.DataProvider:SetSortComparator(function (a, b) return a.Name < b.Name end, true);
 
-    local elementExtent = 30; -- Better performance if hardcoded, must be same as KrowiV_ScrollableListItem_Template
+    local elementExtent = 30; -- Better performance if hardcoded, must be same height as KrowiV_ScrollableListItem_Template
 
     self.ScrollView = CreateScrollBoxListLinearView();
     self.ScrollView:SetDataProvider(self.DataProvider);
