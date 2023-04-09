@@ -24,5 +24,5 @@ L["Rule x"] = "Rule {x}";
 L["Condition x"] = "Condition {x}";
 
 L["Auto Repair Is Enabled"] = "Repair all items automatically when you visit a vendor that can do it.";
-L["Auto Repair Is Guild Enabled"] = "Partially or fully repair items with guild funds, if available.";
+L["Auto Repair Is Guild Enabled"] = "Prefer guild funds to repair, if available.";
 L["Auto Repair Print Chat Message"] = "Enable to print auto repair messages in the chat.";

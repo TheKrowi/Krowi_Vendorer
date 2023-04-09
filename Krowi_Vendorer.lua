@@ -18,6 +18,7 @@ loadHelper:RegisterEvent("GUILDBANK_UPDATE_MONEY");
 loadHelper:RegisterEvent("HEIRLOOMS_UPDATED");
 loadHelper:RegisterEvent("BAG_UPDATE");
 loadHelper:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL");
+loadHelper:RegisterEvent("MERCHANT_SHOW");
 
 function loadHelper:OnEvent(event, arg1, arg2)
     if event == "ADDON_LOADED" then
@@ -46,6 +47,8 @@ function loadHelper:OnEvent(event, arg1, arg2)
     --     print("BAG_UPDATE");
     elseif event == "MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL" then
     --     print("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL");
+    elseif event == "MERCHANT_SHOW" then
+    --     print("MERCHANT_SHOW");
     end
 end
 loadHelper:SetScript("OnEvent", loadHelper.OnEvent);
