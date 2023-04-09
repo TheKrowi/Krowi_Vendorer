@@ -2,7 +2,7 @@
     <Script file="Objects.lua" />
     <Script file="DualItemListSide.lua" />
     <Script file="InstanceType.lua" />
-    <!-- <Script file="TransmogSet.lua" /> -->
+    <Script file="CriteriaType.lua" />
     <!-- <Script file="Achievement.lua" /> -->
     <!-- <Script file="Category.lua" /> -->
     <!-- <Script file="Event.lua" /> -->

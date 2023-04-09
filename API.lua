@@ -23,15 +23,29 @@ do --[[ KrowiV_InjectOptions ]]
 		return destTable[key];
 	end
 
-	function KrowiV_InjectOptions:TableExists(destTablePath)
+	function KrowiV_InjectOptions:GetTable(destTablePath)
 		local destTable = self.OptionsTable.args;
 		local pathParts = strsplittable(".", destTablePath);
 		for _, part in next, pathParts do
 			destTable = destTable[part];
 		end
+		return destTable;
+	end
+
+	function KrowiV_InjectOptions:TableExists(destTablePath)
+		local destTable = KrowiV_InjectOptions:GetTable(destTablePath)
 		return destTable and true or false;
 	end
-    
+
+	-- function KrowiV_InjectOptions:DeleteTable(destTablePath)
+	-- 	local destTable = self.OptionsTable.args;
+	-- 	local pathParts = strsplittable(".", destTablePath);
+	-- 	for _, part in next, pathParts do
+	-- 		destTable = destTable[part];
+	-- 	end
+	-- 	destTable = nil;
+	-- end
+
     function KrowiV_InjectOptions:SetOptions(options)
         self.Options = options;
     end
