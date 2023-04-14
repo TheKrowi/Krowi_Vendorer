@@ -138,7 +138,8 @@
         "SettingsPanel",
         "C_Transmog",
         "CanIMogIt",
-        "OpenAllBags"
+        "OpenAllBags",
+        "GetItemSubClassInfo"
     ],
     "fsdeploy.nodes": [
         {

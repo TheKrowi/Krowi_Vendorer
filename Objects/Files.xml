@@ -4,6 +4,7 @@
     <Script file="InstanceType.lua" />
     <Script file="EqualityOperator.lua" />
     <Script file="CriteriaType.lua" />
+    <Script file="ItemType.lua" />
     <!-- <Script file="Category.lua" /> -->
     <!-- <Script file="Event.lua" /> -->
     <!-- <Script file="Tab.lua" /> -->

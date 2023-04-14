@@ -27,7 +27,9 @@ function loadHelper:OnEvent(event, arg1, arg2)
 
             addon.Data.AutoJunk.Load();
 
-            addon.Options.Load();
+            addon.Objects.ItemType.Load();
+
+            addon.Options.Load(); -- Needs ItemType
 
             addon.GUI.ItemListFrame.JunkList.Init(true);
             addon.GUI.ItemListFrame.IgnoreList.Init(true);
