@@ -5,7 +5,7 @@ local autoRepair = addon.Data.AutoRepair;
 
 local function GetGuildBankRepairMoney()
     -- If player doesn't enable KV Guild Auto Repair
-    if (not addon.Options.db.AutoRepair.IsGuildEnabled) then
+    if not addon.Options.db.AutoRepair.IsGuildEnabled then
         return 0;
     end
 
@@ -14,98 +14,118 @@ local function GetGuildBankRepairMoney()
         return 0;
     end
 
+    -- Blizzard odd API behavior: If Guild Bank wasn't opened after login, it returns 0.
+    -- But if it was opened on any character logged in before, it returns that char's bankk value
+    -- So we can only trust it and test when we try to repair, if it's enough
     local guildBankMoney = GetGuildBankMoney();
     local guildBankWithdrawMoney = GetGuildBankWithdrawMoney();
     -- If Guild Master, just return all the bank money
-    if (guildBankWithdrawMoney == 2 ^ 64) then
+    if guildBankWithdrawMoney == 2 ^ 64 then
         return guildBankMoney;
     end
+
     -- Return the lowest of the two, in case you can repair more than the bank can have
     return math.min(guildBankMoney, guildBankWithdrawMoney);
 end
 
 local function DoAutoRepair()
     -- If merchant can't repair
-    if (not CanMerchantRepair()) then return end
+    if not CanMerchantRepair() then return; end
 
     local repairAllCost = GetRepairAllCost();
     -- If there's nothing to repair
-    if (repairAllCost == 0) then return end
+    if repairAllCost == 0 then return; end
+
+    local gold = math.floor(repairAllCost / 10000);
+    local silver = math.floor((repairAllCost / 100) % 100);
+    local copper = repairAllCost % 100;
 
     local playerMoney = GetMoney();
     local guildBankMoney = GetGuildBankRepairMoney();
 
-    -- If guild funds are available, but my repair cost is too much, try to repair from personal funds
-    if (guildBankMoney > 0 and repairAllCost > guildBankMoney) then
-        if (addon.Options.db.AutoRepair.PrintChatMessage) then
-            if (addon.Options.db.AutoRepair.PrintChatMessage) then
-                print("[KV] Not enough guild funds to repair, using personal!");
-            end
-            RepairAllItems(false);
-            if (addon.Options.db.AutoRepair.PrintChatMessage) then
-                print("[KV] Repaired with personal funds " ..
-                    math.floor(repairAllCost / 10000) .. "g " ..
-                    math.floor((repairAllCost / 100) % 100) .. "s " ..
-                    repairAllCost % 100 .. "c ");
-            end
-        end
-        return
-        -- If guild funds are available and I can repair
-    elseif (guildBankMoney > 0 and repairAllCost <= guildBankMoney) then
+    -- If guild funds are available and I can repair
+    if (guildBankMoney > 0 and repairAllCost <= guildBankMoney) then
         RepairAllItems(true);
-        if (addon.Options.db.AutoRepair.PrintChatMessage) then
-            print("[KV] Repaired with guild funds " ..
-                math.floor(repairAllCost / 10000) .. "g " ..
-                math.floor((repairAllCost / 100) % 100) .. "s " ..
-                repairAllCost % 100 .. "c ");
-            repairAllCost = 0;
+        -- TODO Test UI_ERROR_MESSAGE event with msg type 154 and repair from personal (Bliz bug)
+        PlaySound(SOUNDKIT.ITEM_REPAIR);
+
+        if addon.Options.db.AutoRepair.PrintChatMessage then
+            print(addon.L["Auto Repair Repaired Guild"]:ReplaceVars { g = gold, s = silver, c = copper });
         end
+        return;
     end
 
-    -- If I haven't repaired from guild, there is still a cost and I have money
-    if (repairAllCost > 0 and playerMoney >= GetRepairAllCost()) then
-        RepairAllItems(false);
-        if (addon.Options.db.AutoRepair.PrintChatMessage) then
-            print("[KV] Repaired with personal funds " ..
-                math.floor(repairAllCost / 10000) .. "g " ..
-                math.floor((repairAllCost / 100) % 100) .. "s " ..
-                repairAllCost % 100 .. "c ");
+    -- If guild funds are available, but my repair cost is too much, try to repair from personal funds
+    if (guildBankMoney > 0 and repairAllCost > guildBankMoney) then
+        if addon.Options.db.AutoRepair.PrintChatMessage then
+            print(addon.L["Auto Repair No Guild Funds Use Personal"]);
         end
+
+        -- If I don't have any funds to repair
+        if playerMoney < repairAllCost then
+            if addon.Options.db.AutoRepair.PrintChatMessage then
+                print(addon.L["Auto Repair No Personal"]);
+            end
+            return;
+        end
+
+        RepairAllItems(false);
+        PlaySound(SOUNDKIT.ITEM_REPAIR);
+
+        if addon.Options.db.AutoRepair.PrintChatMessage then
+            print(addon.L["Auto Repair Repaired Personal"]:ReplaceVars { g = gold, s = silver, c = copper });
+        end
+        return;
+    end
+
+    -- If guild funds aren't available, try to repair from personal funds
+    if playerMoney >= GetRepairAllCost() then
+        RepairAllItems(false);
+        PlaySound(SOUNDKIT.ITEM_REPAIR);
+        if addon.Options.db.AutoRepair.PrintChatMessage then
+            print(addon.L["Auto Repair Repaired Personal"]:ReplaceVars { g = gold, s = silver, c = copper });
+        end
+        return;
     end
 
     -- If I don't have any funds to repair
-    if (playerMoney < repairAllCost) then
-        if (addon.Options.db.AutoRepair.PrintChatMessage) then
-            print("[KV] Not enough personal funds to repair!");
+    if playerMoney < repairAllCost then
+        if addon.Options.db.AutoRepair.PrintChatMessage then
+            print(addon.L["Auto Repair No Personal"]);
         end
-        return
+        return;
     end
-    -- Doesn't play?
-    --PlaySound(SOUNDKIT.ITEM_REPAIR);
 end
 
 local function TryAutoRepair()
     -- If player doesn't enable KV Auto Repair
-    if (not addon.Options.db.AutoRepair.IsEnabled) then
-        return;
-    end
+    if not addon.Options.db.AutoRepair.IsEnabled then return; end
 
     local repairAllCost, canRepair = GetRepairAllCost();
     -- If repairs aren't needed
-    if (not canRepair) then
-        return
+    if not canRepair then
+        return;
     else
         DoAutoRepair();
     end
 end
 
+local function HandleFakeGuildBankGold()
+    print("fake gold");
+end
+
 
 local loadHelper = CreateFrame("Frame");
 loadHelper:RegisterEvent("MERCHANT_SHOW");
+loadHelper:RegisterEvent("UI_ERROR_MESSAGE");
 
 function loadHelper:OnEvent(event, arg1, arg2)
     if event == "MERCHANT_SHOW" then
         TryAutoRepair();
+    end
+    -- The guild bank does not have enough money
+    if (event == "UI_ERROR_MESSAGE" and arg1 == 154) then
+        HandleFakeGuildBankGold();
     end
 end
 

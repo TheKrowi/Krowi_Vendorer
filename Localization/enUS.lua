@@ -26,3 +26,8 @@ L["Condition x"] = "Condition {x}";
 L["Auto Repair Is Enabled"] = "Repair all items automatically when you visit a vendor that can do it.";
 L["Auto Repair Is Guild Enabled"] = "Prefer guild funds to repair, if available.";
 L["Auto Repair Print Chat Message"] = "Enable to print auto repair messages in the chat.";
+
+L["Auto Repair No Guild Funds Use Personal"] = "[KV] Not enough guild funds to repair, trying personal funds.";
+L["Auto Repair No Personal"] = "[KV] Not enough personal funds to repair.";
+L["Auto Repair Repaired Personal"] = "[KV] Repaired with personal funds {g}g {s}s {c}c.";
+L["Auto Repair Repaired Guild"] = "[KV] Repaired with guild funds {g}g {s}s {c}c.";
