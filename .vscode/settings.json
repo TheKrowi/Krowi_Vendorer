@@ -135,7 +135,11 @@
         "GetOptionsMemberValue",
         "LE_ITEM_BIND_ON_ACQUIRE",
         "ShowAlert",
-        "SettingsPanel"
+        "SettingsPanel",
+        "GetRepairAllCost",
+        "CanMerchantRepair",
+        "GetMoney",
+        "RepairAllItems"
     ],
     "fsdeploy.nodes": [
         {

@@ -3,6 +3,8 @@ local addonName, addon = ...;
 addon.Data.AutoRepair = {};
 local autoRepair = addon.Data.AutoRepair;
 
+local co, fail;
+
 local function GetGuildBankRepairMoney()
     -- If player doesn't enable KV Guild Auto Repair
     if not addon.Options.db.AutoRepair.IsGuildEnabled then
@@ -75,13 +77,16 @@ local function DoAutoRepair()
     -- If guild funds are available and I can repair
     if (guildBankMoney > 0 and repairAllCost <= guildBankMoney) then
         RepairAllItems(true);
-        -- TODO Test UI_ERROR_MESSAGE event with msg type 154 and repair from personal (Bliz bug)
-        PlaySound(SOUNDKIT.ITEM_REPAIR);
+        coroutine.yield();
 
-        if addon.Options.db.AutoRepair.PrintChatMessage then
-            print(addon.L["Auto Repair Repaired Guild"]:ReplaceVars { g = gold, s = silver, c = copper });
+        if not fail then
+            PlaySound(SOUNDKIT.ITEM_REPAIR);
+
+            if addon.Options.db.AutoRepair.PrintChatMessage then
+                print(addon.L["Auto Repair Repaired Guild"]:ReplaceVars { g = gold, s = silver, c = copper });
+            end
+            return;
         end
-        return;
     end
 
     -- If guild funds are available, but my repair cost is too much, try to repair from personal funds
@@ -110,40 +115,44 @@ local function DoAutoRepair()
     DoPersonalRepairs();
 end
 
-local function TryAutoRepair()
+local function TryAutoRepairAsync()
     -- If player doesn't enable KV Auto Repair
     if not addon.Options.db.AutoRepair.IsEnabled then return; end
 
-    local repairAllCost, canRepair = GetRepairAllCost();
+    local _, canRepair = GetRepairAllCost();
     -- If repairs aren't needed
     if not canRepair then
         return;
-    else
-        DoAutoRepair();
     end
-end
 
-local function HandleFakeGuildBankGold()
-    local repairAllCost, canRepair = GetRepairAllCost();
-    if not canRepair then
-        return;
-    else
-        DoPersonalRepairs();
-    end
+    co = coroutine.create(DoAutoRepair);
+    coroutine.resume(co);
 end
 
 local loadHelper = CreateFrame("Frame");
 loadHelper:RegisterEvent("MERCHANT_SHOW");
-loadHelper:RegisterEvent("UI_ERROR_MESSAGE");
+-- loadHelper:RegisterEvent("UI_ERROR_MESSAGE");
 
 function loadHelper:OnEvent(event, arg1, arg2)
     if event == "MERCHANT_SHOW" then
-        TryAutoRepair();
+        TryAutoRepairAsync();
     end
+
     -- 154 The guild bank does not have enough money
-    if (event == "UI_ERROR_MESSAGE" and arg1 == 154) then
-        HandleFakeGuildBankGold();
+    if event == "UI_ERROR_MESSAGE" and arg1 == 154 then
+        fail = true;
+        if co ~= nil then
+            coroutine.resume(co);
+        end
+    end
+
+    if event == "UPDATE_INVENTORY_DURABILITY" then
+        fail = nil;
+        if co ~= nil then
+            coroutine.resume(co);
+        end
     end
 end
-
 loadHelper:SetScript("OnEvent", loadHelper.OnEvent);
+
+
