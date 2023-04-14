@@ -30,9 +30,7 @@ local function GetGuildBankRepairMoney()
     return math.min(guildBankMoney, guildBankWithdrawMoney);
 end
 
-local function DoPersonalRepairs()
-    local playerMoney = GetMoney();
-    local repairAllCost = GetRepairAllCost();
+local function TryPersonalRepairs(playerMoney, repairAllCost)
     -- If there's nothing to repair
     if repairAllCost == 0 then return; end
 
@@ -40,8 +38,7 @@ local function DoPersonalRepairs()
     local silver = math.floor((repairAllCost / 100) % 100);
     local copper = repairAllCost % 100;
 
-    -- If guild funds aren't available, try to repair from personal funds
-    if playerMoney >= GetRepairAllCost() then
+    if playerMoney >= repairAllCost then
         RepairAllItems(false);
         PlaySound(SOUNDKIT.ITEM_REPAIR);
         if addon.Options.db.AutoRepair.PrintChatMessage then
@@ -94,25 +91,11 @@ local function DoAutoRepair()
         if addon.Options.db.AutoRepair.PrintChatMessage then
             print(addon.L["Auto Repair No Guild Funds Use Personal"]);
         end
-
-        -- If I don't have any funds to repair
-        if playerMoney < repairAllCost then
-            if addon.Options.db.AutoRepair.PrintChatMessage then
-                print(addon.L["Auto Repair No Personal"]);
-            end
-            return;
-        end
-
-        RepairAllItems(false);
-        PlaySound(SOUNDKIT.ITEM_REPAIR);
-
-        if addon.Options.db.AutoRepair.PrintChatMessage then
-            print(addon.L["Auto Repair Repaired Personal"]:ReplaceVars { g = gold, s = silver, c = copper });
-        end
-        return;
+        TryPersonalRepairs(playerMoney, repairAllCost)
+    -- If no guild funds are available, just try repairing from personal funds
+    else
+        TryPersonalRepairs(playerMoney, repairAllCost);
     end
-
-    DoPersonalRepairs();
 end
 
 local function TryAutoRepairAsync()
