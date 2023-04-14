@@ -29,5 +29,4 @@ L["Auto Repair Print Chat Message"] = "Enable to print auto repair messages in t
 
 L["Auto Repair No Guild Funds Use Personal"] = "[KV] Not enough guild funds to repair, trying personal funds.";
 L["Auto Repair No Personal"] = "[KV] Not enough personal funds to repair.";
-L["Auto Repair Repaired Personal"] = "[KV] Repaired with personal funds {g}g {s}s {c}c.";
-L["Auto Repair Repaired Guild"] = "[KV] Repaired with guild funds {g}g {s}s {c}c.";
+L["Auto Repair Repaired"] = "[KV] Repaired {g}g {s}s {c}c.";

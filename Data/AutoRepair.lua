@@ -12,7 +12,7 @@ local function GetGuildBankRepairMoney()
     end
 
     -- If player can't repair, or is not in a guild
-    if (not CanGuildBankRepair() or not GetGuildInfo("player")) then
+    if not CanGuildBankRepair() or not GetGuildInfo("player") then
         return 0;
     end
 
@@ -42,7 +42,7 @@ local function TryPersonalRepairs(playerMoney, repairAllCost)
         RepairAllItems(false);
         PlaySound(SOUNDKIT.ITEM_REPAIR);
         if addon.Options.db.AutoRepair.PrintChatMessage then
-            print(addon.L["Auto Repair Repaired Personal"]:ReplaceVars { g = gold, s = silver, c = copper });
+            print(addon.L["Auto Repair Repaired"]:ReplaceVars { g = gold, s = silver, c = copper }:SetColorYellow());
         end
         return;
     end
@@ -50,49 +50,48 @@ local function TryPersonalRepairs(playerMoney, repairAllCost)
     -- If I don't have any funds to repair
     if playerMoney < repairAllCost then
         if addon.Options.db.AutoRepair.PrintChatMessage then
-            print(addon.L["Auto Repair No Personal"]);
+            print(addon.L["Auto Repair No Personal"]:SetColorYellow());
         end
         return;
     end
 end
 
 local function DoAutoRepair()
-    -- If merchant can't repair
-    if not CanMerchantRepair() then return; end
-
     local repairAllCost = GetRepairAllCost();
-    -- If there's nothing to repair
-    if repairAllCost == 0 then return; end
-
     local gold = math.floor(repairAllCost / 10000);
     local silver = math.floor((repairAllCost / 100) % 100);
     local copper = repairAllCost % 100;
-
     local playerMoney = GetMoney();
     local guildBankMoney = GetGuildBankRepairMoney();
 
     -- If guild funds are available and I can repair
-    if (guildBankMoney > 0 and repairAllCost <= guildBankMoney) then
+    if guildBankMoney > 0 and repairAllCost <= guildBankMoney then
+        -- If guild funds are somehow unavailable (L19), it silently repairs with player funds
         RepairAllItems(true);
         coroutine.yield();
 
         if not fail then
             PlaySound(SOUNDKIT.ITEM_REPAIR);
-
             if addon.Options.db.AutoRepair.PrintChatMessage then
-                print(addon.L["Auto Repair Repaired Guild"]:ReplaceVars { g = gold, s = silver, c = copper });
+                print(addon.L["Auto Repair Repaired"]:ReplaceVars { g = gold, s = silver, c = copper }:SetColorYellow());
             end
+            return;
+        end
+        -- If guild bank repair fails, has fake money L19, use personal funds
+        if fail then
+            print(addon.L["Auto Repair No Guild Funds Use Personal"]:SetColorYellow());
+            TryPersonalRepairs(playerMoney, repairAllCost);
             return;
         end
     end
 
     -- If guild funds are available, but my repair cost is too much, try to repair from personal funds
-    if (guildBankMoney > 0 and repairAllCost > guildBankMoney) then
+    if guildBankMoney > 0 and repairAllCost > guildBankMoney then
         if addon.Options.db.AutoRepair.PrintChatMessage then
-            print(addon.L["Auto Repair No Guild Funds Use Personal"]);
+            print(addon.L["Auto Repair No Guild Funds Use Personal"]:SetColorYellow());
         end
         TryPersonalRepairs(playerMoney, repairAllCost)
-    -- If no guild funds are available, just try repairing from personal funds
+        -- If no guild funds are available, just try repairing from personal funds
     else
         TryPersonalRepairs(playerMoney, repairAllCost);
     end
@@ -106,6 +105,9 @@ local function TryAutoRepairAsync()
     -- If repairs aren't needed
     if not canRepair then
         return;
+        -- If merchant can't repair
+    elseif not CanMerchantRepair() then
+        return;
     end
 
     co = coroutine.create(DoAutoRepair);
@@ -114,7 +116,8 @@ end
 
 local loadHelper = CreateFrame("Frame");
 loadHelper:RegisterEvent("MERCHANT_SHOW");
--- loadHelper:RegisterEvent("UI_ERROR_MESSAGE");
+loadHelper:RegisterEvent("UI_ERROR_MESSAGE");
+loadHelper:RegisterEvent("UPDATE_INVENTORY_DURABILITY");
 
 function loadHelper:OnEvent(event, arg1, arg2)
     if event == "MERCHANT_SHOW" then
@@ -129,6 +132,7 @@ function loadHelper:OnEvent(event, arg1, arg2)
         end
     end
 
+    -- If successful repair event
     if event == "UPDATE_INVENTORY_DURABILITY" then
         fail = nil;
         if co ~= nil then
@@ -136,6 +140,5 @@ function loadHelper:OnEvent(event, arg1, arg2)
         end
     end
 end
+
 loadHelper:SetScript("OnEvent", loadHelper.OnEvent);
-
-
