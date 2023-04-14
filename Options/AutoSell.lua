@@ -306,29 +306,6 @@ hooksecurefunc(SettingsPanel, "Hide", function()
     removedElementPending = nil;
 end);
 
--- local function OpenBackpack()
---     if ContainerFrameSettingsManager:IsUsingCombinedBags() then
--- 		OpenBag(Enum.BagIndex.Backpack);
--- 		return;
--- 	end
--- 	if not GetBackpackFrame() then
--- 		ToggleBackpack();
--- 	end
--- end
-
-local function GetUIPanelAttribute(frame, name)
-	if not frame:GetAttribute("UIPanelLayout-defined") then
-	    local attributes = UIPanelWindows[frame:GetName()];
-	    if not attributes then
-			return;
-	    end
-		SetFrameAttributes(frame, attributes);
-	end
-    print(name)
-    print(frame:GetName())
-	return frame:GetAttribute("UIPanelLayout-"..name);
-end
-
 options.OptionsTable.args["AutoSell"] = {
     type = "group", childGroups = "tab",
     name = addon.L["Auto Sell"],

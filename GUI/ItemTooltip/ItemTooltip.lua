@@ -299,6 +299,40 @@ local function ProcessItem(_tooltip, bag, slot)
         end
     end
 
+    GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
+    _tooltip:AddDoubleLine("itemName", itemName);
+    _tooltip:AddDoubleLine("itemLink", itemLink);
+    _tooltip:AddDoubleLine("itemQuality", itemQuality);
+    _tooltip:AddDoubleLine("itemLevel", itemLevel);
+    _tooltip:AddDoubleLine("itemMinLevel", itemMinLevel);
+    _tooltip:AddDoubleLine("itemType", itemType);
+    _tooltip:AddDoubleLine("itemSubType", itemSubType);
+    _tooltip:AddDoubleLine("itemStackCount", itemStackCount);
+    _tooltip:AddDoubleLine("itemEquipLoc", itemEquipLoc);
+    _tooltip:AddDoubleLine("itemTexture", itemTexture);
+    _tooltip:AddDoubleLine("sellPrice", sellPrice);
+    _tooltip:AddDoubleLine("classID", classID);
+    _tooltip:AddDoubleLine("subclassID", subclassID);
+    _tooltip:AddDoubleLine("bindType", bindType);
+    _tooltip:AddDoubleLine("expacID", expacID);
+    _tooltip:AddDoubleLine("setID", setID);
+    _tooltip:AddDoubleLine("isCraftingReagent", isCraftingReagent);
+
+    local playerKnowsTransmogFromItem, isValidAppearanceForCharacter, playerKnowsTransmog, characterCanLearnTransmog;
+    local canIMogIt = CanIMogIt; --LibStub("AceAddon-3.0"):GetAddon("CanIMogIt");
+    if canIMogIt then
+        playerKnowsTransmogFromItem = canIMogIt:PlayerKnowsTransmogFromItem(itemLink);
+        isValidAppearanceForCharacter = canIMogIt:IsValidAppearanceForCharacter(itemLink)
+        playerKnowsTransmog = canIMogIt:PlayerKnowsTransmog(itemLink)
+        characterCanLearnTransmog = canIMogIt:CharacterCanLearnTransmog(itemLink)
+    end
+    GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
+    _tooltip:AddDoubleLine("CanIMogIt", canIMogIt and "yes" or "no");
+    _tooltip:AddDoubleLine("playerKnowsTransmogFromItem", playerKnowsTransmogFromItem and "yes" or "no");
+    _tooltip:AddDoubleLine("isValidAppearanceForCharacter", isValidAppearanceForCharacter and "yes" or "no");
+    _tooltip:AddDoubleLine("playerKnowsTransmog", playerKnowsTransmog and "yes" or "no");
+    _tooltip:AddDoubleLine("characterCanLearnTransmog", characterCanLearnTransmog and "yes" or "no");
+    
     _tooltip:Show();
 end
 
