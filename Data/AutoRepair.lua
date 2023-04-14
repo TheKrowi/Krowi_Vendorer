@@ -15,8 +15,8 @@ local function GetGuildBankRepairMoney()
     end
 
     -- Blizzard odd API behavior: If Guild Bank wasn't opened after login, it returns 0.
-    -- But if it was opened on any character logged in before, it returns that char's bankk value
-    -- So we can only trust it and test when we try to repair, if it's enough
+    -- But if it was opened on any character logged in before, it returns that char's bank value
+    -- So we can only trust it and test fail when we try to repair, if it's enough
     local guildBankMoney = GetGuildBankMoney();
     local guildBankWithdrawMoney = GetGuildBankWithdrawMoney();
     -- If Guild Master, just return all the bank money
@@ -26,6 +26,35 @@ local function GetGuildBankRepairMoney()
 
     -- Return the lowest of the two, in case you can repair more than the bank can have
     return math.min(guildBankMoney, guildBankWithdrawMoney);
+end
+
+local function DoPersonalRepairs()
+    local playerMoney = GetMoney();
+    local repairAllCost = GetRepairAllCost();
+    -- If there's nothing to repair
+    if repairAllCost == 0 then return; end
+
+    local gold = math.floor(repairAllCost / 10000);
+    local silver = math.floor((repairAllCost / 100) % 100);
+    local copper = repairAllCost % 100;
+
+    -- If guild funds aren't available, try to repair from personal funds
+    if playerMoney >= GetRepairAllCost() then
+        RepairAllItems(false);
+        PlaySound(SOUNDKIT.ITEM_REPAIR);
+        if addon.Options.db.AutoRepair.PrintChatMessage then
+            print(addon.L["Auto Repair Repaired Personal"]:ReplaceVars { g = gold, s = silver, c = copper });
+        end
+        return;
+    end
+
+    -- If I don't have any funds to repair
+    if playerMoney < repairAllCost then
+        if addon.Options.db.AutoRepair.PrintChatMessage then
+            print(addon.L["Auto Repair No Personal"]);
+        end
+        return;
+    end
 end
 
 local function DoAutoRepair()
@@ -78,23 +107,7 @@ local function DoAutoRepair()
         return;
     end
 
-    -- If guild funds aren't available, try to repair from personal funds
-    if playerMoney >= GetRepairAllCost() then
-        RepairAllItems(false);
-        PlaySound(SOUNDKIT.ITEM_REPAIR);
-        if addon.Options.db.AutoRepair.PrintChatMessage then
-            print(addon.L["Auto Repair Repaired Personal"]:ReplaceVars { g = gold, s = silver, c = copper });
-        end
-        return;
-    end
-
-    -- If I don't have any funds to repair
-    if playerMoney < repairAllCost then
-        if addon.Options.db.AutoRepair.PrintChatMessage then
-            print(addon.L["Auto Repair No Personal"]);
-        end
-        return;
-    end
+    DoPersonalRepairs();
 end
 
 local function TryAutoRepair()
@@ -111,9 +124,13 @@ local function TryAutoRepair()
 end
 
 local function HandleFakeGuildBankGold()
-    print("fake gold");
+    local repairAllCost, canRepair = GetRepairAllCost();
+    if not canRepair then
+        return;
+    else
+        DoPersonalRepairs();
+    end
 end
-
 
 local loadHelper = CreateFrame("Frame");
 loadHelper:RegisterEvent("MERCHANT_SHOW");
@@ -123,7 +140,7 @@ function loadHelper:OnEvent(event, arg1, arg2)
     if event == "MERCHANT_SHOW" then
         TryAutoRepair();
     end
-    -- The guild bank does not have enough money
+    -- 154 The guild bank does not have enough money
     if (event == "UI_ERROR_MESSAGE" and arg1 == 154) then
         HandleFakeGuildBankGold();
     end
