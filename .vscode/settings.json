@@ -146,7 +146,11 @@
         "GetItemSubClassInfo",
         "KrowiV_SingleItemListFrame",
         "ButtonFrameTemplate_ShowButtonBar",
-        "C_Timer"
+        "C_Timer",
+        "CanGuildBankRepair",
+        "GetGuildInfo",
+        "GetGuildBankMoney",
+        "GetGuildBankWithdrawMoney"
     ],
     "fsdeploy.nodes": [
         {
