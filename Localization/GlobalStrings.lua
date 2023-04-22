@@ -39,4 +39,24 @@ function globalStrings.Load(L)
     L["Battle for Azeroth"] = EXPANSION_NAME7;
     L["Shadowlands"] = EXPANSION_NAME8;
     L["Dragonflight"] = EXPANSION_NAME9;
+    L["Item Level"] = STAT_AVERAGE_ITEM_LEVEL;
+    L["Soulbound"] = ITEM_SOULBOUND;
+    L["Quality"] = QUALITY;
+    
+    L["Direction"] = HUD_EDIT_MODE_SETTING_BAGS_DIRECTION;
+    L["General"] = GENERAL;
+    L["Info"] = INFO;
+    L["Version"] = GAME_VERSION_LABEL;
+    L["Sources"] = SOURCES;
+    L["Icon"] = EMBLEM_SYMBOL;
+    L["Minimap"] = MINIMAP_LABEL;
+    L["Name"] = NAME;
+    L["Delete"] = DELETE;
+    L["Quality"] = QUALITY;
+    L["Quality"] = QUALITY;
+    L["Quality"] = QUALITY;
+    L["Quality"] = QUALITY;
+    
+
+    SOURCES = "Sources";
 end

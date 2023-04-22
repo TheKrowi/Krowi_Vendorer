@@ -61,6 +61,7 @@ do -- [[ Rule ]]
                 DeleteRule = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.5),
                     name = addon.L["Delete rule"],
+                    desc = addon.L["Delete rule Desc"],
                     func = function()
                         options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule] = nil;
                         addon.Options.db.AutoSell.Rules[numRule] = removedFlag;
@@ -69,12 +70,12 @@ do -- [[ Rule ]]
                 },
                 InvalidRule = {
                     order = OrderPP(), type = "description", width = "full",
-                    name = addon.L["InvalidRule"]:SetColorLightRed(),
+                    name = addon.L["Invalid Rule"]:SetColorLightRed(),
                     fontSize = "medium"
                 },
-                ItemClassesHeader = {
+                ItemTypeHeader = {
                     order = OrderPP(), type = "header",
-                    name = addon.L["Sell selected item types"]
+                    name = addon.L["Item types and sub types"]
                 },
                 ItemTypes = {
                     order = OrderPP(), type = "group", inline = true,
@@ -83,15 +84,11 @@ do -- [[ Rule ]]
                         AddNewItemType = {
                             order = OrderPP(), type = "execute",
                             name = addon.L["Add new item type"],
+                            desc = addon.L["Add new item type Desc"],
                             func = function() autoSell.AddNewItemTypeFunc(numRule) end
                         }
                     }
                 },
-                -- AtLeastOneItemClass = {
-                --     order = OrderPP(), type = "description", width = "full",
-                --     name = addon.L["AtLeastOneItemClass"]:SetColorLightRed(),
-                --     fontSize = "medium"
-                -- },
                 ConditionsHeader = {
                     order = OrderPP(), type = "header",
                     name = addon.L["Conditions"]
@@ -103,6 +100,7 @@ do -- [[ Rule ]]
                         AddNewCondition = {
                             order = OrderPP(), type = "execute",
                             name = addon.L["Add new condition"],
+                            desc = addon.L["Add new condition Desc"],
                             func = function() autoSell.AddNewConditionFunc(numRule) end
                         }
                     }
@@ -194,12 +192,14 @@ do -- [[ ItemType ]]
                 CheckSubType = {
                     order = OrderPP(), type = "toggle", width = AdjustedWidth(0.8),
                     name = addon.L["Select sub type"],
+                    desc = addon.L["Select sub type Desc"],
                     get = function() return addon.Options.db.AutoSell.Rules[numRule].ItemTypes[numItemType].CheckSubType; end,
                     set = function(_, value) ItemTypeCheckSubTypeSet(numRule, numItemType, value); end
                 },
                 DeleteItemType = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
                     name = addon.L["Delete"],
+                    desc = addon.L["Delete type Desc"],
                     func = function() DeleteItemType(numRule, numItemType); end
                 },
                 InvalidItemType = {
@@ -217,9 +217,9 @@ do -- [[ ItemType ]]
                     control = "Dropdown",
                     hidden = function() return not addon.Options.db.AutoSell.Rules[numRule].ItemTypes[numItemType].CheckSubType; end
                 },
-                AtLeastOneItemClass = {
+                AtLeastOneItemSubTypeMustBeSelected = {
                     order = OrderPP(), type = "description", width = "full",
-                    name = addon.L["AtLeastOneItemClass"]:SetColorLightRed(),
+                    name = addon.L["At least one item sub type must be selected"]:SetColorLightRed(),
                     fontSize = "medium",
                     hidden = function()
                         local thisItemType = addon.Options.db.AutoSell.Rules[numRule].ItemTypes[numItemType];
@@ -374,6 +374,7 @@ do -- [[ Condition ]]
                 DeleteCondition = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
                     name = addon.L["Delete"],
+                    desc = addon.L["Delete Condition Desc"],
                     func = function()
                         options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args.Conditions.args["Condition" .. numCondition] = nil;
                         addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition] = removedFlag;
@@ -383,7 +384,7 @@ do -- [[ Condition ]]
                 },
                 InvalidCondition = {
                     order = OrderPP(), type = "description", width = "full",
-                    name = addon.L["InvalidCondition"]:SetColorLightRed(),
+                    name = addon.L["Invalid condition"]:SetColorLightRed(),
                     fontSize = "medium",
                     hidden = function() return addon.Options.db.AutoSell.Rules[numRule].Conditions[numCondition].IsValid; end
                 }

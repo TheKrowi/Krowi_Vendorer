@@ -178,7 +178,18 @@
         "CANCEL",
         "InterfaceOptions_AddCategory",
         "SELECTED_CHAT_FRAME",
-        "DEFAULT_CHAT_FRAME"
+        "DEFAULT_CHAT_FRAME",
+        "STAT_AVERAGE_ITEM_LEVEL",
+        "ITEM_SOULBOUND",
+        "QUALITY",
+        "HUD_EDIT_MODE_SETTING_BAGS_DIRECTION",
+        "GENERAL",
+        "INFO",
+        "GAME_VERSION_LABEL",
+        "EMBLEM_SYMBOL",
+        "MINIMAP_LABEL",
+        "NAME",
+        "DELETE"
     ],
     "fsdeploy.nodes": [
         {

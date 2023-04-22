@@ -6,6 +6,10 @@ local autoSellList = itemListFrame.AutoSellList;
 local frame = KrowiV_SingleItemListFrame;
 local criteriaType = addon.Objects.CriteriaType;
 
+function autoSellList:Init()
+    frame:SetScript("OnEvent", self.OnEvent);
+end
+
 local function IsItemTypeInRule(rule, itemTypeId)
     for _, itemType in next, rule.ItemTypes do
         if itemType.Type == itemTypeId then
@@ -90,6 +94,41 @@ local function PopulateListFrame()
     end
 end
 
+local co, maxNumItems;
+local function SellItems()
+    local numItems = 0;
+    local items = frame:GetItems();
+    for i = #items, 1, -1 do
+        local item = items[i];
+        if item.Bag and item.Slot then
+            print(addon.L["Selling item"]:ReplaceVars(item.Link));
+            C_Container.UseContainerItem(item.Bag, item.Slot);
+            numItems = numItems + 1;
+            frame:RemoveListItem(item);
+            if maxNumItems and numItems >= maxNumItems then
+                print(addon.L["x of y items sold in safe mode"]:ReplaceVars{
+                    x = numItems,
+                    y = maxNumItems
+                });
+                return;
+            end
+            coroutine.yield();
+        end
+    end
+    if maxNumItems then
+        print(addon.L["x of y items sold in safe mode"]:ReplaceVars{
+            x = numItems,
+            y = maxNumItems
+        });
+    else
+        print(addon.L["x of y items sold"]:ReplaceVars{
+            x = numItems,
+            y = maxNumItems
+        });
+    end
+    co = nil;
+end
+
 function autoSellList:Show()
     frame:ClearAllPoints();
     frame:SetParent(MerchantFrame);
@@ -98,19 +137,21 @@ function autoSellList:Show()
     frame:SetTitle(addon.L["Auto Sell List"]);
     frame:SetIcon("Interface/Icons/Inv_Gizmo_03");
     frame:SetListInfo(addon.L["These items will be auto sold."]);
-    frame.Button1:SetText(addon.L["Sell Items"]);
+    frame.Button1:SetText(addon.L["Sell All Items"]);
     frame.Button1:Show();
     frame.Button1:SetScript("OnClick", function()
-        local items = frame:GetItems();
-        for _, item in next, items do
-            if item.Bag and item.Slot then
-                print("Selling", item.Link);
-                C_Container.UseContainerItem(item.Bag, item.Slot);
-                frame:RemoveListItem(item);
-            end
-        end
-        -- addon.Util.DelayFunction("KrowiV_RefreshAutoSellList", 1, self.Update);
+        maxNumItems = nil;
+        co = coroutine.create(SellItems);
+        coroutine.resume(co);
     end);
+    frame.Button2:SetText(addon.L["Sell 12 Items"]);
+    frame.Button2:Show();
+    frame.Button2:SetScript("OnClick", function()
+        maxNumItems = 12;
+        co = coroutine.create(SellItems);
+        coroutine.resume(co);
+    end);
+    frame:RegisterEvent("BAG_UPDATE");
     frame:Show();
     self.Update();
 end
@@ -122,12 +163,13 @@ function autoSellList:ShowStandalone()
     frame:SetPoint("BOTTOM");
     frame:SetTitle(addon.L["Auto Sell List"]);
     frame:SetIcon("Interface/Icons/Inv_Gizmo_03");
-    frame:SetListInfo(addon.L["These items will be auto sold."]);
+    frame:SetListInfo(addon.L["Auto Sell List Info"]);
     frame:Show();
     self.Update();
 end
 
 function autoSellList.Hide()
+    frame:UnregisterEvent("BAG_UPDATE");
     frame:Hide();
 end
 
@@ -137,4 +179,14 @@ function autoSellList.Update()
     end
     frame:ClearListItems();
     PopulateListFrame();
+end
+
+function autoSellList:OnEvent(event, arg1, arg2)
+    if event == "BAG_UPDATE" then
+        if co ~= nil then
+            coroutine.resume(co);
+        else
+            autoSellList.Update();
+        end
+    end
 end

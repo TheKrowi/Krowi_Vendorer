@@ -16,6 +16,12 @@
 					<Anchor point="BOTTOMRIGHT"/>
 				</Anchors>
 			</Button>
+            <Button parentKey="Button2" name="$parentButton2" motionScriptsWhileDisabled="true" inherits="MagicButtonTemplate" hidden="true">
+				<Size x="140" y="22"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.Button1" relativePoint="TOPLEFT" />
+				</Anchors>
+			</Button>
         </Frames>
         <Layers>
             <Layer level="BORDER">

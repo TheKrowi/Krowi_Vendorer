@@ -26,7 +26,7 @@ function loadHelper:OnEvent(event, arg1, arg2)
             KrowiV_InjectOptions:SetOptionsTable(addon.Options.OptionsTable);
             KrowiV_InjectOptions:SetOptions(addon.Options.Defaults.profile);
 
-            addon.Data.AutoJunk.Load();
+            -- addon.Data.AutoJunk.Load();
 
             addon.Objects.ItemType.Load();
 
@@ -34,6 +34,7 @@ function loadHelper:OnEvent(event, arg1, arg2)
 
             addon.GUI.ItemListFrame.JunkList.Init(true);
             addon.GUI.ItemListFrame.IgnoreList.Init(true);
+            addon.GUI.ItemListFrame.AutoSellList:Init();
 
             addon.Icon.Load();
 
@@ -46,7 +47,7 @@ function loadHelper:OnEvent(event, arg1, arg2)
     elseif event == "HEIRLOOMS_UPDATED" then
     --     print("HEIRLOOMS_UPDATED");
     elseif event == "BAG_UPDATE" then
-    --     print("BAG_UPDATE");
+        -- print("BAG_UPDATE");
     elseif event == "MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL" then
     --     print("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL");
     elseif event == "MERCHANT_SHOW" then
