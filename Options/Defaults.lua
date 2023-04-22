@@ -34,6 +34,11 @@ options.Defaults = {
                 -- Dynamically filled in by adding rules
             },
             RulesHistoryCounter = 0
+        },
+        AutoRepair = {
+            IsEnabled = true,
+            IsGuildEnabled = true,
+            PrintChatMessage = true
         }
     }
 };

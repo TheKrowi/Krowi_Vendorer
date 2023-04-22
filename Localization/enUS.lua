@@ -22,3 +22,11 @@ L["Auto Sell Quality Desc"] = "Taking other rules into account, if the item's qu
 L["Auto Sell Item Level Desc"] = "Taking other rules into account, if the item's item level is lower than this value, sell the item.";
 L["Rule x"] = "Rule {x}";
 L["Condition x"] = "Condition {x}";
+
+L["Auto Repair Is Enabled"] = "Repair all items automatically when you visit a vendor that can do it.";
+L["Auto Repair Is Guild Enabled"] = "Prefer guild funds to repair, if available.";
+L["Auto Repair Print Chat Message"] = "Enable to print auto repair messages in the chat.";
+
+L["Auto Repair No Guild Funds Use Personal"] = "[KV] Not enough guild funds to repair, trying personal funds.";
+L["Auto Repair No Personal"] = "[KV] Not enough personal funds to repair.";
+L["Auto Repair Repaired"] = "[KV] Repaired {g}g {s}s {c}c.";

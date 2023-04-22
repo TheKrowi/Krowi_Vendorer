@@ -5,6 +5,7 @@
     <Script file="General.lua" />
     <Script file="AutoSell.lua" />
     <Script file="AutoJunk.lua" />
+    <Script file="AutoRepair.lua" />
     <!-- <Script file="Plugins.lua" /> -->
     <!-- <Script file="Credits.lua" /> -->
 </Ui>
