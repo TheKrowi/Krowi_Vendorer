@@ -2,4 +2,5 @@
     <Script file="ItemListFrame.lua"/>
     <Script file="JunkList.lua"/>
     <Script file="IgnoreList.lua"/>
+    <Script file="AutoSellList.lua"/>
 </Ui>

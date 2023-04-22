@@ -52,6 +52,8 @@ hooksecurefunc("MerchantFrame_UpdateFilterString", PrepareMerchantFrame);
 
 hooksecurefunc(MerchantFrame, "Show", function(self)
 	SetMerchantFilter(LE_LOOT_FILTER_ALL);
+
+	addon.GUI.ItemListFrame.AutoSellList:Show();
 end);
 
 MerchantFrameBottomRightBorder:SetTexCoord(91 / 256, (91 + 76) / 256, 0, 0.4765625);

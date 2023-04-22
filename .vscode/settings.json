@@ -139,7 +139,10 @@
         "C_Transmog",
         "CanIMogIt",
         "OpenAllBags",
-        "GetItemSubClassInfo"
+        "GetItemSubClassInfo",
+        "KrowiV_SingleItemListFrame",
+        "ButtonFrameTemplate_ShowButtonBar",
+        "C_Timer"
     ],
     "fsdeploy.nodes": [
         {

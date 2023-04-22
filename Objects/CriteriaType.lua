@@ -4,15 +4,18 @@ local objects = addon.Objects;
 objects.CriteriaType = {};
 local criteriaType = objects.CriteriaType;
 local equalityOperator = addon.Objects.EqualityOperator;
+local itemQuality = addon.Objects.ItemQuality;
 
 criteriaType.List = {
     addon.L["Item level"],
-    addon.L["Soulbound"]
+    addon.L["Soulbound"],
+    addon.L["Quality"]
 };
 
 criteriaType.Enum = addon.Util.Enum2{
     "ItemLevel",
-    "Soulbound"
+    "Soulbound",
+    "Quality"
 };
 
 do --[[ Rule evaluation functions ]]
@@ -26,11 +29,18 @@ do --[[ Rule evaluation functions ]]
         return result, "Item is soulbound";
     end
 
+    local function Quality_Func(quality, qualities)
+        local result = qualities[quality];
+        return result, "Item is " .. itemQuality.List[quality];
+    end
+
     function criteriaType.Func(condition, itemInfo)
-        if condition.CriteriaType == criteriaType.Enum.ItemLevel then -- Item level
+        if condition.CriteriaType == criteriaType.Enum.ItemLevel then
             return ItemLevel_Func(itemInfo.ItemLevel, condition.Operator, condition.Value);
-        elseif condition.CriteriaType == criteriaType.Enum.Soulbound then -- Soulbound
+        elseif condition.CriteriaType == criteriaType.Enum.Soulbound then
             return Soulbound_Func(itemInfo.BindType);
+        elseif condition.CriteriaType == criteriaType.Enum.Quality then
+            return Quality_Func(itemInfo.Quality, condition.Qualities);
         end
     end
 end
@@ -57,11 +67,15 @@ do --[[ Rule validity checking ]]
         if not criteriaType.List[condition.CriteriaType] then
             return false, desc .. addon.L["No valid criteria type selected"];
         end
-        if condition.CriteriaType == criteriaType.Enum.ItemLevel then -- Item level
+        if condition.CriteriaType == criteriaType.Enum.ItemLevel then
             local isValid, text = ItemLevel_IsValid(condition)
             return isValid, desc .. text;
-        elseif condition.CriteriaType == criteriaType.Enum.Soulbound then -- Soulbound
+        elseif condition.CriteriaType == criteriaType.Enum.Soulbound then
             return true, "";
+        elseif condition.CriteriaType == criteriaType.Enum.Quality then
+            if condition.NumSelectedQualities == 0 then
+                return false, addon.L["At least one quality must be selected"];
+            end
         end
         return true, "";
     end

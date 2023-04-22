@@ -9,8 +9,8 @@ local OrderPP = KrowiV_InjectOptions.AutoOrderPlusPlus;
 local AdjustedWidth = KrowiV_InjectOptions.AdjustedWidth;
 
 function autoJunk.RegisterOptionsTable()
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("Auto Junk", options.OptionsTable.args.AutoJunk);
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Auto Junk", "Auto Junk", addon.MetaData.Title);
+    -- LibStub("AceConfig-3.0"):RegisterOptionsTable("Auto Junk", options.OptionsTable.args.AutoJunk);
+    -- LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Auto Junk", "Auto Junk", addon.MetaData.Title);
 end
 
 function autoJunk.PostLoad()

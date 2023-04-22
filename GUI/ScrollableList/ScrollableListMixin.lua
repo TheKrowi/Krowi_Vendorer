@@ -39,14 +39,16 @@ function KrowiV_ScrollableListMixin:OnLoad()
     ScrollUtil.AddManagedScrollBarVisibilityBehavior(self.ScrollBox, self.ScrollBar, anchorsWithBar, anchorsWithoutBar);
 end
 
-function KrowiV_ScrollableListMixin:AppendListItem(id, icon, color, name, onClick, ...)
+function KrowiV_ScrollableListMixin:AppendListItem(link, icon, color, name, onClick, bag, slot, ...)
     local elementData =
     {
-        Id = id,
+        Link = link,
         Icon = icon,
         Color = color,
         Name = name,
         OnClick = onClick and onClick or self.ListItemsOnClick,
+        Bag = bag,
+        Slot = slot,
         MouseButtons = ... and ... or self.ListItemsMouseButtons
     };
 
@@ -69,4 +71,8 @@ end
 
 function KrowiV_ScrollableListMixin:ClearListItems()
     self.DataProvider:Flush();
+end
+
+function KrowiV_ScrollableListMixin:GetItems()
+    return self.DataProvider:GetCollection();
 end

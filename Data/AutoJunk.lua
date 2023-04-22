@@ -80,15 +80,15 @@ function autoJunk.EnableForInstanceId()
 end
 
 function loadHelper:OnEvent(event, arg1, arg2)
-    if event == "PLAYER_ENTERING_WORLD" then
-        autoJunk.EnableForInstanceId();
-    elseif event == "LOOT_READY" then -- GOLD = NIL
-        local slots = GetNumLootItems();
-        for i = 1, slots, 1 do
-            local loot = GetLootSlotLink(i);
-            print(AddToJunkIfComply(loot), loot);
-        end
-    end
+    -- if event == "PLAYER_ENTERING_WORLD" then
+    --     autoJunk.EnableForInstanceId();
+    -- elseif event == "LOOT_READY" then -- GOLD = NIL
+    --     local slots = GetNumLootItems();
+    --     for i = 1, slots, 1 do
+    --         local loot = GetLootSlotLink(i);
+    --         print(AddToJunkIfComply(loot), loot);
+    --     end
+    -- end
 end
 loadHelper:SetScript("OnEvent", loadHelper.OnEvent);
 
