@@ -9,13 +9,15 @@ function KrowiV_ScrollableListItemMixin:Init(elementData)
     self.IconBorder:SetVertexColor(elementData.Color:GetRGBA());
     self.Name:SetText(elementData.Name);
     self.Name:SetTextColor(elementData.Color:GetRGBA());
-    self:RegisterForClicks(unpack(elementData.MouseButtons));
+    if elementData.MouseButtons then
+        self:RegisterForClicks(unpack(elementData.MouseButtons));
+    end
     self:SetScript("OnClick", elementData.OnClick);
 end
 
 function KrowiV_ScrollableListItemMixin:OnEnter(button)
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-	GameTooltip:SetItemByID(self.ElementData.Id);
+    GameTooltip:SetHyperlink(self.ElementData.Link);
     GameTooltip:Show();
 end
 

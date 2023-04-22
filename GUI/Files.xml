@@ -7,6 +7,7 @@
     <Include file="ScrollableList/ScrollableList.xml"/>
     <Include file="DualItemList/DualItemList.xml"/>
     <Include file="DualItemListFrame/DualItemListFrame.xml"/>
+    <Include file="SingleItemListFrame/SingleItemListFrame.xml"/>
     <Include file="EmbeddedDualItemListFrame/EmbeddedDualItemListFrame.xml"/>
     <Include file="ItemList/Files.xml"/>
     <Include file="ItemTooltip/Files.xml"/>

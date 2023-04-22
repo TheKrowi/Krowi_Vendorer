@@ -226,18 +226,33 @@ local itemClassMatrix = {
 --     end
 -- };
 
-local function IsItemClassInRule(rule, itemClassId)
-    for itemClass, value in next, rule.ItemClasses do
-        if itemClass == itemClassId then
-            return value;
+local function IsItemTypeInRule(rule, itemTypeId)
+    for _, itemType in next, rule.ItemTypes do
+        if itemType.Type == itemTypeId then
+            return itemType;
         end
     end
 end
 
+local function IsItemSubTypeInRule(itemType, itemSubTypeId)
+    if not itemType.CheckSubType then
+        return true;
+    end
+    return itemType.SubTypes[itemSubTypeId];
+end
+
 local function CheckRule(doSell, results, rule, itemInfo)
-    if not IsItemClassInRule(rule, itemInfo.ClassId) then
-        doSell = doSell or false;
-        return doSell, results;
+    if #rule.ItemTypes > 0 then
+        local itemType = IsItemTypeInRule(rule, itemInfo.ItemTypeId);
+        if not itemType then
+            doSell = doSell or false;
+            return doSell, results;
+        end
+
+        if not IsItemSubTypeInRule(itemType, itemInfo.ItemSubTypeId) then
+            doSell = doSell or false;
+            return doSell, results;
+        end
     end
 
     local ruleResults = {}
@@ -274,8 +289,10 @@ local function ProcessItem(_tooltip, bag, slot)
 
     local itemInfo = {
         ItemLevel = itemLevel,
-        ClassId = classID,
-        BindType = bindType
+        ItemTypeId = classID,
+        ItemSubTypeId = subclassID,
+        BindType = bindType,
+        Quality = itemQuality
     };
 
     local doSell, results = false, {};
@@ -299,6 +316,40 @@ local function ProcessItem(_tooltip, bag, slot)
         end
     end
 
+    GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
+    _tooltip:AddDoubleLine("itemName", itemName);
+    _tooltip:AddDoubleLine("itemLink", itemLink);
+    _tooltip:AddDoubleLine("itemQuality", itemQuality);
+    _tooltip:AddDoubleLine("itemLevel", itemLevel);
+    _tooltip:AddDoubleLine("itemMinLevel", itemMinLevel);
+    _tooltip:AddDoubleLine("itemType", itemType);
+    _tooltip:AddDoubleLine("itemSubType", itemSubType);
+    _tooltip:AddDoubleLine("itemStackCount", itemStackCount);
+    _tooltip:AddDoubleLine("itemEquipLoc", itemEquipLoc);
+    _tooltip:AddDoubleLine("itemTexture", itemTexture);
+    _tooltip:AddDoubleLine("sellPrice", sellPrice);
+    _tooltip:AddDoubleLine("classID", classID);
+    _tooltip:AddDoubleLine("subclassID", subclassID);
+    _tooltip:AddDoubleLine("bindType", bindType);
+    _tooltip:AddDoubleLine("expacID", expacID);
+    _tooltip:AddDoubleLine("setID", setID);
+    _tooltip:AddDoubleLine("isCraftingReagent", isCraftingReagent);
+
+    -- local playerKnowsTransmogFromItem, isValidAppearanceForCharacter, playerKnowsTransmog, characterCanLearnTransmog;
+    -- local canIMogIt = CanIMogIt; --LibStub("AceAddon-3.0"):GetAddon("CanIMogIt");
+    -- if canIMogIt then
+    --     playerKnowsTransmogFromItem = canIMogIt:PlayerKnowsTransmogFromItem(itemLink);
+    --     isValidAppearanceForCharacter = canIMogIt:IsValidAppearanceForCharacter(itemLink)
+    --     playerKnowsTransmog = canIMogIt:PlayerKnowsTransmog(itemLink)
+    --     characterCanLearnTransmog = canIMogIt:CharacterCanLearnTransmog(itemLink)
+    -- end
+    -- GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
+    -- _tooltip:AddDoubleLine("CanIMogIt", canIMogIt and "yes" or "no");
+    -- _tooltip:AddDoubleLine("playerKnowsTransmogFromItem", playerKnowsTransmogFromItem and "yes" or "no");
+    -- _tooltip:AddDoubleLine("isValidAppearanceForCharacter", isValidAppearanceForCharacter and "yes" or "no");
+    -- _tooltip:AddDoubleLine("playerKnowsTransmog", playerKnowsTransmog and "yes" or "no");
+    -- _tooltip:AddDoubleLine("characterCanLearnTransmog", characterCanLearnTransmog and "yes" or "no");
+    
     _tooltip:Show();
 end
 
@@ -313,7 +364,8 @@ end
 function tooltip.Load()
     -- TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, ProcessItem100002);
 
-    hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
-        ProcessItem(self, bag, slot);
-    end);
+    -- Enable this again to show tooltip info
+    -- hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
+    --     ProcessItem(self, bag, slot);
+    -- end);
 end

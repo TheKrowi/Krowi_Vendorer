@@ -1,0 +1,42 @@
+<Ui>
+    <Script file="SingleItemListFrameMixin.lua"/>
+
+    <Frame name="KrowiV_SingleItemListFrame" mixin="KrowiV_SingleItemListFrameMixin" inherits="ButtonFrameTemplate" toplevel="true" movable="true" enableMouse="true" parent="MerchantFrame" hidden="true">
+        <Size x="305" y="444"/>
+        <Frames>
+            <Frame name="$parentEmbeddedItemList" parentKey="EmbeddedItemList" inherits="KrowiV_ScrollableList_Template" setAllPoints="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+                </Anchors>
+            </Frame>
+            <Button parentKey="Button1" name="$parentButton1" motionScriptsWhileDisabled="true" inherits="MagicButtonTemplate" hidden="true">
+				<Size x="140" y="22"/>
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+			</Button>
+        </Frames>
+        <Layers>
+            <Layer level="BORDER">
+                <FontString inherits="GameFontNormal" justifyH="CENTER" parentKey="ItemListInfo">
+                    <Size x="100" y="100"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.TopTileStreaks" x="75"/>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.EmbeddedItemList" x="-50"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnMouseDown>
+				self:StartMoving();
+				self.anchorframe = nil;
+			</OnMouseDown>
+			<OnMouseUp>
+				self:StopMovingOrSizing();
+			</OnMouseUp>
+        </Scripts>
+    </Frame>
+</Ui>

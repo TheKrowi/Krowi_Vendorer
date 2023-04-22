@@ -139,7 +139,14 @@
         "GetRepairAllCost",
         "CanMerchantRepair",
         "GetMoney",
-        "RepairAllItems"
+        "RepairAllItems",
+        "C_Transmog",
+        "CanIMogIt",
+        "OpenAllBags",
+        "GetItemSubClassInfo",
+        "KrowiV_SingleItemListFrame",
+        "ButtonFrameTemplate_ShowButtonBar",
+        "C_Timer"
     ],
     "fsdeploy.nodes": [
         {

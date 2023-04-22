@@ -3,10 +3,7 @@
     <Script file="DualItemListSide.lua" />
     <Script file="InstanceType.lua" />
     <Script file="EqualityOperator.lua" />
+    <Script file="ItemQuality.lua" />
     <Script file="CriteriaType.lua" />
-    <!-- <Script file="Category.lua" /> -->
-    <!-- <Script file="Event.lua" /> -->
-    <!-- <Script file="Tab.lua" /> -->
-    <!-- <Script file="CompareFunc.lua" /> -->
-    <!-- <Script file="Flags.lua" /> -->
+    <Script file="ItemType.lua" />
 </Ui>
