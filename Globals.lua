@@ -8,38 +8,30 @@ function addon.GetPartialItemInfo(id)
     return itemTexture, color, itemName;
 end
 
-function addon.AddCharToSavedData()
+local function AddCharToSavedData(playerGUID)
     if not KrowiV_SavedData.Characters then
         KrowiV_SavedData.Characters = {};
     end
-    -- local character = KrowiV_SavedData.Characters[playerGUID];
-    -- local excludeFromHeaderTooltip, excludeFromEarnedByAchievementTooltip, excludeFromMostProgressAchievementTooltip, ignore;
-    -- if character then
-    --     excludeFromHeaderTooltip = character.ExcludeFromHeaderTooltip;
-    --     excludeFromEarnedByAchievementTooltip = character.ExcludeFromEarnedByAchievementTooltip;
-    --     excludeFromMostProgressAchievementTooltip = character.ExcludeFromMostProgressAchievementTooltip;
-    --     ignore = character.Ignore;
-    -- end
 
-    local playerGUID = UnitGUID("player");
+    local character = KrowiV_SavedData.Characters[playerGUID];
+    local rules;
+    if character then
+        rules = character.Rules;
+    end
+
     KrowiV_SavedData.Characters[playerGUID] = {
         Name = (UnitFullName("player")),
         Realm = (select(2, UnitFullName("player"))),
         Class = (select(2, UnitClass("player"))),
         Faction = (UnitFactionGroup("player")),
-        -- CompletedAchievements = {},
-        -- NotCompletedAchievements = {},
-        -- ExcludeFromHeaderTooltip = excludeFromHeaderTooltip,
-        -- ExcludeFromEarnedByAchievementTooltip = excludeFromEarnedByAchievementTooltip,
-        -- ExcludeFromMostProgressAchievementTooltip = excludeFromMostProgressAchievementTooltip,
-        -- Ignore = ignore
+        Rules = rules or {}
     };
 end
 
 function addon.GetCurrentCharacter()
     local playerGUID = UnitGUID("player");
-    if not KrowiV_SavedData.Characters[playerGUID] then
-        addon.AddCharToSavedData();
+    if not KrowiV_SavedData.Characters or not KrowiV_SavedData.Characters[playerGUID] then
+        AddCharToSavedData(playerGUID);
     end
-    return KrowiV_SavedData.Characters[playerGUID];
+    return KrowiV_SavedData.Characters[playerGUID], playerGUID;
 end

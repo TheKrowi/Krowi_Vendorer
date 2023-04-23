@@ -192,7 +192,9 @@
         "DELETE",
         "VIDEO_OPTIONS_ENABLED",
         "UnitFullName",
-        "UnitGUID"
+        "UnitGUID",
+        "time",
+        "random"
     ],
     "fsdeploy.nodes": [
         {

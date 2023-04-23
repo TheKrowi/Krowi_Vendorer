@@ -88,6 +88,12 @@ local function PopulateListFrame()
                         doSell, results = CheckRule(doSell, results, rule, itemInfo);
                     end
                 end
+                local character = addon.GetCurrentCharacter();
+                for _, rule in next, character.Rules do
+                    if rule.IsValid then
+                        doSell, results = CheckRule(doSell, results, rule, itemInfo);
+                    end
+                end
 
                 if doSell then
                     local icon, color, name = addon.GetPartialItemInfo(itemLink);

@@ -1,6 +1,7 @@
 <Ui>
     <Script file="Objects.lua" />
     <Script file="DualItemListSide.lua" />
+    <Script file="Scope.lua" />
     <Script file="InstanceType.lua" />
     <Script file="EqualityOperator.lua" />
     <Script file="ItemQuality.lua" />

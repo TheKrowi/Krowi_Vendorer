@@ -9,6 +9,7 @@ local criteriaType = addon.Objects.CriteriaType;
 local equalityOperator = addon.Objects.EqualityOperator;
 local itemType = addon.Objects.ItemType;
 local itemQuality = addon.Objects.ItemQuality;
+local scope = addon.Objects.Scope;
 local removedElementPending;
 
 local OrderPP = KrowiV_InjectOptions.AutoOrderPlusPlus;
@@ -19,42 +20,48 @@ function autoSell.RegisterOptionsTable()
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Auto Sell", "Auto Sell", addon.MetaData.Title);
 end
 
-local removedFlag = "REMOVED";
+local function GetRules(_scope)
+    if _scope == scope.Character then
+        local character = addon.GetCurrentCharacter();
+        return character.Rules;
+    end
+    return KrowiV_SavedData.Rules;
+end
 
 do -- [[ Rule ]]
-    local function CheckIfRuleIsValid(numRule)
+    local function CheckIfRuleIsValid(scopeName, rule)
         local isValid = true;
-        for _, _itemType in next, KrowiV_SavedData.Rules[numRule].ItemTypes do
-            if _itemType ~= removedFlag then
+        for _, _itemType in next, rule.ItemTypes do
+            if not _itemType.Remove then
                 isValid = isValid and _itemType.IsValid;
             end
         end
-        for _, condition in next, KrowiV_SavedData.Rules[numRule].Conditions do
-            if condition ~= removedFlag then
+        for _, condition in next, rule.Conditions do
+            if not condition.Remove then
                 isValid = isValid and (criteriaType.CheckIfValid(condition));
             end
         end
-        KrowiV_SavedData.Rules[numRule].IsValid = isValid;
+        rule.IsValid = isValid;
 
-        local invalidRuleTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.InvalidRule");
+        local invalidRuleTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.InvalidRule");
         invalidRuleTable.hidden = isValid;
 
         addon.GUI.ItemListFrame.AutoSellList.Update();
     end
     autoSell.CheckIfRuleIsValid = CheckIfRuleIsValid;
 
-    local function AddRuleTable(numRule)
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args", "Rule" .. tostring(numRule), {
+    local function AddRuleTable(scopeName, rule)
+        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args", rule.Guid, {
             order = OrderPP(), type = "group",
-            name = KrowiV_SavedData.Rules[numRule].Name,
+            name = rule.Name,
             args = {
                 Name = {
                     order = OrderPP(), type = "input", width = AdjustedWidth(1.5),
                     name = addon.L["Name"],
-                    get = function() return KrowiV_SavedData.Rules[numRule].Name; end,
+                    get = function() return rule.Name; end,
                     set = function(_, value)
-                        KrowiV_SavedData.Rules[numRule].Name = value;
-                        local ruleTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule);
+                        rule.Name = value;
+                        local ruleTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid);
                         ruleTable.name = value;
                     end
                 },
@@ -63,8 +70,9 @@ do -- [[ Rule ]]
                     name = addon.L["Delete rule"],
                     desc = addon.L["Delete rule Desc"],
                     func = function()
-                        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule] = nil;
-                        KrowiV_SavedData.Rules[numRule] = removedFlag;
+                        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid] = nil;
+                        rule.Remove = true;
+                        rule.IsValid = false;
                         removedElementPending = true;
                     end
                 },
@@ -72,8 +80,8 @@ do -- [[ Rule ]]
                     order = OrderPP(), type = "toggle", width = AdjustedWidth(0.8),
                     name = addon.L["Enabled"],
                     desc = addon.L["Enabled Desc"],
-                    get = function() return KrowiV_SavedData.Rules[numRule].IsEnabled; end,
-                    set = function(_, value) KrowiV_SavedData.Rules[numRule].IsEnabled = value; end
+                    get = function() return rule.IsEnabled; end,
+                    set = function(_, value) rule.IsEnabled = value; end
                 },
                 InvalidRule = {
                     order = OrderPP(), type = "description", width = "full",
@@ -92,7 +100,7 @@ do -- [[ Rule ]]
                             order = OrderPP(), type = "execute",
                             name = addon.L["Add new item type"],
                             desc = addon.L["Add new item type Desc"],
-                            func = function() autoSell.AddNewItemTypeFunc(numRule) end
+                            func = function() autoSell.AddNewItemTypeFunc(scopeName, rule) end
                         }
                     }
                 },
@@ -108,86 +116,87 @@ do -- [[ Rule ]]
                             order = OrderPP(), type = "execute",
                             name = addon.L["Add new condition"],
                             desc = addon.L["Add new condition Desc"],
-                            func = function() autoSell.AddNewConditionFunc(numRule) end
+                            func = function() autoSell.AddNewConditionFunc(scopeName, rule) end
                         }
                     }
                 }
             }
         });
-        autoSell.CheckIfRuleIsValid(numRule);
+        autoSell.CheckIfRuleIsValid(scopeName, rule);
     end
     autoSell.AddRuleTable = AddRuleTable;
 
-    local function AddNewRuleFunc(scope)
-        local character = addon.GetCurrentCharacter();
-        KrowiV_SavedData.RulesHistoryCounter = KrowiV_SavedData.RulesHistoryCounter + 1;
-        tinsert(KrowiV_SavedData.Rules, {
-            Name = "Rule " .. KrowiV_SavedData.RulesHistoryCounter,
+    local function AddNewRuleFunc(_scope)
+        local unique = time() + random(time());
+        local rule = {
+            Guid = "Rule-" .. unique,
+            Name = "Rule " .. unique,
             IsValid = false,
             IsEnabled = true,
             NumSelectedItemClasses = 0,
             ItemTypes = {},
             Conditions = {}
-        });
-        local numRules = #KrowiV_SavedData.Rules;
-        AddRuleTable(numRules);
-        -- autoSell.AddNewConditionFunc(numRules);
+        };
+        tinsert(GetRules(_scope), rule);
+        local scopeName = addon.Objects.ScopeList[_scope];
+        AddRuleTable(scopeName, rule);
     end
     autoSell.AddNewRuleFunc = AddNewRuleFunc;
 end
 
 do -- [[ ItemType ]]
-    local function CheckIfItemTypeIsValid(numRule, numItemType)
-        local isValid = KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].Type ~= nil;
-        if KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].CheckSubType then
-            isValid = isValid and KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].NumSelectedSubTypes > 0;
+    local function CheckIfItemTypeIsValid(scopeName, rule, _itemType)
+        local isValid = _itemType.Type ~= nil;
+        if _itemType.CheckSubType then
+            isValid = isValid and _itemType.NumSelectedSubTypes > 0;
         end
-        KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].IsValid = isValid;
-        autoSell.CheckIfRuleIsValid(numRule);
+        _itemType.IsValid = isValid;
+        autoSell.CheckIfRuleIsValid(scopeName, rule);
     end
 
-    local function ResetItemTypeSubTypes(numRule, numItemType)
-        KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].NumSelectedSubTypes = 0;
-        for index, _ in next, KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].SubTypes do
-            KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].SubTypes[index] = nil;
+    local function ResetItemTypeSubTypes(_itemType)
+        _itemType.NumSelectedSubTypes = 0;
+        for index, _ in next, _itemType.SubTypes do
+            _itemType.SubTypes[index] = nil;
         end
     end
 
-    local function ItemTypeTypeSet(numRule, numItemType, value, reset)
-        KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].Type = value;
+    local function ItemTypeTypeSet(scopeName, rule, _itemType, value, reset)
+        _itemType.Type = value;
         if reset then
-            ResetItemTypeSubTypes(numRule, numItemType);
+            ResetItemTypeSubTypes(_itemType);
         end
-        CheckIfItemTypeIsValid(numRule, numItemType);
+        CheckIfItemTypeIsValid(scopeName, rule, _itemType);
     end
 
-    local function ItemTypeCheckSubTypeSet(numRule, numItemType, value)
-        KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].CheckSubType = value;
+    local function ItemTypeCheckSubTypeSet(scopeName, rule, _itemType, value)
+        _itemType.CheckSubType = value;
         if not value then
-            ResetItemTypeSubTypes(numRule, numItemType);
+            ResetItemTypeSubTypes(_itemType);
         end
-        CheckIfItemTypeIsValid(numRule, numItemType);
+        CheckIfItemTypeIsValid(scopeName, rule, _itemType);
     end
 
-    local function DeleteItemType(numRule, numItemType)
-        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args.ItemTypes.args["ItemType" .. numItemType] = nil;
-        KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType] = removedFlag;
-        autoSell.CheckIfRuleIsValid(numRule);
+    local function DeleteItemType(scopeName, rule, _itemType)
+        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.ItemTypes.args[_itemType.Guid] = nil;
+        _itemType.Remove = true;
+        _itemType.IsValid = false;
+        autoSell.CheckIfRuleIsValid(scopeName, rule);
         removedElementPending = true;
     end
 
-    local function ItemTypeSubTypeSet(numRule, numItemType, index, value)
+    local function ItemTypeSubTypeSet(scopeName, rule, _itemType, index, value)
         if value then
-            KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].NumSelectedSubTypes = KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].NumSelectedSubTypes + 1;
+            _itemType.NumSelectedSubTypes = _itemType.NumSelectedSubTypes + 1;
         else
-            KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].NumSelectedSubTypes = KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].NumSelectedSubTypes - 1;
+            _itemType.NumSelectedSubTypes = _itemType.NumSelectedSubTypes - 1;
         end
-        KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].SubTypes[index] = value;
-        CheckIfItemTypeIsValid(numRule, numItemType);
+        _itemType.SubTypes[index] = value;
+        CheckIfItemTypeIsValid(scopeName, rule, _itemType);
     end
 
-    local function AddItemTypeTable(numRule, numItemType)
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.ItemTypes.args", "ItemType" .. tostring(numItemType), {
+    local function AddItemTypeTable(scopeName, rule, _itemType)
+        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.ItemTypes.args", _itemType.Guid, {
             order = OrderPP(), type = "group", inline = true,
             name = "",
             args = {
@@ -195,72 +204,71 @@ do -- [[ ItemType ]]
                     order = OrderPP(), type = "select", width = AdjustedWidth(0.8),
                     name = "",
                     values = itemType.List,
-                    get = function() return KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].Type; end,
-                    set = function(_, value) ItemTypeTypeSet(numRule, numItemType, value, true); end
+                    get = function() return _itemType.Type; end,
+                    set = function(_, value) ItemTypeTypeSet(scopeName, rule, _itemType, value, true); end
                 },
                 CheckSubType = {
                     order = OrderPP(), type = "toggle", width = AdjustedWidth(0.8),
                     name = addon.L["Select sub type"],
                     desc = addon.L["Select sub type Desc"],
-                    get = function() return KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].CheckSubType; end,
-                    set = function(_, value) ItemTypeCheckSubTypeSet(numRule, numItemType, value); end
+                    get = function() return _itemType.CheckSubType; end,
+                    set = function(_, value) ItemTypeCheckSubTypeSet(scopeName, rule, _itemType, value); end
                 },
                 DeleteItemType = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
                     name = addon.L["Delete"],
                     desc = addon.L["Delete type Desc"],
-                    func = function() DeleteItemType(numRule, numItemType); end
+                    func = function() DeleteItemType(scopeName, rule, _itemType); end
                 },
                 InvalidItemType = {
                     order = OrderPP(), type = "description", width = "full",
                     name = addon.L["No item type selected"]:SetColorLightRed(),
                     fontSize = "medium",
-                    hidden = function() return KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].Type ~= nil; end
+                    hidden = function() return _itemType.Type ~= nil; end
                 },
                 SubTypes = {
                     order = OrderPP(), type = "multiselect", width = "full",
                     name = "",
-                    values = function() return itemType.SubTypeList[KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].Type] end,
-                    get = function(_, index) return KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].SubTypes[index]; end,
-                    set = function(_, index, value) ItemTypeSubTypeSet(numRule, numItemType, index, value); end,
+                    values = function() return itemType.SubTypeList[_itemType.Type] end,
+                    get = function(_, index) return _itemType.SubTypes[index]; end,
+                    set = function(_, index, value) ItemTypeSubTypeSet(scopeName, rule, _itemType, index, value); end,
                     control = "Dropdown",
-                    hidden = function() return not KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType].CheckSubType; end
+                    hidden = function() return not _itemType.CheckSubType; end
                 },
                 AtLeastOneItemSubTypeMustBeSelected = {
                     order = OrderPP(), type = "description", width = "full",
                     name = addon.L["At least one item sub type must be selected"]:SetColorLightRed(),
                     fontSize = "medium",
-                    hidden = function()
-                        local thisItemType = KrowiV_SavedData.Rules[numRule].ItemTypes[numItemType];
-                        return not thisItemType.CheckSubType or thisItemType.NumSelectedSubTypes > 0;
-                    end
+                    hidden = function() return not _itemType.CheckSubType or _itemType.NumSelectedSubTypes > 0; end
                 },
             }
         });
-        CheckIfItemTypeIsValid(numRule, numItemType);
-        local addNewItemClassTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.ItemTypes.args.AddNewItemType");
+        CheckIfItemTypeIsValid(scopeName, rule, _itemType);
+        local addNewItemClassTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.ItemTypes.args.AddNewItemType");
         addNewItemClassTable.order = OrderPP();
     end
     autoSell.AddItemTypeTable = AddItemTypeTable;
 
-    local function AddNewItemTypeFunc(numRule)
-        tinsert(KrowiV_SavedData.Rules[numRule].ItemTypes, {
+    local function AddNewItemTypeFunc(scopeName, rule)
+        local unique = time() + random(time());
+        local _itemType = {
+            Guid = "ItemType-" .. unique,
             SubTypes = {},
             NumSelectedSubTypes = 0
-        });
-        local numItemType = #KrowiV_SavedData.Rules[numRule].ItemTypes;
-        AddItemTypeTable(numRule, numItemType);
+        };
+        tinsert(rule.ItemTypes, _itemType);
+        AddItemTypeTable(scopeName, rule, _itemType);
     end
     autoSell.AddNewItemTypeFunc = AddNewItemTypeFunc;
 end
 
 do -- [[ Condition ]]
-    local function CheckIfConditionIsValid(numRule, numCondition)
-        local isValid, desc = criteriaType.CheckIfValid(KrowiV_SavedData.Rules[numRule].Conditions[numCondition]);
-        KrowiV_SavedData.Rules[numRule].Conditions[numCondition].IsValid = isValid;
-        local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Conditions.args.Condition" .. numCondition .. ".args.InvalidCondition");
+    local function CheckIfConditionIsValid(scopeName, rule, condition)
+        local isValid, desc = criteriaType.CheckIfValid(condition);
+        condition.IsValid = isValid;
+        local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
         invalidConditionTable.name = desc:SetColorLightRed();
-        autoSell.CheckIfRuleIsValid(numRule);
+        autoSell.CheckIfRuleIsValid(scopeName, rule);
     end
 
     local function ShowAlert(message)
@@ -275,97 +283,97 @@ do -- [[ Condition ]]
         StaticPopup_Show("KROWIV_ALERT")
     end
 
-    local function ConditionItemLevelValueSet(numRule, numCondition, value)
+    local function ConditionItemLevelValueSet(scopeName, rule, condition, value)
         if strtrim(value) == "" then
-            KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Value = 0;
+            condition.Value = 0;
         elseif tonumber(value) == nil then
             ShowAlert(addon.L["ItemLevel is not a valid item level."]:ReplaceVars(value));
         else
-            KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Value = tonumber(value);
+            condition.Value = tonumber(value);
         end
-        CheckIfConditionIsValid(numRule, numCondition);
+        CheckIfConditionIsValid(scopeName, rule, condition);
     end
 
-    local function ConditionCriteriaTypeSet_Reset(numRule, numCondition, value)
+    local function ConditionCriteriaTypeSet_Reset(scopeName, rule, condition, value)
         if value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.Quality then
-            KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Operator = nil;
-            KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Value = nil;
+            condition.Operator = nil;
+            condition.Value = nil;
         end
         if value == criteriaType.Enum.ItemLevel or value == criteriaType.Enum.Soulbound then
-            KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Qualities = nil;
-            KrowiV_SavedData.Rules[numRule].Conditions[numCondition].NumSelectedQualities = nil;
+            condition.Qualities = nil;
+            condition.NumSelectedQualities = nil;
         end
-        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args.Conditions.args["Condition" .. numCondition].args.Operator = nil;
-        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args.Conditions.args["Condition" .. numCondition].args.Value = nil;
-        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args.Conditions.args["Condition" .. numCondition].args.Blank1 = nil;
+        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Operator = nil;
+        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Value = nil;
+        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Blank1 = nil;
     end
 
-    local function ConditionCriteriaTypeSet_ItemLevel(numRule, numCondition)
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Conditions.args.Condition" .. numCondition .. ".args", "Operator", {
+    local function ConditionCriteriaTypeSet_ItemLevel(scopeName, rule, condition)
+        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Operator", {
             order = OrderPP(), type = "select", width = AdjustedWidth(0.5),
             name = "",
             values = equalityOperator.List,
-            get = function() return KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Operator; end,
+            get = function() return condition.Operator; end,
             set = function(_, _value)
-                KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Operator = _value;
-                CheckIfConditionIsValid(numRule, numCondition);
+                condition.Operator = _value;
+                CheckIfConditionIsValid(scopeName, rule, condition);
             end
         });
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Conditions.args.Condition" .. numCondition .. ".args", "Value", {
+        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
             order = OrderPP(), type = "input", width = AdjustedWidth(0.4),
             name = "",
-            get = function() return tostring(KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Value or ""); end,
-            set = function(_, _value) ConditionItemLevelValueSet(numRule, numCondition, _value); end
+            get = function() return tostring(condition.Value or ""); end,
+            set = function(_, _value) ConditionItemLevelValueSet(scopeName, rule, condition, _value); end
         });
     end
 
-    local function ConditionCriteriaTypeSet_Soulbound(numRule, numCondition)
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Conditions.args.Condition" .. numCondition .. ".args", "Blank1", {
+    local function ConditionCriteriaTypeSet_Soulbound(scopeName, rule, condition)
+        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Blank1", {
             order = OrderPP(), type = "description", width = AdjustedWidth(0.9), name = ""
         });
     end
 
-    local function ConditionCriteriaTypeSet_Quality(numRule, numCondition)
-        KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Qualities = KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Qualities or {};
-        KrowiV_SavedData.Rules[numRule].Conditions[numCondition].NumSelectedQualities = KrowiV_SavedData.Rules[numRule].Conditions[numCondition].NumSelectedQualities or 0;
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Conditions.args.Condition" .. numCondition .. ".args", "Value", {
+    local function ConditionCriteriaTypeSet_Quality(scopeName, rule, condition)
+        condition.Qualities = condition.Qualities or {};
+        condition.NumSelectedQualities = condition.NumSelectedQualities or 0;
+        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
             order = OrderPP(), type = "multiselect", width = AdjustedWidth(0.9),
             name = "",
             values = itemQuality.List,
-            get = function(_, index) return KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Qualities[index]; end,
+            get = function(_, index) return condition.Qualities[index]; end,
             set = function(_, index, value)
                 if value then
-                    KrowiV_SavedData.Rules[numRule].Conditions[numCondition].NumSelectedQualities = KrowiV_SavedData.Rules[numRule].Conditions[numCondition].NumSelectedQualities + 1;
+                    condition.NumSelectedQualities = condition.NumSelectedQualities + 1;
                 else
-                    KrowiV_SavedData.Rules[numRule].Conditions[numCondition].NumSelectedQualities = KrowiV_SavedData.Rules[numRule].Conditions[numCondition].NumSelectedQualities - 1;
+                    condition.NumSelectedQualities = condition.NumSelectedQualities - 1;
                 end
-                KrowiV_SavedData.Rules[numRule].Conditions[numCondition].Qualities[index] = value;
-                CheckIfConditionIsValid(numRule, numCondition);
+                condition.Qualities[index] = value;
+                CheckIfConditionIsValid(scopeName, rule, condition);
             end,
             control = "Dropdown"
         });
     end
 
-    local function ConditionCriteriaTypeSet(numRule, numCondition, value)
-        KrowiV_SavedData.Rules[numRule].Conditions[numCondition].CriteriaType = value;
-        ConditionCriteriaTypeSet_Reset(numRule, numCondition, value);
+    local function ConditionCriteriaTypeSet(scopeName, rule, condition, value)
+        condition.CriteriaType = value;
+        ConditionCriteriaTypeSet_Reset(scopeName, rule, condition, value);
 
         if value == criteriaType.Enum.ItemLevel then
-            ConditionCriteriaTypeSet_ItemLevel(numRule, numCondition);
+            ConditionCriteriaTypeSet_ItemLevel(scopeName, rule, condition);
         elseif value == criteriaType.Enum.Soulbound then
-            ConditionCriteriaTypeSet_Soulbound(numRule, numCondition);
+            ConditionCriteriaTypeSet_Soulbound(scopeName, rule, condition);
         elseif value == criteriaType.Enum.Quality then
-            ConditionCriteriaTypeSet_Quality(numRule, numCondition);
+            ConditionCriteriaTypeSet_Quality(scopeName, rule, condition);
         end
-        local deleteConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Conditions.args.Condition" .. numCondition .. ".args.DeleteCondition");
+        local deleteConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.DeleteCondition");
         deleteConditionTable.order = OrderPP();
-        CheckIfConditionIsValid(numRule, numCondition);
-        local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Conditions.args.Condition" .. numCondition .. ".args.InvalidCondition");
+        CheckIfConditionIsValid(scopeName, rule, condition);
+        local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
         invalidConditionTable.order = OrderPP();
     end
 
-    local function AddConditionTable(numRule, numCondition)
-        KrowiV_InjectOptions:AddTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Conditions.args", "Condition" .. tostring(numCondition), {
+    local function AddConditionTable(scopeName, rule, condition)
+        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args", condition.Guid, {
             order = OrderPP(), type = "group", inline = true,
             name = "",
             args = {
@@ -377,17 +385,18 @@ do -- [[ Condition ]]
                     order = OrderPP(), type = "select", width = AdjustedWidth(0.6),
                     name = "",
                     values = criteriaType.List,
-                    get = function() return KrowiV_SavedData.Rules[numRule].Conditions[numCondition].CriteriaType; end,
-                    set = function(_, value) ConditionCriteriaTypeSet(numRule, numCondition, value); end
+                    get = function() return condition.CriteriaType; end,
+                    set = function(_, value) ConditionCriteriaTypeSet(scopeName, rule, condition, value); end
                 },
                 DeleteCondition = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
                     name = addon.L["Delete"],
                     desc = addon.L["Delete Condition Desc"],
                     func = function()
-                        options.OptionsTable.args["AutoSell"].args.Rules.args["Rule" .. numRule].args.Conditions.args["Condition" .. numCondition] = nil;
-                        KrowiV_SavedData.Rules[numRule].Conditions[numCondition] = removedFlag;
-                        autoSell.CheckIfRuleIsValid(numRule);
+                        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid] = nil;
+                        condition.Remove = true;
+                        condition.IsValid = false;
+                        autoSell.CheckIfRuleIsValid(scopeName, rule);
                         removedElementPending = true;
                     end
                 },
@@ -395,64 +404,85 @@ do -- [[ Condition ]]
                     order = OrderPP(), type = "description", width = "full",
                     name = addon.L["Invalid condition"]:SetColorLightRed(),
                     fontSize = "medium",
-                    hidden = function() return KrowiV_SavedData.Rules[numRule].Conditions[numCondition].IsValid; end
+                    hidden = function() return condition.IsValid; end
                 }
             }
         });
-        ConditionCriteriaTypeSet(numRule, numCondition, KrowiV_SavedData.Rules[numRule].Conditions[numCondition].CriteriaType);
-        local addNewConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args.Rules.args.Rule" .. numRule .. ".args.Conditions.args.AddNewCondition");
+        ConditionCriteriaTypeSet(scopeName, rule, condition, condition.CriteriaType);
+        local addNewConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args.AddNewCondition");
         addNewConditionTable.order = OrderPP();
     end
     autoSell.AddConditionTable = AddConditionTable;
 
-    function AddNewConditionFunc(numRule)
-        tinsert(KrowiV_SavedData.Rules[numRule].Conditions, {});
-        local numConditions = #KrowiV_SavedData.Rules[numRule].Conditions;
-        AddConditionTable(numRule, numConditions);
+    function AddNewConditionFunc(scopeName, rule)
+        local unique = time() + random(time());
+        local condition = {
+            Guid = "Condition-" .. unique,
+        };
+        tinsert(rule.Conditions, condition);
+        AddConditionTable(scopeName, rule, condition);
     end
     autoSell.AddNewConditionFunc = AddNewConditionFunc;
 end
 
 local function CleanUpRemovedRules()
     -- Clean up deleted rules during previous session
-    for i = #KrowiV_SavedData.Rules, 1, -1 do
-        if KrowiV_SavedData.Rules[i] == removedFlag then
-            tremove(KrowiV_SavedData.Rules, i);
+    for _, _scope in next, scope do
+        local rules = GetRules(_scope);
+        for i = #rules, 1, -1 do
+            if rules[i].Remove then
+                tremove(rules, i);
+            end
         end
     end
 end
 
-local function CleanUpRemovedItemTypes(numRule)
+local function CleanUpRemovedItemTypes()
     -- Clean up deleted conditions during previous session
-    for i = #KrowiV_SavedData.Rules[numRule].ItemTypes, 1, -1 do
-        if KrowiV_SavedData.Rules[numRule].ItemTypes[i] == removedFlag then
-            tremove(KrowiV_SavedData.Rules[numRule].ItemTypes, i);
+    for _, _scope in next, scope do
+        local rules = GetRules(_scope);
+        for _, rule in next, rules do
+            local itemTypes = rule.ItemTypes;
+            for i = #itemTypes, 1, -1 do
+                if itemTypes[i].Remove then
+                    tremove(itemTypes, i);
+                end
+            end
         end
     end
 end
 
-local function CleanUpRemovedConditions(numRule)
+local function CleanUpRemovedConditions()
     -- Clean up deleted conditions during previous session
-    for i = #KrowiV_SavedData.Rules[numRule].Conditions, 1, -1 do
-        if KrowiV_SavedData.Rules[numRule].Conditions[i] == removedFlag then
-            tremove(KrowiV_SavedData.Rules[numRule].Conditions, i);
+    for _, _scope in next, scope do
+        local rules = GetRules(_scope);
+        for _, rule in next, rules do
+            local conditions = rule.Conditions;
+            for i = #conditions, 1, -1 do
+                if conditions[i].Remove then
+                    tremove(conditions, i);
+                end
+            end
         end
     end
 end
 
 function autoSell.PostLoad()
     KrowiV_SavedData.Rules = KrowiV_SavedData.Rules or {};
-    KrowiV_SavedData.RulesHistoryCounter = KrowiV_SavedData.RulesHistoryCounter or 0;
     CleanUpRemovedRules();
-    for i, _ in next, KrowiV_SavedData.Rules do
-        autoSell.AddRuleTable(i);
-        CleanUpRemovedItemTypes(i);
-        for j, _ in next, KrowiV_SavedData.Rules[i].ItemTypes do
-            autoSell.AddItemTypeTable(i, j);
-        end
-        CleanUpRemovedConditions(i);
-        for j, _ in next, KrowiV_SavedData.Rules[i].Conditions do
-            autoSell.AddConditionTable(i, j);
+    CleanUpRemovedItemTypes();
+    CleanUpRemovedConditions();
+    for _, _scope in next, scope do
+        local rules = GetRules(_scope);
+        local scopeName = addon.Objects.ScopeList[_scope];
+        for _, rule in next, rules do
+            autoSell.AddRuleTable(scopeName, rule);
+            for _, _itemType in next, rule.ItemTypes do
+                autoSell.AddItemTypeTable(scopeName, rule, _itemType);
+            end
+            for _, condition in next, rule.Conditions do
+                autoSell.AddConditionTable(scopeName, rule, condition);
+            end
         end
     end
 end
@@ -463,10 +493,8 @@ hooksecurefunc(SettingsPanel, "Hide", function()
     end
 
     CleanUpRemovedRules();
-    for i, _ in next, KrowiV_SavedData.Rules do
-        CleanUpRemovedItemTypes(i);
-        CleanUpRemovedConditions(i);
-    end
+    CleanUpRemovedItemTypes();
+    CleanUpRemovedConditions();
     removedElementPending = nil;
 end);
 
@@ -488,7 +516,7 @@ options.OptionsTable.args["AutoSell"] = {
         --         -- },
         --     }
         -- },
-        Rules = {
+        AccountRules = {
             order = OrderPP(), type = "group",
             name = addon.L["Account Rules"],
             args = {
@@ -496,7 +524,7 @@ options.OptionsTable.args["AutoSell"] = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(),
                     name = addon.L["Add new rule"],
                     desc = addon.L["Add new rule Desc"],
-                    func = function() autoSell.AddNewRuleFunc("Account"); end
+                    func = function() autoSell.AddNewRuleFunc(scope.Account); end
                 },
                 OpenInventory = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(),
@@ -518,7 +546,7 @@ options.OptionsTable.args["AutoSell"] = {
                 }
             }
         },
-        CharactertRules = {
+        CharacterRules = {
             order = OrderPP(), type = "group",
             name = addon.L["Character Rules"],
             args = {
@@ -526,7 +554,7 @@ options.OptionsTable.args["AutoSell"] = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(),
                     name = addon.L["Add new rule"],
                     desc = addon.L["Add new rule Desc"],
-                    func = function() autoSell.AddNewRuleFunc("Character"); end
+                    func = function() autoSell.AddNewRuleFunc(scope.Character); end
                 },
                 OpenInventory = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(),
