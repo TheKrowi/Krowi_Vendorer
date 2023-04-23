@@ -29,11 +29,7 @@ options.Defaults = {
                 true -- Epic
             },
             ItemLevel = 0,
-            Operator = 1,
-            Rules = {
-                -- Dynamically filled in by adding rules
-            },
-            RulesHistoryCounter = 0
+            Operator = 1
         },
         AutoRepair = {
             IsEnabled = true,

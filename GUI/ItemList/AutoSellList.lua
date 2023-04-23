@@ -26,6 +26,10 @@ local function IsItemSubTypeInRule(itemType, itemSubTypeId)
 end
 
 local function CheckRule(doSell, results, rule, itemInfo)
+    if not rule.IsEnabled then
+        doSell = doSell or false;
+        return doSell, results;
+    end
     if #rule.ItemTypes > 0 then
         local itemType = IsItemTypeInRule(rule, itemInfo.ItemTypeId);
         if not itemType then
@@ -79,7 +83,7 @@ local function PopulateListFrame()
                 };
 
                 local doSell, results = false, {};
-                for _, rule in next, addon.Options.db.AutoSell.Rules do
+                for _, rule in next, KrowiV_SavedData.Rules do
                     if rule.IsValid then
                         doSell, results = CheckRule(doSell, results, rule, itemInfo);
                     end

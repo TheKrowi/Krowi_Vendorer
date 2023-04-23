@@ -52,7 +52,7 @@ function globalStrings.Load(L)
     L["Minimap"] = MINIMAP_LABEL;
     L["Name"] = NAME;
     L["Delete"] = DELETE;
-    L["Quality"] = QUALITY;
+    L["Enabled"] = VIDEO_OPTIONS_ENABLED;
     L["Quality"] = QUALITY;
     L["Quality"] = QUALITY;
     L["Quality"] = QUALITY;

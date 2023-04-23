@@ -296,7 +296,7 @@ local function ProcessItem(_tooltip, bag, slot)
     };
 
     local doSell, results = false, {};
-    for _, rule in next, addon.Options.db.AutoSell.Rules do
+    for _, rule in next, KrowiV_SavedData.Rules do
         if rule.IsValid then
             doSell, results = CheckRule(doSell, results, rule, itemInfo);
         end

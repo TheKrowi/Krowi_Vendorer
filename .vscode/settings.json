@@ -189,7 +189,10 @@
         "EMBLEM_SYMBOL",
         "MINIMAP_LABEL",
         "NAME",
-        "DELETE"
+        "DELETE",
+        "VIDEO_OPTIONS_ENABLED",
+        "UnitFullName",
+        "UnitGUID"
     ],
     "fsdeploy.nodes": [
         {
