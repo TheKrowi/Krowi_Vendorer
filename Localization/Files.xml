@@ -4,12 +4,12 @@
     <!-- <Script file="deDE.ExtraWrathStrings.lua" /> -->
     <!-- <Script file="zhCN.ExtraWrathStrings.lua" /> -->
     <!-- <Script file="frFR.ExtraWrathStrings.lua" /> -->
-    <!-- <Script file="enUS.PluginStrings.lua" /> -->
-    <!-- <Script file="deDE.PluginStrings.lua" /> -->
+    <Script file="enUS.PluginStrings.lua" />
+    <Script file="deDE.PluginStrings.lua" />
     <!-- <Script file="zhCN.PluginStrings.lua" /> -->
     <!-- <Script file="frFR.PluginStrings.lua" /> -->
     <Script file="enUS.lua" />
-    <!-- <Script file="deDE.lua" /> -->
+    <Script file="deDE.lua" />
     <!-- <Script file="zhCN.lua" /> -->
     <!-- <Script file="frFR.lua" /> -->
     <Script file="Localization.lua" />

@@ -122,7 +122,7 @@ do -- [[ Rule ]]
         });
         local numRules = #addon.Options.db.AutoSell.Rules;
         AddRuleTable(numRules);
-        autoSell.AddNewConditionFunc(numRules);
+        -- autoSell.AddNewConditionFunc(numRules);
     end
     autoSell.AddNewRuleFunc = AddNewRuleFunc;
 end
