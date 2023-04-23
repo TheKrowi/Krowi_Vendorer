@@ -543,8 +543,8 @@ options.OptionsTable.args["AutoSell"] = {
                 },
                 OpenAutoSellListFrame = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(),
-                    name = addon.L["Open Auto Sell List"],
-                    desc = addon.L["Open Auto Sell List Desc"],
+                    name = addon.L["Open auto sell list"],
+                    desc = addon.L["Open auto sell list Desc"],
                     func = function()
                         addon.GUI.ItemListFrame.AutoSellList:ShowStandalone();
                     end
@@ -573,8 +573,8 @@ options.OptionsTable.args["AutoSell"] = {
                 },
                 OpenAutoSellListFrame = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(),
-                    name = addon.L["Open Auto Sell List"],
-                    desc = addon.L["Open Auto Sell List Desc"],
+                    name = addon.L["Open auto sell list"],
+                    desc = addon.L["Open auto sell list Desc"],
                     func = function()
                         addon.GUI.ItemListFrame.AutoSellList:ShowStandalone();
                     end

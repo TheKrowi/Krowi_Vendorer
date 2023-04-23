@@ -7,7 +7,7 @@ local equalityOperator = addon.Objects.EqualityOperator;
 local itemQuality = addon.Objects.ItemQuality;
 
 criteriaType.List = {
-    addon.L["Item level"],
+    addon.L["Item Level"],
     addon.L["Soulbound"],
     addon.L["Quality"]
 };
