@@ -59,46 +59,47 @@ local function CheckRule(doSell, results, rule, itemInfo)
     return doSell, results;
 end
 
+local function ProcessItem(bag, slot, item)
+    local link = item:GetItemLink();
+    local classID, subclassID, bindType = select(12, GetItemInfo(link));
+
+    local itemInfo = {
+        ItemLevel = item:GetCurrentItemLevel(),
+        ItemTypeId = classID,
+        ItemSubTypeId = subclassID,
+        BindType = bindType,
+        Quality = item:GetItemQuality()
+    };
+
+    local doSell, results = false, {};
+    for _, rule in next, KrowiV_SavedData.Rules do
+        if rule.IsValid then
+            doSell, results = CheckRule(doSell, results, rule, itemInfo);
+        end
+    end
+    local character = addon.GetCurrentCharacter();
+    for _, rule in next, character.Rules do
+        if rule.IsValid then
+            doSell, results = CheckRule(doSell, results, rule, itemInfo);
+        end
+    end
+
+    if doSell then
+        local icon = item:GetItemIcon();
+        local color = item:GetItemQualityColor();
+        local name = item:GetItemName();
+        frame:AppendListItem(link, icon, color.color, name, nil, bag, slot);
+    end
+end
+
 local function PopulateListFrame()
     for bag = Enum.BagIndex.Backpack, Enum.BagIndex.ReagentBag do
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
-            local itemLink = C_Container.GetContainerItemLink(bag, slot);
-            if itemLink then
-                local itemName, _, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
-                itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
-                expacID, setID, isCraftingReagent = GetItemInfo(itemLink);
-
-                local itemId = GetItemInfoInstant(itemLink);
-                if not itemId or not itemQuality or not itemLevel then
-                    return;
-                end
-                itemLevel = GetDetailedItemLevelInfo(itemLink) or itemLevel;
-
-                local itemInfo = {
-                    ItemLevel = itemLevel,
-                    ItemTypeId = classID,
-                    ItemSubTypeId = subclassID,
-                    BindType = bindType,
-                    Quality = itemQuality
-                };
-
-                local doSell, results = false, {};
-                for _, rule in next, KrowiV_SavedData.Rules do
-                    if rule.IsValid then
-                        doSell, results = CheckRule(doSell, results, rule, itemInfo);
-                    end
-                end
-                local character = addon.GetCurrentCharacter();
-                for _, rule in next, character.Rules do
-                    if rule.IsValid then
-                        doSell, results = CheckRule(doSell, results, rule, itemInfo);
-                    end
-                end
-
-                if doSell then
-                    local icon, color, name = addon.GetPartialItemInfo(itemLink);
-                    frame:AppendListItem(itemLink, icon, color, name, nil, bag, slot);
-                end
+            local item = Item:CreateFromBagAndSlot(bag, slot);
+            if not item:IsItemEmpty() then
+                item:ContinueOnItemLoad(function()
+                    ProcessItem(bag, slot, item);
+                end);
             end
         end
     end
@@ -193,6 +194,7 @@ end
 
 function autoSellList:OnEvent(event, arg1, arg2)
     if event == "BAG_UPDATE" then
+        print("BAG_UPDATE")
         if co ~= nil then
             coroutine.resume(co);
         else

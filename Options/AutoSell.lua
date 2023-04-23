@@ -50,6 +50,14 @@ do -- [[ Rule ]]
     end
     autoSell.CheckIfRuleIsValid = CheckIfRuleIsValid;
 
+    local function DeleteRule(scopeName, rule)
+        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid] = nil;
+        rule.Remove = true;
+        rule.IsValid = false;
+        removedElementPending = true;
+        addon.GUI.ItemListFrame.AutoSellList.Update();
+    end
+
     local function AddRuleTable(scopeName, rule)
         KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args", rule.Guid, {
             order = OrderPP(), type = "group",
@@ -69,12 +77,7 @@ do -- [[ Rule ]]
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.5),
                     name = addon.L["Delete rule"],
                     desc = addon.L["Delete rule Desc"],
-                    func = function()
-                        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid] = nil;
-                        rule.Remove = true;
-                        rule.IsValid = false;
-                        removedElementPending = true;
-                    end
+                    func = function() DeleteRule(scopeName, rule); end
                 },
                 Enabled = {
                     order = OrderPP(), type = "toggle", width = AdjustedWidth(0.8),
@@ -294,20 +297,6 @@ do -- [[ Condition ]]
         CheckIfConditionIsValid(scopeName, rule, condition);
     end
 
-    local function ConditionCriteriaTypeSet_Reset(scopeName, rule, condition, value)
-        if value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.Quality then
-            condition.Operator = nil;
-            condition.Value = nil;
-        end
-        if value == criteriaType.Enum.ItemLevel or value == criteriaType.Enum.Soulbound then
-            condition.Qualities = nil;
-            condition.NumSelectedQualities = nil;
-        end
-        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Operator = nil;
-        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Value = nil;
-        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Blank1 = nil;
-    end
-
     local function ConditionCriteriaTypeSet_ItemLevel(scopeName, rule, condition)
         KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Operator", {
             order = OrderPP(), type = "select", width = AdjustedWidth(0.5),
@@ -325,6 +314,20 @@ do -- [[ Condition ]]
             get = function() return tostring(condition.Value or ""); end,
             set = function(_, _value) ConditionItemLevelValueSet(scopeName, rule, condition, _value); end
         });
+    end
+
+    local function ConditionCriteriaTypeSet_Reset(scopeName, rule, condition, value)
+        if value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.Quality then
+            condition.Operator = nil;
+            condition.Value = nil;
+        end
+        if value == criteriaType.Enum.ItemLevel or value == criteriaType.Enum.Soulbound then
+            condition.Qualities = nil;
+            condition.NumSelectedQualities = nil;
+        end
+        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Operator = nil;
+        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Value = nil;
+        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Blank1 = nil;
     end
 
     local function ConditionCriteriaTypeSet_Soulbound(scopeName, rule, condition)
@@ -372,6 +375,14 @@ do -- [[ Condition ]]
         invalidConditionTable.order = OrderPP();
     end
 
+    local function DeleteCondition(scopeName, rule, condition)
+        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid] = nil;
+        condition.Remove = true;
+        condition.IsValid = false;
+        autoSell.CheckIfRuleIsValid(scopeName, rule);
+        removedElementPending = true;
+    end
+
     local function AddConditionTable(scopeName, rule, condition)
         KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args", condition.Guid, {
             order = OrderPP(), type = "group", inline = true,
@@ -392,13 +403,7 @@ do -- [[ Condition ]]
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
                     name = addon.L["Delete"],
                     desc = addon.L["Delete Condition Desc"],
-                    func = function()
-                        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid] = nil;
-                        condition.Remove = true;
-                        condition.IsValid = false;
-                        autoSell.CheckIfRuleIsValid(scopeName, rule);
-                        removedElementPending = true;
-                    end
+                    func = function() DeleteCondition(scopeName, rule, condition); end
                 },
                 InvalidCondition = {
                     order = OrderPP(), type = "description", width = "full",

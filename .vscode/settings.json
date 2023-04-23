@@ -194,7 +194,8 @@
         "UnitFullName",
         "UnitGUID",
         "time",
-        "random"
+        "random",
+        "Item"
     ],
     "fsdeploy.nodes": [
         {
