@@ -473,6 +473,7 @@ local function CleanUpRemovedConditions()
 end
 
 function autoSell.PostLoad()
+    KrowiV_SavedData = KrowiV_SavedData or {};
     KrowiV_SavedData.Rules = KrowiV_SavedData.Rules or {};
     CleanUpRemovedRules();
     CleanUpRemovedItemTypes();
