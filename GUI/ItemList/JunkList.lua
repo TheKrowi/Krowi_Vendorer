@@ -30,20 +30,25 @@ end
 local function PopulateLeftListFrame()
     for bag = Enum.BagIndex.Backpack, Enum.BagIndex.ReagentBag do
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
-            local itemId = C_Container.GetContainerItemID(bag, slot);
-            if itemId and not KrowiV_SavedData.JunkItems[itemId] and not KrowiV_SavedData.IgnoredItems[itemId] then
-                local icon, color, name = addon.GetPartialItemInfo(itemId);
-                frame:AppendListItem(dualItemListSide.Left, itemId, icon, color, name);
+            local item = Item:CreateFromBagAndSlot(bag, slot);
+            if not item:IsItemEmpty() then
+                item:ContinueOnItemLoad(function()
+                    local link = item:GetItemLink();
+                    local icon = item:GetItemIcon();
+                    local color = item:GetItemQualityColor();
+                    local name = item:GetItemName();
+                    frame:AppendListItem(link, icon, color.color, name, nil, bag, slot);
+                end);
             end
         end
     end
 end
 
 local function PopulateRightListFrame()
-    for itemId, _ in next, KrowiV_SavedData.JunkItems do
-        local icon, color, name = addon.GetPartialItemInfo(itemId);
-        frame:AppendListItem(dualItemListSide.Right, itemId, icon, color, name);
-    end
+    -- for itemId, _ in next, KrowiV_SavedData.JunkItems do
+    --     local icon, color, name = addon.GetPartialItemInfo(itemId);
+    --     frame:AppendListItem(dualItemListSide.Right, itemId, icon, color, name);
+    -- end
 end
 
 function junkList.Show()

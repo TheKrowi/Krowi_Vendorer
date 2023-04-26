@@ -10,6 +10,7 @@ local isEmbedded = false;
 function ignoreList.Init(_isEmbedded)
     KrowiV_SavedData = KrowiV_SavedData or {};
     KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
+    KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
 
     isEmbedded = _isEmbedded;
     if isEmbedded then
@@ -17,24 +18,35 @@ function ignoreList.Init(_isEmbedded)
     end
 end
 
-local function LeftJunkItemOnClick(self)
-    KrowiV_SavedData.IgnoredItems[self.ElementData.Id] = true;
-    KrowiV_SavedData.JunkItems[self.ElementData.Id] = nil;
+local function LeftItemOnClick(self)
+    KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = true;
+    KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.LeftItemOnClick(self, frame);
 end
 
-local function RightJunkItemOnClick(self)
-    KrowiV_SavedData.IgnoredItems[self.ElementData.Id] = nil;
+local function RightItemOnClick(self)
+    KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.RightItemOnClick(self, frame);
 end
 
 local function PopulateLeftListFrame()
+    KrowiV_Test = {};
     for bag = Enum.BagIndex.Backpack, Enum.BagIndex.ReagentBag do
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
-            local itemId = C_Container.GetContainerItemID(bag, slot);
-            if itemId and not KrowiV_SavedData.IgnoredItems[itemId] then
-                local icon, color, name = addon.GetPartialItemInfo(itemId);
-                frame:AppendListItem(dualItemListSide.Left, itemId, icon, color, name);
+            local item = Item:CreateFromBagAndSlot(bag, slot);
+            if not item:IsItemEmpty() then
+                item:ContinueOnItemLoad(function()
+                    local itemId = item:GetItemID();
+                    if KrowiV_SavedData.IgnoredItems[itemId] then
+                        return;
+                    end
+                    local link = item:GetItemLink();
+                    local icon = item:GetItemIcon();
+                    local color = item:GetItemQualityColor();
+                    local name = item:GetItemName();
+                    frame:AppendListItem(dualItemListSide.Left, link, icon, color.color, name, nil, bag, slot);
+                    tinsert(KrowiV_Test, link);
+                end);
             end
         end
     end
@@ -42,8 +54,15 @@ end
 
 local function PopulateRightListFrame()
     for itemId, _ in next, KrowiV_SavedData.IgnoredItems do
-        local icon, color, name = addon.GetPartialItemInfo(itemId);
-        frame:AppendListItem(dualItemListSide.Right, itemId, icon, color, name);
+        local item = Item:CreateFromItemID(itemId);
+        item:ContinueOnItemLoad(function()
+            local link = item:GetItemLink();
+            local icon = item:GetItemIcon();
+            local color = item:GetItemQualityColor();
+            local name = item:GetItemName();
+            frame:AppendListItem(dualItemListSide.Right, link, icon, color.color, name);
+            tinsert(KrowiV_Test, link);
+        end);
     end
 end
 
@@ -59,10 +78,10 @@ function ignoreList.Show()
     end
     frame:ClearListItems(dualItemListSide.Left);
     frame:RegisterListItemsForClicks(dualItemListSide.Left, "LeftButtonUp");
-    frame:SetListItemsOnClick(dualItemListSide.Left, LeftJunkItemOnClick);
+    frame:SetListItemsOnClick(dualItemListSide.Left, LeftItemOnClick);
     frame:ClearListItems(dualItemListSide.Right);
     frame:RegisterListItemsForClicks(dualItemListSide.Right, "RightButtonUp");
-    frame:SetListItemsOnClick(dualItemListSide.Right, RightJunkItemOnClick);
+    frame:SetListItemsOnClick(dualItemListSide.Right, RightItemOnClick);
     PopulateLeftListFrame();
     PopulateRightListFrame();
     frame:Show();

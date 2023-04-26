@@ -195,7 +195,8 @@
         "UnitGUID",
         "time",
         "random",
-        "Item"
+        "Item",
+        "PanelTemplates_SetTab"
     ],
     "fsdeploy.nodes": [
         {

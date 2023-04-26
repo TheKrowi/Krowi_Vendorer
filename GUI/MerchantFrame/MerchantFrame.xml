@@ -1,12 +1,12 @@
 <Ui>
     <Script file="MerchantFrame.lua"/>
 
-    <!-- <Button name="MerchantFrameTab3" inherits="PanelTabButtonTemplate" parent="MerchantFrame" id="3">
+    <Button name="MerchantFrameTab3" inherits="PanelTabButtonTemplate" parent="MerchantFrame" id="3">
         <Anchors>
             <Anchor point="LEFT" relativeTo="MerchantFrameTab2" relativePoint="RIGHT" x="-16" y="0"/>
         </Anchors>
         <Scripts>
-            <OnLoad function="KrowiV_ShowJunkList_OnLoad"/>
+            <OnLoad function="KrowiV_ShowIgnoreList_OnLoad"/>
             <OnEnter>
                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
                 GameTooltip:SetText("", 1.0,1.0,1.0 );
@@ -18,12 +18,12 @@
         </Scripts>
     </Button>
 
-    <Button name="MerchantFrameTab4" inherits="PanelTabButtonTemplate" parent="MerchantFrame" id="4">
+    <!-- <Button name="MerchantFrameTab4" inherits="PanelTabButtonTemplate" parent="MerchantFrame" id="4">
         <Anchors>
             <Anchor point="LEFT" relativeTo="MerchantFrameTab3" relativePoint="RIGHT" x="-16" y="0"/>
         </Anchors>
         <Scripts>
-            <OnLoad function="KrowiV_ShowIgnoreList_OnLoad"/>
+            <OnLoad function="KrowiV_ShowJunkList_OnLoad"/>
             <OnEnter>
                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
                 GameTooltip:SetText("", 1.0,1.0,1.0 );

@@ -32,7 +32,7 @@ function loadHelper:OnEvent(event, arg1, arg2)
 
             addon.Options.Load(); -- Needs ItemType
 
-            addon.GUI.ItemListFrame.JunkList.Init(true);
+            -- addon.GUI.ItemListFrame.JunkList.Init(true);
             addon.GUI.ItemListFrame.IgnoreList.Init(true);
             addon.GUI.ItemListFrame.AutoSellList:Init();
 

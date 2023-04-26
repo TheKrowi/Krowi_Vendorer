@@ -8,11 +8,11 @@ function KrowiV_DualItemListMixin:OnLoad()
     self.RightList = self.RightFrame.ListFrame;
 end
 
-function KrowiV_DualItemListMixin:AppendListItem(side, id, icon, color, name, onClick, ...)
+function KrowiV_DualItemListMixin:AppendListItem(side, link, icon, color, name, onClick, ...)
     if side == addon.Objects.DualItemListSide.Left then
-        self.LeftList:AppendListItem(id, icon, color, name, onClick, ...);
+        self.LeftList:AppendListItem(link, icon, color, name, onClick, ...);
     elseif side == addon.Objects.DualItemListSide.Right then
-        self.RightList:AppendListItem(id, icon, color, name, onClick, ...);
+        self.RightList:AppendListItem(link, icon, color, name, onClick, ...);
     end
 end
 

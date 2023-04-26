@@ -60,6 +60,11 @@ local function CheckRule(doSell, results, rule, itemInfo)
 end
 
 local function ProcessItem(bag, slot, item)
+    local itemId = item:GetItemID();
+    if KrowiV_SavedData.IgnoredItems[itemId] then
+        return;
+    end
+    
     local link = item:GetItemLink();
     local classID, subclassID, bindType = select(12, GetItemInfo(link));
 
@@ -134,10 +139,21 @@ local function SellItems()
     else
         print(addon.L["x of y items sold"]:ReplaceVars{
             x = numItems,
-            y = maxNumItems
+            y = #items
         });
     end
     co = nil;
+end
+
+local function ItemOnClick(self, button)
+    if button == "LeftButton" then -- Sell item
+        C_Container.UseContainerItem(self.ElementData.Bag, self.ElementData.Slot);
+        frame:RemoveListItem(self.ElementData);
+    elseif button == "RightButton" then -- Ignore item
+        KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = true;
+        KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
+        frame:RemoveListItem(self.ElementData);
+    end
 end
 
 function autoSellList:Show()
@@ -147,7 +163,7 @@ function autoSellList:Show()
     frame:SetPoint("BOTTOM");
     frame:SetTitle(addon.L["Auto Sell List"]);
     frame:SetIcon("Interface/Icons/Inv_Gizmo_03");
-    frame:SetListInfo(addon.L["These items will be auto sold."]);
+    frame:SetListInfo(addon.L["Auto Sell List Info"]);
     frame.Button1:SetText(addon.L["Sell All Items"]);
     frame.Button1:Show();
     frame.Button1:SetScript("OnClick", function()
@@ -163,6 +179,8 @@ function autoSellList:Show()
         coroutine.resume(co);
     end);
     frame:RegisterEvent("BAG_UPDATE");
+    frame:RegisterListItemsForClicks("LeftButtonUp", "RightButtonUp");
+    frame:SetListItemsOnClick(ItemOnClick);
     frame:Show();
     self.Update();
 end
@@ -194,7 +212,7 @@ end
 
 function autoSellList:OnEvent(event, arg1, arg2)
     if event == "BAG_UPDATE" then
-        print("BAG_UPDATE")
+        -- print("BAG_UPDATE")
         if co ~= nil then
             coroutine.resume(co);
         else

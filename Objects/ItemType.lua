@@ -25,13 +25,13 @@ end
 function itemType.Load()
     itemType.List = {};
     itemType.SubTypeList = {};
-    KrowiV_Test = {};
+    -- KrowiV_Test = {};
     local type, subType;
     local i = 0;
     repeat
         type = GetItemClassInfo(i);
         if type then
-            KrowiV_Test[type] = {};
+            -- KrowiV_Test[type] = {};
             itemType.List[i] = type;
         end
         local j = 0;
@@ -41,8 +41,8 @@ function itemType.Load()
                 subType = nil;
             end
             if subType then
-                KrowiV_Test[type].SubTypes = KrowiV_Test[type].SubTypes or {};
-                KrowiV_Test[type].SubTypes[j] = subType;
+                -- KrowiV_Test[type].SubTypes = KrowiV_Test[type].SubTypes or {};
+                -- KrowiV_Test[type].SubTypes[j] = subType;
                 itemType.SubTypeList[i] = itemType.SubTypeList[i] or {};
                 itemType.SubTypeList[i][j] = subType;
             end
@@ -55,6 +55,6 @@ function itemType.Load()
             end
         end
     until type == nil or i > 100;
-    KrowiV_Test2 = itemType.List;
-    KrowiV_Test3 = itemType.SubTypeList;
+    -- KrowiV_Test2 = itemType.List;
+    -- KrowiV_Test3 = itemType.SubTypeList;
 end

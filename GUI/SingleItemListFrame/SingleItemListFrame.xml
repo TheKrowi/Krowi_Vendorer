@@ -28,8 +28,8 @@
                 <FontString inherits="GameFontNormal" justifyH="CENTER" parentKey="ItemListInfo">
                     <Size x="100" y="100"/>
                     <Anchors>
-                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.TopTileStreaks" x="75"/>
-                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.EmbeddedItemList" x="-50"/>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.TopTileStreaks" x="55"/>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.EmbeddedItemList" x="-30"/>
                     </Anchors>
                 </FontString>
             </Layer>

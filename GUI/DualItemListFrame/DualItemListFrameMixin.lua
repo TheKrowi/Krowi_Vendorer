@@ -14,11 +14,11 @@ function KrowiV_DualItemListFrameMixin:SetIcon(icon)
     SetPortraitToTexture(self.PortraitContainer.portrait, icon);
 end
 
-function KrowiV_DualItemListFrameMixin:AppendListItem(side, id, icon, color, name, onClick, ...)
+function KrowiV_DualItemListFrameMixin:AppendListItem(side, link, icon, color, name, onClick, ...)
     if side == dualItemListSide.Left then
-        self.EmbeddedItemList.LeftList:AppendListItem(id, icon, color, name, onClick, ...);
+        self.EmbeddedItemList.LeftList:AppendListItem(link, icon, color, name, onClick, ...);
     elseif side == dualItemListSide.Right then
-        self.EmbeddedItemList.RightList:AppendListItem(id, icon, color, name, onClick, ...);
+        self.EmbeddedItemList.RightList:AppendListItem(link, icon, color, name, onClick, ...);
     end
 end
 
