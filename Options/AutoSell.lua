@@ -99,11 +99,23 @@ do -- [[ Rule ]]
                     order = OrderPP(), type = "group", inline = true,
                     name = "",
                     args = {
+                        NoItemType = {
+                            order = OrderPP(), type = "description", width = AdjustedWidth(1.1),
+                            name = addon.L["No item type"],
+                            fontSize = "medium",
+                            hidden = function()
+                                local numItemTypes = 0;
+                                for _, _itemType in next, rule.ItemTypes do
+                                    numItemTypes = numItemTypes + (_itemType.Remove and 0 or 1);
+                                end
+                                return numItemTypes > 0;
+                            end
+                        },
                         AddNewItemType = {
                             order = OrderPP(), type = "execute",
                             name = addon.L["Add new item type"],
                             desc = addon.L["Add new item type Desc"],
-                            func = function() autoSell.AddNewItemTypeFunc(scopeName, rule) end
+                            func = function() autoSell.AddNewItemTypeFunc(scopeName, rule); end
                         }
                     }
                 },
@@ -115,11 +127,23 @@ do -- [[ Rule ]]
                     order = OrderPP(), type = "group", inline = true,
                     name = "",
                     args = {
+                        NoCondition = {
+                            order = OrderPP(), type = "description", width = AdjustedWidth(1.1),
+                            name = addon.L["No condition"],
+                            fontSize = "medium",
+                            hidden = function()
+                                local numConditions = 0;
+                                for _, condition in next, rule.Conditions do
+                                    numConditions = numConditions + (condition.Remove and 0 or 1);
+                                end
+                                return numConditions > 0;
+                            end
+                        },
                         AddNewCondition = {
                             order = OrderPP(), type = "execute",
                             name = addon.L["Add new condition"],
                             desc = addon.L["Add new condition Desc"],
-                            func = function() autoSell.AddNewConditionFunc(scopeName, rule) end
+                            func = function() autoSell.AddNewConditionFunc(scopeName, rule); end
                         }
                     }
                 }
