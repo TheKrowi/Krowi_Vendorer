@@ -69,7 +69,8 @@ do -- [[ Rule ]]
                         rule.Name = value;
                         local ruleTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid);
                         ruleTable.name = value;
-                    end
+                    end,
+                    disabled = function() return rule.IsPreset; end
                 },
                 DeleteRule = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.5),
@@ -82,7 +83,8 @@ do -- [[ Rule ]]
                     name = addon.L["Enabled"],
                     desc = addon.L["Enabled Desc"],
                     get = function() return rule.IsEnabled; end,
-                    set = function(_, value) rule.IsEnabled = value; end
+                    set = function(_, value) rule.IsEnabled = value; end,
+                    hidden = function() return rule.IsPreset; end
                 },
                 InvalidRule = {
                     order = OrderPP(), type = "description", width = "full",
@@ -98,7 +100,7 @@ do -- [[ Rule ]]
                     name = "",
                     args = {
                         NoItemType = {
-                            order = OrderPP(), type = "description", width = AdjustedWidth(1.1),
+                            order = OrderPP(), type = "description", width = rule.IsPreset and "full" or AdjustedWidth(1.1),
                             name = addon.L["No item type"],
                             fontSize = "medium",
                             hidden = function()
@@ -107,13 +109,15 @@ do -- [[ Rule ]]
                                     numItemTypes = numItemTypes + (_itemType.Remove and 0 or 1);
                                 end
                                 return numItemTypes > 0;
-                            end
+                            end,
+                            disabled = function() return rule.IsPreset; end
                         },
                         AddNewItemType = {
                             order = OrderPP(), type = "execute",
                             name = addon.L["Add new item type"],
                             desc = addon.L["Add new item type Desc"],
-                            func = function() autoSell.AddNewItemTypeFunc(scopeName, rule); end
+                            func = function() autoSell.AddNewItemTypeFunc(scopeName, rule); end,
+                            hidden = function() return rule.IsPreset; end
                         }
                     }
                 },
@@ -126,7 +130,7 @@ do -- [[ Rule ]]
                     name = "",
                     args = {
                         NoCondition = {
-                            order = OrderPP(), type = "description", width = AdjustedWidth(1.1),
+                            order = OrderPP(), type = "description", width = rule.IsPreset and "full" or AdjustedWidth(1.1),
                             name = addon.L["No condition"],
                             fontSize = "medium",
                             hidden = function()
@@ -135,13 +139,15 @@ do -- [[ Rule ]]
                                     numConditions = numConditions + (condition.Remove and 0 or 1);
                                 end
                                 return numConditions > 0;
-                            end
+                            end,
+                            disabled = function() return rule.IsPreset; end
                         },
                         AddNewCondition = {
                             order = OrderPP(), type = "execute",
                             name = addon.L["Add new condition"],
                             desc = addon.L["Add new condition Desc"],
-                            func = function() autoSell.AddNewConditionFunc(scopeName, rule); end
+                            func = function() autoSell.AddNewConditionFunc(scopeName, rule); end,
+                            hidden = function() return rule.IsPreset; end
                         }
                     }
                 }
@@ -151,11 +157,11 @@ do -- [[ Rule ]]
     end
     autoSell.AddRuleTable = AddRuleTable;
 
-    local function AddNewRuleFunc(_scope)
+    local function AddNewRuleFunc(_scope, guid, name)
         local unique = time() + random(time());
         local rule = {
-            Guid = "Rule-" .. unique,
-            Name = "Rule " .. unique,
+            Guid = guid or ("Rule-" .. unique),
+            Name = name or ("Rule " .. unique),
             IsValid = false,
             IsEnabled = true,
             NumSelectedItemClasses = 0,
@@ -165,6 +171,7 @@ do -- [[ Rule ]]
         tinsert(GetRules(_scope), rule);
         local scopeName = addon.Objects.ScopeList[_scope];
         AddRuleTable(scopeName, rule);
+        return rule;
     end
     autoSell.AddNewRuleFunc = AddNewRuleFunc;
 end
@@ -228,20 +235,23 @@ do -- [[ ItemType ]]
                     name = "",
                     values = itemType.List,
                     get = function() return _itemType.Type; end,
-                    set = function(_, value) ItemTypeTypeSet(scopeName, rule, _itemType, value, true); end
+                    set = function(_, value) ItemTypeTypeSet(scopeName, rule, _itemType, value, true); end,
+                    disabled = function() return rule.IsPreset; end
                 },
                 CheckSubType = {
                     order = OrderPP(), type = "toggle", width = AdjustedWidth(0.8),
                     name = addon.L["Select sub type"],
                     desc = addon.L["Select sub type Desc"],
                     get = function() return _itemType.CheckSubType; end,
-                    set = function(_, value) ItemTypeCheckSubTypeSet(scopeName, rule, _itemType, value); end
+                    set = function(_, value) ItemTypeCheckSubTypeSet(scopeName, rule, _itemType, value); end,
+                    disabled = function() return rule.IsPreset; end
                 },
                 DeleteItemType = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
                     name = addon.L["Delete"],
                     desc = addon.L["Delete type Desc"],
-                    func = function() DeleteItemType(scopeName, rule, _itemType); end
+                    func = function() DeleteItemType(scopeName, rule, _itemType); end,
+                    hidden = function() return rule.IsPreset; end
                 },
                 InvalidItemType = {
                     order = OrderPP(), type = "description", width = "full",
@@ -256,7 +266,8 @@ do -- [[ ItemType ]]
                     get = function(_, index) return _itemType.SubTypes[index]; end,
                     set = function(_, index, value) ItemTypeSubTypeSet(scopeName, rule, _itemType, index, value); end,
                     control = "Dropdown",
-                    hidden = function() return not _itemType.CheckSubType; end
+                    hidden = function() return not _itemType.CheckSubType; end,
+                    disabled = function() return rule.IsPreset; end
                 },
                 AtLeastOneItemSubTypeMustBeSelected = {
                     order = OrderPP(), type = "description", width = "full",
@@ -281,6 +292,7 @@ do -- [[ ItemType ]]
         };
         tinsert(rule.ItemTypes, _itemType);
         AddItemTypeTable(scopeName, rule, _itemType);
+        return _itemType;
     end
     autoSell.AddNewItemTypeFunc = AddNewItemTypeFunc;
 end
@@ -326,13 +338,15 @@ do -- [[ Condition ]]
             set = function(_, _value)
                 condition.Operator = _value;
                 CheckIfConditionIsValid(scopeName, rule, condition);
-            end
+            end,
+            disabled = function() return rule.IsPreset; end
         });
         KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
             order = OrderPP(), type = "input", width = AdjustedWidth(0.4),
             name = "",
             get = function() return tostring(condition.Value or ""); end,
-            set = function(_, _value) ConditionItemLevelValueSet(scopeName, rule, condition, _value); end
+            set = function(_, _value) ConditionItemLevelValueSet(scopeName, rule, condition, _value); end,
+            disabled = function() return rule.IsPreset; end
         });
     end
 
@@ -356,6 +370,17 @@ do -- [[ Condition ]]
         });
     end
 
+    local function ConditionQualityValueSet(scopeName, rule, condition, index, value)
+        if value then
+            condition.NumSelectedQualities = condition.NumSelectedQualities + 1;
+        else
+            condition.NumSelectedQualities = condition.NumSelectedQualities - 1;
+        end
+        condition.Qualities[index] = value;
+        CheckIfConditionIsValid(scopeName, rule, condition);
+    end
+    autoSell.ConditionQualityValueSet = ConditionQualityValueSet;
+
     local function ConditionCriteriaTypeSet_Quality(scopeName, rule, condition)
         condition.Qualities = condition.Qualities or {};
         condition.NumSelectedQualities = condition.NumSelectedQualities or 0;
@@ -364,16 +389,9 @@ do -- [[ Condition ]]
             name = "",
             values = itemQuality.List,
             get = function(_, index) return condition.Qualities[index]; end,
-            set = function(_, index, value)
-                if value then
-                    condition.NumSelectedQualities = condition.NumSelectedQualities + 1;
-                else
-                    condition.NumSelectedQualities = condition.NumSelectedQualities - 1;
-                end
-                condition.Qualities[index] = value;
-                CheckIfConditionIsValid(scopeName, rule, condition);
-            end,
-            control = "Dropdown"
+            set = function(_, index, value) ConditionQualityValueSet(scopeName, rule, condition, index, value); end,
+            control = "Dropdown",
+            disabled = function() return rule.IsPreset; end
         });
     end
 
@@ -394,6 +412,7 @@ do -- [[ Condition ]]
         local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
         invalidConditionTable.order = OrderPP();
     end
+    autoSell.ConditionCriteriaTypeSet = ConditionCriteriaTypeSet;
 
     local function DeleteCondition(scopeName, rule, condition)
         options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid] = nil;
@@ -415,13 +434,15 @@ do -- [[ Condition ]]
                     name = "",
                     values = criteriaType.List,
                     get = function() return condition.CriteriaType; end,
-                    set = function(_, value) ConditionCriteriaTypeSet(scopeName, rule, condition, value); end
+                    set = function(_, value) ConditionCriteriaTypeSet(scopeName, rule, condition, value); end,
+                    disabled = function() return rule.IsPreset; end
                 },
                 DeleteCondition = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
                     name = addon.L["Delete"],
                     desc = addon.L["Delete Condition Desc"],
-                    func = function() DeleteCondition(scopeName, rule, condition); end
+                    func = function() DeleteCondition(scopeName, rule, condition); end,
+                    hidden = function() return rule.IsPreset; end
                 },
                 InvalidCondition = {
                     order = OrderPP(), type = "description", width = "full",
@@ -444,6 +465,7 @@ do -- [[ Condition ]]
         };
         tinsert(rule.Conditions, condition);
         AddConditionTable(scopeName, rule, condition);
+        return condition;
     end
     autoSell.AddNewConditionFunc = AddNewConditionFunc;
 end
@@ -466,6 +488,15 @@ function autoSell.PostLoad()
     end
 end
 
+local function AddJunkRule(_scope)
+    local rule = autoSell.AddNewRuleFunc(_scope, "Rule-Preset" .. addon.L["Junk"], addon.L["Junk"] .. " (Preset)");
+    rule.IsPreset = true;
+    local scopeName = addon.Objects.ScopeList[_scope];
+    local condition = autoSell.AddNewConditionFunc(scopeName, rule);
+    autoSell.ConditionCriteriaTypeSet(scopeName, rule, condition, criteriaType.Enum.Quality);
+    autoSell.ConditionQualityValueSet(scopeName, rule, condition, 0, true);
+end
+
 options.OptionsTable.args["AutoSell"] = {
     type = "group", childGroups = "tab",
     name = addon.L["Auto Sell"],
@@ -484,6 +515,30 @@ options.OptionsTable.args["AutoSell"] = {
         --         -- },
         --     }
         -- },
+        PresetRules = {
+            order = OrderPP(), type = "group",
+            name = addon.L["Preset Rules"],
+            args = {
+                Description = {
+                    order = OrderPP(), type = "description", width = "full",
+                    name = addon.L["Preset Rules Desc"]
+                },
+                JunkRuleName = {
+                    order = OrderPP(), type = "description", width = AdjustedWidth(1),
+                    name = addon.L["Junk"]
+                },
+                JunkRuleAccount = {
+                    order = OrderPP(), type = "execute", width = AdjustedWidth(1),
+                    name = "Add to Account", desc = "",
+                    func = function(_, value) AddJunkRule(scope.Account); end
+                },
+                JunkRuleCharacter = {
+                    order = OrderPP(), type = "execute", width = AdjustedWidth(1),
+                    name = "Add to Character", desc = "",
+                    func = function(_, value) AddJunkRule(scope.Character); end
+                }
+            }
+        },
         AccountRules = {
             order = OrderPP(), type = "group",
             name = addon.L["Account Rules"],

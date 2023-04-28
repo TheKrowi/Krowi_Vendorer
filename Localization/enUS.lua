@@ -90,3 +90,4 @@ L["Auto Repair No Guild Funds Use Personal"] = "[KV] Not enough guild funds to r
 L["Auto Repair No Personal"] = "[KV] Not enough personal funds to repair.";
 L["Auto Repair Repaired"] = "[KV] Repaired {g}g {s}s {c}c.";
 
+L["Preset Rules Desc"] = "When adding one of the rules below, the rule will be added to the respective rules list.";
