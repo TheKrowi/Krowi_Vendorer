@@ -10,7 +10,6 @@ local equalityOperator = addon.Objects.EqualityOperator;
 local itemType = addon.Objects.ItemType;
 local itemQuality = addon.Objects.ItemQuality;
 local scope = addon.Objects.Scope;
-local removedElementPending;
 
 local OrderPP = KrowiV_InjectOptions.AutoOrderPlusPlus;
 local AdjustedWidth = KrowiV_InjectOptions.AdjustedWidth;
@@ -52,9 +51,8 @@ do -- [[ Rule ]]
 
     local function DeleteRule(scopeName, rule)
         options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid] = nil;
-        rule.Remove = true;
-        rule.IsValid = false;
-        removedElementPending = true;
+        local _scope = addon.Objects.Scope[scopeName];
+        addon.Util.TableRemoveByValue(GetRules(_scope), rule);
         addon.GUI.ItemListFrame.AutoSellList.Update();
     end
 
@@ -206,10 +204,8 @@ do -- [[ ItemType ]]
 
     local function DeleteItemType(scopeName, rule, _itemType)
         options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.ItemTypes.args[_itemType.Guid] = nil;
-        _itemType.Remove = true;
-        _itemType.IsValid = false;
+        addon.Util.TableRemoveByValue(rule.ItemTypes, _itemType);
         autoSell.CheckIfRuleIsValid(scopeName, rule);
-        removedElementPending = true;
     end
 
     local function ItemTypeSubTypeSet(scopeName, rule, _itemType, index, value)
@@ -401,10 +397,8 @@ do -- [[ Condition ]]
 
     local function DeleteCondition(scopeName, rule, condition)
         options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid] = nil;
-        condition.Remove = true;
-        condition.IsValid = false;
+        addon.Util.TableRemoveByValue(rule.Conditions, condition);
         autoSell.CheckIfRuleIsValid(scopeName, rule);
-        removedElementPending = true;
     end
 
     local function AddConditionTable(scopeName, rule, condition)
@@ -454,54 +448,9 @@ do -- [[ Condition ]]
     autoSell.AddNewConditionFunc = AddNewConditionFunc;
 end
 
-local function CleanUpRemovedRules()
-    -- Clean up deleted rules during previous session
-    for _, _scope in next, scope do
-        local rules = GetRules(_scope);
-        for i = #rules, 1, -1 do
-            if rules[i].Remove then
-                tremove(rules, i);
-            end
-        end
-    end
-end
-
-local function CleanUpRemovedItemTypes()
-    -- Clean up deleted conditions during previous session
-    for _, _scope in next, scope do
-        local rules = GetRules(_scope);
-        for _, rule in next, rules do
-            local itemTypes = rule.ItemTypes;
-            for i = #itemTypes, 1, -1 do
-                if itemTypes[i].Remove then
-                    tremove(itemTypes, i);
-                end
-            end
-        end
-    end
-end
-
-local function CleanUpRemovedConditions()
-    -- Clean up deleted conditions during previous session
-    for _, _scope in next, scope do
-        local rules = GetRules(_scope);
-        for _, rule in next, rules do
-            local conditions = rule.Conditions;
-            for i = #conditions, 1, -1 do
-                if conditions[i].Remove then
-                    tremove(conditions, i);
-                end
-            end
-        end
-    end
-end
-
 function autoSell.PostLoad()
     KrowiV_SavedData = KrowiV_SavedData or {};
     KrowiV_SavedData.Rules = KrowiV_SavedData.Rules or {};
-    CleanUpRemovedRules();
-    CleanUpRemovedItemTypes();
-    CleanUpRemovedConditions();
     for _, _scope in next, scope do
         local rules = GetRules(_scope);
         local scopeName = addon.Objects.ScopeList[_scope];
@@ -516,17 +465,6 @@ function autoSell.PostLoad()
         end
     end
 end
-
-hooksecurefunc(SettingsPanel, "Hide", function()
-    if not removedElementPending then
-        return;
-    end
-
-    CleanUpRemovedRules();
-    CleanUpRemovedItemTypes();
-    CleanUpRemovedConditions();
-    removedElementPending = nil;
-end);
 
 options.OptionsTable.args["AutoSell"] = {
     type = "group", childGroups = "tab",

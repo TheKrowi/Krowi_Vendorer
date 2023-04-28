@@ -196,7 +196,8 @@
         "time",
         "random",
         "Item",
-        "PanelTemplates_SetTab"
+        "PanelTemplates_SetTab",
+        "tremovebyval"
     ],
     "fsdeploy.nodes": [
         {
