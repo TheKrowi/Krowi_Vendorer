@@ -64,10 +64,17 @@ local function ProcessItem(bag, slot, item)
     if KrowiV_SavedData.IgnoredItems[itemId] then
         return;
     end
-    
-    local link = item:GetItemLink();
-    local classID, subclassID, bindType = select(12, GetItemInfo(link));
 
+    local link = item:GetItemLink();
+    if KrowiV_SavedData.JunkItems[itemId] then
+        local icon = item:GetItemIcon();
+        local color = item:GetItemQualityColor();
+        local name = item:GetItemName();
+        frame:AppendListItem(link, icon, color.color, name, nil, bag, slot);
+        return;
+    end
+
+    local classID, subclassID, bindType = select(12, GetItemInfo(link));
     local itemInfo = {
         ItemLevel = item:GetCurrentItemLevel(),
         ItemTypeId = classID,

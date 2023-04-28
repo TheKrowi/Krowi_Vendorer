@@ -365,7 +365,7 @@ function tooltip.Load()
     -- TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, ProcessItem100002);
 
     -- Enable this again to show tooltip info
-    -- hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
-    --     ProcessItem(self, bag, slot);
-    -- end);
+    hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
+        ProcessItem(self, bag, slot);
+    end);
 end

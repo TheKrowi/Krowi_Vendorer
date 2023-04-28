@@ -30,7 +30,6 @@ local function RightItemOnClick(self)
 end
 
 local function PopulateLeftListFrame()
-    KrowiV_Test = {};
     for bag = Enum.BagIndex.Backpack, Enum.BagIndex.ReagentBag do
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
             local item = Item:CreateFromBagAndSlot(bag, slot);
@@ -45,7 +44,6 @@ local function PopulateLeftListFrame()
                     local color = item:GetItemQualityColor();
                     local name = item:GetItemName();
                     frame:AppendListItem(dualItemListSide.Left, link, icon, color.color, name, nil, bag, slot);
-                    tinsert(KrowiV_Test, link);
                 end);
             end
         end
@@ -61,7 +59,6 @@ local function PopulateRightListFrame()
             local color = item:GetItemQualityColor();
             local name = item:GetItemName();
             frame:AppendListItem(dualItemListSide.Right, link, icon, color.color, name);
-            tinsert(KrowiV_Test, link);
         end);
     end
 end

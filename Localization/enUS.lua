@@ -1,4 +1,4 @@
--- [[ Exported at 2023-04-28 18-17-16 ]] --
+-- [[ Exported at 2023-04-28 22-59-10 ]] --
 -- [[ This code is automatically generated as an export from ]] --
 -- [[ an SQLite database and is not meant for manual edit. ]] --
 
@@ -33,6 +33,8 @@ L["WoWInterface Desc"] = "Open a popup dialog with a link to the {addonName} {wo
 L["Show minimap icon"] = "Show minimap icon";
 L["Show minimap icon Desc"] = "Show / hide the minimap icon.";
 L["Auto Sell"] = "Auto Sell";
+L["Preset Rules"] = "Preset Rules";
+L["Preset Rules Desc"] = "When adding one of the rules below, the rule will be added to the respective rules list.";
 L["Account Rules"] = "Account Rules";
 L["Character Rules"] = "Character Rules";
 L["Add new rule"] = "Add new rule";
@@ -90,4 +92,3 @@ L["Auto Repair No Guild Funds Use Personal"] = "[KV] Not enough guild funds to r
 L["Auto Repair No Personal"] = "[KV] Not enough personal funds to repair.";
 L["Auto Repair Repaired"] = "[KV] Repaired {g}g {s}s {c}c.";
 
-L["Preset Rules Desc"] = "When adding one of the rules below, the rule will be added to the respective rules list.";

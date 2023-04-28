@@ -200,6 +200,7 @@ do -- [[ ItemType ]]
         end
         CheckIfItemTypeIsValid(scopeName, rule, _itemType);
     end
+    autoSell.ItemTypeTypeSet = ItemTypeTypeSet;
 
     local function ItemTypeCheckSubTypeSet(scopeName, rule, _itemType, value)
         _itemType.CheckSubType = value;
@@ -208,6 +209,7 @@ do -- [[ ItemType ]]
         end
         CheckIfItemTypeIsValid(scopeName, rule, _itemType);
     end
+    autoSell.ItemTypeCheckSubTypeSet = ItemTypeCheckSubTypeSet;
 
     local function DeleteItemType(scopeName, rule, _itemType)
         options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.ItemTypes.args[_itemType.Guid] = nil;
@@ -224,6 +226,7 @@ do -- [[ ItemType ]]
         _itemType.SubTypes[index] = value;
         CheckIfItemTypeIsValid(scopeName, rule, _itemType);
     end
+    autoSell.ItemTypeSubTypeSet = ItemTypeSubTypeSet;
 
     local function AddItemTypeTable(scopeName, rule, _itemType)
         KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.ItemTypes.args", _itemType.Guid, {
@@ -489,12 +492,22 @@ function autoSell.PostLoad()
 end
 
 local function AddJunkRule(_scope)
-    local rule = autoSell.AddNewRuleFunc(_scope, "Rule-Preset" .. addon.L["Junk"], addon.L["Junk"] .. " (Preset)");
+    local rule = autoSell.AddNewRuleFunc(_scope, "Rule-PresetJunk", addon.L["Junk"] .. " (Preset)");
     rule.IsPreset = true;
     local scopeName = addon.Objects.ScopeList[_scope];
     local condition = autoSell.AddNewConditionFunc(scopeName, rule);
     autoSell.ConditionCriteriaTypeSet(scopeName, rule, condition, criteriaType.Enum.Quality);
     autoSell.ConditionQualityValueSet(scopeName, rule, condition, 0, true);
+end
+
+local function AddArtifactRelicRule(_scope)
+    local rule = autoSell.AddNewRuleFunc(_scope, "Rule-PresetArtifactRelic", addon.L["Artifact Relic"] .. " (Preset)");
+    rule.IsPreset = true;
+    local scopeName = addon.Objects.ScopeList[_scope];
+    local _itemType = autoSell.AddNewItemTypeFunc(scopeName, rule);
+    autoSell.ItemTypeTypeSet(scopeName, rule, _itemType, 3, true);
+    autoSell.ItemTypeCheckSubTypeSet(scopeName, rule, _itemType, true);
+    autoSell.ItemTypeSubTypeSet(scopeName, rule, _itemType, 11, true);
 end
 
 options.OptionsTable.args["AutoSell"] = {
@@ -521,11 +534,13 @@ options.OptionsTable.args["AutoSell"] = {
             args = {
                 Description = {
                     order = OrderPP(), type = "description", width = "full",
-                    name = addon.L["Preset Rules Desc"]
+                    name = addon.L["Preset Rules Desc"],
+                    fontSize = "medium"
                 },
                 JunkRuleName = {
                     order = OrderPP(), type = "description", width = AdjustedWidth(1),
-                    name = addon.L["Junk"]
+                    name = addon.L["Junk"],
+                    fontSize = "medium"
                 },
                 JunkRuleAccount = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(1),
@@ -536,6 +551,21 @@ options.OptionsTable.args["AutoSell"] = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(1),
                     name = "Add to Character", desc = "",
                     func = function(_, value) AddJunkRule(scope.Character); end
+                },
+                ArtifactRelicRuleName = {
+                    order = OrderPP(), type = "description", width = AdjustedWidth(1),
+                    name = addon.L["Artifact Relic"],
+                    fontSize = "medium"
+                },
+                ArtifactRelicRuleAccount = {
+                    order = OrderPP(), type = "execute", width = AdjustedWidth(1),
+                    name = "Add to Account", desc = "",
+                    func = function(_, value) AddArtifactRelicRule(scope.Account); end
+                },
+                ArtifactRelicRuleCharacter = {
+                    order = OrderPP(), type = "execute", width = AdjustedWidth(1),
+                    name = "Add to Character", desc = "",
+                    func = function(_, value) AddArtifactRelicRule(scope.Character); end
                 }
             }
         },

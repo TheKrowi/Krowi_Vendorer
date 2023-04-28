@@ -18,7 +18,7 @@
         </Scripts>
     </Button>
 
-    <!-- <Button name="MerchantFrameTab4" inherits="PanelTabButtonTemplate" parent="MerchantFrame" id="4">
+    <Button name="MerchantFrameTab4" inherits="PanelTabButtonTemplate" parent="MerchantFrame" id="4">
         <Anchors>
             <Anchor point="LEFT" relativeTo="MerchantFrameTab3" relativePoint="RIGHT" x="-16" y="0"/>
         </Anchors>
@@ -33,5 +33,5 @@
                 MerchantFrame_Update();
             </OnClick>
         </Scripts>
-    </Button> -->
+    </Button>
 </Ui>
