@@ -76,6 +76,8 @@ local function ProcessItem(bag, slot, item)
 
     local classID, subclassID, bindType = select(12, GetItemInfo(link));
     local itemInfo = {
+        Bag = bag,
+        Slot = slot,
         ItemLevel = item:GetCurrentItemLevel(),
         ItemTypeId = classID,
         ItemSubTypeId = subclassID,
@@ -124,30 +126,36 @@ local function SellItems()
     for i = #items, 1, -1 do
         local item = items[i];
         if item.Bag and item.Slot then
-            print(addon.L["Selling item"]:ReplaceVars(item.Link));
+            if addon.Options.db.AutoSell.PrintChatMessage then
+                print(addon.L["Selling item"]:ReplaceVars(item.Link));
+            end
             C_Container.UseContainerItem(item.Bag, item.Slot);
             numItems = numItems + 1;
             frame:RemoveListItem(item);
             if maxNumItems and numItems >= maxNumItems then
-                print(addon.L["x of y items sold in safe mode"]:ReplaceVars{
-                    x = numItems,
-                    y = maxNumItems
-                });
+                if addon.Options.db.AutoSell.PrintChatMessage then
+                    print(addon.L["x of y items sold in safe mode"]:ReplaceVars{
+                        x = numItems,
+                        y = maxNumItems
+                    });
+                end
                 return;
             end
             coroutine.yield();
         end
     end
-    if maxNumItems then
-        print(addon.L["x of y items sold in safe mode"]:ReplaceVars{
-            x = numItems,
-            y = maxNumItems
-        });
-    else
-        print(addon.L["x of y items sold"]:ReplaceVars{
-            x = numItems,
-            y = #items
-        });
+    if addon.Options.db.AutoSell.PrintChatMessage then
+        if maxNumItems then
+            print(addon.L["x of y items sold in safe mode"]:ReplaceVars{
+                x = numItems,
+                y = maxNumItems
+            });
+        else
+            print(addon.L["x of y items sold"]:ReplaceVars{
+                x = numItems,
+                y = #items
+            });
+        end
     end
     co = nil;
 end

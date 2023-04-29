@@ -288,6 +288,8 @@ local function ProcessItem(_tooltip, bag, slot)
     itemLevel = GetDetailedItemLevelInfo(itemLink) or itemLevel;
 
     local itemInfo = {
+        Bag = bag,
+        Slot = slot,
         ItemLevel = itemLevel,
         ItemTypeId = classID,
         ItemSubTypeId = subclassID,
@@ -366,6 +368,8 @@ function tooltip.Load()
 
     -- Enable this again to show tooltip info
     hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
-        ProcessItem(self, bag, slot);
+        if addon.Options.db.Tooltip.ShowAutoSellRules then
+            ProcessItem(self, bag, slot);
+        end
     end);
 end

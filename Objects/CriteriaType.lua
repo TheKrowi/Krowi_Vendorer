@@ -5,6 +5,7 @@ objects.CriteriaType = {};
 local criteriaType = objects.CriteriaType;
 local equalityOperator = addon.Objects.EqualityOperator;
 local itemQuality = addon.Objects.ItemQuality;
+local itemLocation = ItemLocation:CreateEmpty();
 
 criteriaType.List = {
     addon.L["Item Level"],
@@ -24,8 +25,9 @@ do --[[ Rule evaluation functions ]]
         return result, "Item is " .. equalityOperator.List[operator] .. " " .. value;
     end
 
-    local function Soulbound_Func(bindType)
-        local result = bindType == LE_ITEM_BIND_ON_ACQUIRE;
+    local function Soulbound_Func(bag, slot)
+        itemLocation:SetBagAndSlot(bag, slot);
+        local result = C_Item.IsBound(itemLocation);
         return result, "Item is soulbound";
     end
 
@@ -38,7 +40,7 @@ do --[[ Rule evaluation functions ]]
         if condition.CriteriaType == criteriaType.Enum.ItemLevel then
             return ItemLevel_Func(itemInfo.ItemLevel, condition.Operator, condition.Value);
         elseif condition.CriteriaType == criteriaType.Enum.Soulbound then
-            return Soulbound_Func(itemInfo.BindType);
+            return Soulbound_Func(itemInfo.Bag, itemInfo.Slot);
         elseif condition.CriteriaType == criteriaType.Enum.Quality then
             return Quality_Func(itemInfo.Quality, condition.Qualities);
         end

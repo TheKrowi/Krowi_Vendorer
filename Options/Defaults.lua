@@ -29,12 +29,16 @@ options.Defaults = {
                 true -- Epic
             },
             ItemLevel = 0,
-            Operator = 1
+            Operator = 1,
+            PrintChatMessage = true
         },
         AutoRepair = {
             IsEnabled = true,
             IsGuildEnabled = true,
             PrintChatMessage = true
+        },
+        Tooltip = {
+            ShowAutoSellRules = false
         }
     }
 };

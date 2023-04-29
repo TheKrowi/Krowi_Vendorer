@@ -197,7 +197,9 @@
         "random",
         "Item",
         "PanelTemplates_SetTab",
-        "tremovebyval"
+        "tremovebyval",
+        "ItemLocation",
+        "C_Item"
     ],
     "fsdeploy.nodes": [
         {
