@@ -28,22 +28,37 @@ local function GetRules(_scope)
 end
 
 do -- [[ Rule ]]
+    local function CheckIfItemTypesAreInvalid(itemTypes)
+        if not itemTypes then
+            return;
+        end
+        for _, _itemType in next, itemTypes do
+            if _itemType.IsInvalid then
+                return true;
+            end
+        end
+    end
+
+    local function CheckIfConditionsAreInvalid(conditions)
+        if not conditions then
+            return;
+        end
+        for _, condition in next, conditions do
+            if condition.IsInvalid then
+                return true;
+            end
+        end
+    end
+
     local function CheckIfRuleIsValid(scopeName, rule)
-        local isValid = true;
-        for _, _itemType in next, rule.ItemTypes do
-            if not _itemType.Remove then
-                isValid = isValid and _itemType.IsValid;
-            end
+        local isInvalid = CheckIfItemTypesAreInvalid(rule.ItemTypes);
+        if not isInvalid then
+            isInvalid = CheckIfConditionsAreInvalid(rule.Conditions);
         end
-        for _, condition in next, rule.Conditions do
-            if not condition.Remove then
-                isValid = isValid and (criteriaType.CheckIfValid(condition));
-            end
-        end
-        rule.IsValid = isValid;
+        rule.IsInvalid = isInvalid and true or nil; -- Force to nil if false
 
         local invalidRuleTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.InvalidRule");
-        invalidRuleTable.hidden = isValid;
+        invalidRuleTable.hidden = not isInvalid;
 
         addon.GUI.ItemListFrame.AutoSellList.Update();
     end
@@ -82,8 +97,8 @@ do -- [[ Rule ]]
                     order = OrderPP(), type = "toggle", width = AdjustedWidth(0.8),
                     name = addon.L["Enabled"],
                     desc = addon.L["Enabled Desc"],
-                    get = function() return rule.IsEnabled; end,
-                    set = function(_, value) rule.IsEnabled = value; end,
+                    get = function() return not rule.IsDisabled; end,
+                    set = function(_, value) rule.IsDisabled = not value and true or nil; end,
                     hidden = function() return rule.IsPreset; end
                 },
                 InvalidRule = {
@@ -103,13 +118,7 @@ do -- [[ Rule ]]
                             order = OrderPP(), type = "description", width = rule.IsPreset and "full" or AdjustedWidth(1.1),
                             name = addon.L["No item type"],
                             fontSize = "medium",
-                            hidden = function()
-                                local numItemTypes = 0;
-                                for _, _itemType in next, rule.ItemTypes do
-                                    numItemTypes = numItemTypes + (_itemType.Remove and 0 or 1);
-                                end
-                                return numItemTypes > 0;
-                            end,
+                            hidden = function() return rule.ItemTypes and #rule.ItemTypes > 0; end,
                             disabled = function() return rule.IsPreset; end
                         },
                         AddNewItemType = {
@@ -133,13 +142,7 @@ do -- [[ Rule ]]
                             order = OrderPP(), type = "description", width = rule.IsPreset and "full" or AdjustedWidth(1.1),
                             name = addon.L["No condition"],
                             fontSize = "medium",
-                            hidden = function()
-                                local numConditions = 0;
-                                for _, condition in next, rule.Conditions do
-                                    numConditions = numConditions + (condition.Remove and 0 or 1);
-                                end
-                                return numConditions > 0;
-                            end,
+                            hidden = function() return rule.Conditions and #rule.Conditions > 0; end,
                             disabled = function() return rule.IsPreset; end
                         },
                         AddNewCondition = {
@@ -162,51 +165,56 @@ do -- [[ Rule ]]
         local rule = {
             Guid = guid or ("Rule-" .. unique),
             Name = name or ("Rule " .. unique),
-            IsValid = false,
-            IsEnabled = true,
-            NumSelectedItemClasses = 0,
-            ItemTypes = {},
-            Conditions = {}
         };
+        local rules = GetRules(_scope);
+        for _, _rule in next, rules do -- Prevent identical preset rules
+            if rule.Guid == _rule.Guid then
+                return _rule, false;
+            end
+        end
         tinsert(GetRules(_scope), rule);
         local scopeName = addon.Objects.ScopeList[_scope];
         AddRuleTable(scopeName, rule);
-        return rule;
+        return rule, true;
     end
     autoSell.AddNewRuleFunc = AddNewRuleFunc;
 end
 
 do -- [[ ItemType ]]
-    local function CheckIfItemTypeIsValid(scopeName, rule, _itemType)
-        local isValid = _itemType.Type ~= nil;
-        if _itemType.CheckSubType then
-            isValid = isValid and _itemType.NumSelectedSubTypes > 0;
+    local function MakeQuickItemTypes(rule)
+        rule.QuickItemTypes = {};
+        for _, _itemType in next, rule.ItemTypes do
+            if not _itemType.IsInvalid then
+                rule.QuickItemTypes[_itemType.Type] = rule.QuickItemTypes[_itemType.Type] or (_itemType.SubTypes and {} or true);
+                if _itemType.SubTypes then
+                    for itemSubTypeId, _ in next, _itemType.SubTypes do
+                        rule.QuickItemTypes[_itemType.Type][itemSubTypeId] = true;
+                    end
+                end
+            end
         end
-        _itemType.IsValid = isValid;
-        autoSell.CheckIfRuleIsValid(scopeName, rule);
     end
 
-    local function ResetItemTypeSubTypes(_itemType)
-        _itemType.NumSelectedSubTypes = 0;
-        for index, _ in next, _itemType.SubTypes do
-            _itemType.SubTypes[index] = nil;
-        end
+    local function CheckIfItemTypeIsValid(scopeName, rule, _itemType)
+        local isInvalid = not _itemType.Type or (_itemType.SubTypes and _itemType.NumSelectedSubTypes == 0);
+        _itemType.IsInvalid = isInvalid and true or nil; -- Force to nil if false
+        MakeQuickItemTypes(rule);
+        autoSell.CheckIfRuleIsValid(scopeName, rule);
     end
 
     local function ItemTypeTypeSet(scopeName, rule, _itemType, value, reset)
         _itemType.Type = value;
         if reset then
-            ResetItemTypeSubTypes(_itemType);
+            _itemType.NumSelectedSubTypes = _itemType.SubTypes and 0 or nil;
+            _itemType.SubTypes = _itemType.SubTypes and {} or nil;
         end
         CheckIfItemTypeIsValid(scopeName, rule, _itemType);
     end
     autoSell.ItemTypeTypeSet = ItemTypeTypeSet;
 
     local function ItemTypeCheckSubTypeSet(scopeName, rule, _itemType, value)
-        _itemType.CheckSubType = value;
-        if not value then
-            ResetItemTypeSubTypes(_itemType);
-        end
+        _itemType.NumSelectedSubTypes = value and 0 or nil;
+        _itemType.SubTypes = value and {} or nil;
         CheckIfItemTypeIsValid(scopeName, rule, _itemType);
     end
     autoSell.ItemTypeCheckSubTypeSet = ItemTypeCheckSubTypeSet;
@@ -214,6 +222,7 @@ do -- [[ ItemType ]]
     local function DeleteItemType(scopeName, rule, _itemType)
         options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.ItemTypes.args[_itemType.Guid] = nil;
         addon.Util.TableRemoveByValue(rule.ItemTypes, _itemType);
+        MakeQuickItemTypes(rule);
         autoSell.CheckIfRuleIsValid(scopeName, rule);
     end
 
@@ -245,7 +254,7 @@ do -- [[ ItemType ]]
                     order = OrderPP(), type = "toggle", width = AdjustedWidth(0.8),
                     name = addon.L["Select sub type"],
                     desc = addon.L["Select sub type Desc"],
-                    get = function() return _itemType.CheckSubType; end,
+                    get = function() return _itemType.SubTypes; end,
                     set = function(_, value) ItemTypeCheckSubTypeSet(scopeName, rule, _itemType, value); end,
                     disabled = function() return rule.IsPreset; end
                 },
@@ -269,14 +278,14 @@ do -- [[ ItemType ]]
                     get = function(_, index) return _itemType.SubTypes[index]; end,
                     set = function(_, index, value) ItemTypeSubTypeSet(scopeName, rule, _itemType, index, value); end,
                     control = "Dropdown",
-                    hidden = function() return not _itemType.CheckSubType; end,
+                    hidden = function() return not _itemType.SubTypes; end,
                     disabled = function() return rule.IsPreset; end
                 },
                 AtLeastOneItemSubTypeMustBeSelected = {
                     order = OrderPP(), type = "description", width = "full",
                     name = addon.L["At least one item sub type must be selected"]:SetColorLightRed(),
                     fontSize = "medium",
-                    hidden = function() return not _itemType.CheckSubType or _itemType.NumSelectedSubTypes > 0; end
+                    hidden = function() return not _itemType.SubTypes or _itemType.NumSelectedSubTypes > 0; end
                 },
             }
         });
@@ -289,10 +298,9 @@ do -- [[ ItemType ]]
     local function AddNewItemTypeFunc(scopeName, rule)
         local unique = time() + random(time());
         local _itemType = {
-            Guid = "ItemType-" .. unique,
-            SubTypes = {},
-            NumSelectedSubTypes = 0
+            Guid = "ItemType-" .. unique
         };
+        rule.ItemTypes = rule.ItemTypes or {};
         tinsert(rule.ItemTypes, _itemType);
         AddItemTypeTable(scopeName, rule, _itemType);
         return _itemType;
@@ -303,7 +311,7 @@ end
 do -- [[ Condition ]]
     local function CheckIfConditionIsValid(scopeName, rule, condition)
         local isValid, desc = criteriaType.CheckIfValid(condition);
-        condition.IsValid = isValid;
+        condition.IsInvalid = not isValid and true or nil;
         local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
         invalidConditionTable.name = desc:SetColorLightRed();
         autoSell.CheckIfRuleIsValid(scopeName, rule);
@@ -451,7 +459,7 @@ do -- [[ Condition ]]
                     order = OrderPP(), type = "description", width = "full",
                     name = addon.L["Invalid condition"]:SetColorLightRed(),
                     fontSize = "medium",
-                    hidden = function() return condition.IsValid; end
+                    hidden = function() return not condition.IsInvalid; end
                 }
             }
         });
@@ -466,6 +474,7 @@ do -- [[ Condition ]]
         local condition = {
             Guid = "Condition-" .. unique,
         };
+        rule.Conditions = rule.Conditions or {};
         tinsert(rule.Conditions, condition);
         AddConditionTable(scopeName, rule, condition);
         return condition;
@@ -481,18 +490,25 @@ function autoSell.PostLoad()
         local scopeName = addon.Objects.ScopeList[_scope];
         for _, rule in next, rules do
             autoSell.AddRuleTable(scopeName, rule);
-            for _, _itemType in next, rule.ItemTypes do
-                autoSell.AddItemTypeTable(scopeName, rule, _itemType);
+            if rule.ItemTypes then
+                for _, _itemType in next, rule.ItemTypes do
+                    autoSell.AddItemTypeTable(scopeName, rule, _itemType);
+                end
             end
-            for _, condition in next, rule.Conditions do
-                autoSell.AddConditionTable(scopeName, rule, condition);
+            if rule.Conditions then
+                for _, condition in next, rule.Conditions do
+                    autoSell.AddConditionTable(scopeName, rule, condition);
+                end
             end
         end
     end
 end
 
 local function AddJunkRule(_scope)
-    local rule = autoSell.AddNewRuleFunc(_scope, "Rule-PresetJunk", addon.L["Junk"] .. " (Preset)");
+    local rule, isNew = autoSell.AddNewRuleFunc(_scope, "Rule-PresetJunk", addon.L["Junk"] .. " (Preset)");
+    if not isNew then
+        return;
+    end
     rule.IsPreset = true;
     local scopeName = addon.Objects.ScopeList[_scope];
     local condition = autoSell.AddNewConditionFunc(scopeName, rule);
@@ -501,7 +517,10 @@ local function AddJunkRule(_scope)
 end
 
 local function AddArtifactRelicRule(_scope)
-    local rule = autoSell.AddNewRuleFunc(_scope, "Rule-PresetArtifactRelic", addon.L["Artifact Relic"] .. " (Preset)");
+    local rule, isNew = autoSell.AddNewRuleFunc(_scope, "Rule-PresetArtifactRelic", addon.L["Artifact Relic"] .. " (Preset)");
+    if not isNew then
+        return;
+    end
     rule.IsPreset = true;
     local scopeName = addon.Objects.ScopeList[_scope];
     local _itemType = autoSell.AddNewItemTypeFunc(scopeName, rule);

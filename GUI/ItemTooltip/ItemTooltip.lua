@@ -271,8 +271,8 @@ local function CheckRule(doSell, results, rule, itemInfo)
     return doSell, results;
 end
 
-local function ProcessItem(_tooltip, bag, slot)
-    local itemLink = C_Container.GetContainerItemLink(bag, slot);
+local function ProcessItem(_tooltip, bag, slot) -- If slot is nil, bag = guid
+    local itemLink = slot and C_Container.GetContainerItemLink(bag, slot) or C_Item.GetItemLinkByGUID(bag);
     if not itemLink then
         return;
     end
@@ -355,16 +355,22 @@ local function ProcessItem(_tooltip, bag, slot)
     _tooltip:Show();
 end
 
--- local function ProcessItem100002(tooltip, localData)
---     ProcessItem(tooltip, localData.id);
+local function ProcessItem100002(tooltip, localData)
+    ProcessItem(tooltip, localData.guid);
 
---     -- for i, v in next, localData do
---     --     print(i, v)
---     -- end
--- end
+    -- if localData.guid then
+    --     local itemLink = C_Item.GetItemLinkByGUID(localData.guid);
+    -- end
+    -- for i, v in next, localData do
+    --     print(i, v)
+    -- end
+end
 
 function tooltip.Load()
-    -- TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, ProcessItem100002);
+    -- if addon.IsDragonflightRetail then
+    --     TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, ProcessItem100002);
+    --     return;
+    -- end
 
     -- Enable this again to show tooltip info
     hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)

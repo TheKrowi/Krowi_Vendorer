@@ -7,8 +7,8 @@ local merchantItemsContainer = addon.GUI.MerchantItemsContainer;
 local originalWidth, originalHeight = MerchantFrame:GetSize();
 
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
-	addon.GUI.ItemListFrame.JunkList.Hide();
-	addon.GUI.ItemListFrame.IgnoreList.Hide();
+	addon.GUI.ItemListFrame.JunkList:Hide();
+	addon.GUI.ItemListFrame.IgnoreList:Hide();
 	local numColumns = addon.Options.db.NumColumns - merchantItemsContainer.DefaultMerchantInfoNumColumns;
 	local numRows = addon.Options.db.NumRows - merchantItemsContainer.DefaultMerchantInfoNumRows;
 	local itemWidth = merchantItemsContainer.OffsetX + merchantItemsContainer.ItemWidth;
@@ -32,8 +32,8 @@ hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
 end);
 
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
-	addon.GUI.ItemListFrame.JunkList.Hide();
-	addon.GUI.ItemListFrame.IgnoreList.Hide();
+	addon.GUI.ItemListFrame.JunkList:Hide();
+	addon.GUI.ItemListFrame.IgnoreList:Hide();
 	MerchantFrame:SetSize(originalWidth, originalHeight);
 	KrowiV_BottomExtensionRightBorder:Hide();
 	KrowiV_BottomExtensionLeftBorder:Hide();
@@ -91,12 +91,12 @@ end
 
 function KrowiV_ShowIgnoreList_OnClick(self)
 	PanelTemplates_SetTab(MerchantFrame, self:GetID());
-	addon.ItemListFrame.IgnoreList.Show();
+	addon.ItemListFrame.IgnoreList:Show(true);
 end
 
 function KrowiV_ShowJunkList_OnClick(self)
 	PanelTemplates_SetTab(MerchantFrame, self:GetID());
-	addon.ItemListFrame.JunkList.Show();
+	addon.ItemListFrame.JunkList:Show(true);
 end
 
 function MerchantFrame_Update()
@@ -133,7 +133,7 @@ function merchantFrame.UpdateIgnoreInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
-	addon.GUI.ItemListFrame.IgnoreList.Show();
+	addon.GUI.ItemListFrame.IgnoreList:Show(true);
 end
 
 function merchantFrame.UpdateJunkInfo()
@@ -153,5 +153,5 @@ function merchantFrame.UpdateJunkInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
-	addon.GUI.ItemListFrame.JunkList.Show();
+	addon.GUI.ItemListFrame.JunkList:Show(true);
 end

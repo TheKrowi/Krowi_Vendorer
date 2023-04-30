@@ -1,6 +1,12 @@
 -- [[ Namespaces ]] --
 local addonName, addon = ...;
 
+-- [[ Version data ]] --
+local version = (GetBuildInfo());
+local major = string.match(version, "(%d+)%.(%d+)%.(%d+)(%w?)");
+addon.IsWrathClassic = major == "3";
+addon.IsDragonflightRetail = major == "10";
+
 -- [[ Ace ]] --
 addon.L = LibStub(addon.Libs.AceLocale):GetLocale(addonName);
 
@@ -32,8 +38,11 @@ function loadHelper:OnEvent(event, arg1, arg2)
 
             addon.Options.Load(); -- Needs ItemType
 
-            addon.GUI.ItemListFrame.JunkList.Init(true);
-            addon.GUI.ItemListFrame.IgnoreList.Init(true);
+            KrowiV_SavedData = KrowiV_SavedData or {};
+            KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
+            KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
+            -- addon.GUI.ItemListFrame.JunkList.Init(true);
+            -- addon.GUI.ItemListFrame.IgnoreList.Init(true);
             addon.GUI.ItemListFrame.AutoSellList:Init();
 
             addon.Icon.Load();

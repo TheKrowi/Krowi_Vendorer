@@ -4,29 +4,27 @@ local itemListFrame = addon.GUI.ItemListFrame;
 local dualItemListSide = addon.Objects.DualItemListSide;
 itemListFrame.JunkList = {};
 local junkList = itemListFrame.JunkList;
-local frame = KrowiV_DualItemListFrame;
-local isEmbedded = false;
+local frame;
 
-function junkList.Init(_isEmbedded)
-    KrowiV_SavedData = KrowiV_SavedData or {};
-    KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
-    KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
-
-    isEmbedded = _isEmbedded;
-    if isEmbedded then
-        frame = KrowiV_EmbeddedDualItemListFrame
-    end
-end
+-- function junkList.Init()
+--     KrowiV_SavedData = KrowiV_SavedData or {};
+--     KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
+--     KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
+-- end
 
 local function LeftItemOnClick(self)
     KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = true;
     KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.LeftItemOnClick(self, frame);
+    -- addon.GUI.ItemListFrame.IgnoreList.Update();
+    addon.GUI.ItemListFrame.AutoSellList.Update();
 end
 
 local function RightItemOnClick(self)
     KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.RightItemOnClick(self, frame);
+    -- addon.GUI.ItemListFrame.IgnoreList.Update();
+    addon.GUI.ItemListFrame.AutoSellList.Update();
 end
 
 local function PopulateLeftListFrame()
@@ -36,7 +34,7 @@ local function PopulateLeftListFrame()
             if not item:IsItemEmpty() then
                 item:ContinueOnItemLoad(function()
                     local itemId = item:GetItemID();
-                    if KrowiV_SavedData.IgnoredItems[itemId] then
+                    if KrowiV_SavedData.JunkItems[itemId] then
                         return;
                     end
                     local link = item:GetItemLink();
@@ -63,8 +61,11 @@ local function PopulateRightListFrame()
     end
 end
 
-function junkList.Show()
-    if not isEmbedded then
+function junkList:Show(isEmbedded)
+    self.IsEmbedded = isEmbedded;
+    if isEmbedded then
+        frame = KrowiV_EmbeddedDualItemListFrame
+    else
         frame:ClearAllPoints();
         frame:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
         frame:SetHeight(MerchantFrame:GetHeight());
@@ -84,8 +85,17 @@ function junkList.Show()
     frame:Show();
 end
 
-function junkList.Hide()
-    if isEmbedded then
+function junkList:Hide()
+    if self.IsEmbedded then
         frame:Hide();
     end
+end
+
+function junkList.Update()
+    if not frame or not frame:IsShown() then
+        return;
+    end
+    frame:ClearListItems();
+    PopulateLeftListFrame();
+    PopulateRightListFrame();
 end

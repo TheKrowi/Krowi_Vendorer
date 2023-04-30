@@ -4,29 +4,27 @@ local itemListFrame = addon.GUI.ItemListFrame;
 local dualItemListSide = addon.Objects.DualItemListSide;
 itemListFrame.IgnoreList = {};
 local ignoreList = itemListFrame.IgnoreList;
-local frame = KrowiV_DualItemListFrame;
-local isEmbedded = false;
+local frame;
 
-function ignoreList.Init(_isEmbedded)
-    KrowiV_SavedData = KrowiV_SavedData or {};
-    KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
-    KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
-
-    isEmbedded = _isEmbedded;
-    if isEmbedded then
-        frame = KrowiV_EmbeddedDualItemListFrame
-    end
-end
+-- function ignoreList.Init()
+--     KrowiV_SavedData = KrowiV_SavedData or {};
+--     KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
+--     KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
+-- end
 
 local function LeftItemOnClick(self)
     KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = true;
     KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.LeftItemOnClick(self, frame);
+    -- addon.GUI.ItemListFrame.JunkList.Update();
+    addon.GUI.ItemListFrame.AutoSellList.Update();
 end
 
 local function RightItemOnClick(self)
     KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.RightItemOnClick(self, frame);
+    -- addon.GUI.ItemListFrame.JunkList.Update();
+    addon.GUI.ItemListFrame.AutoSellList.Update();
 end
 
 local function PopulateLeftListFrame()
@@ -63,8 +61,12 @@ local function PopulateRightListFrame()
     end
 end
 
-function ignoreList.Show()
-    if not isEmbedded then
+function ignoreList:Show(isEmbedded)
+    self.IsEmbedded = isEmbedded;
+    if isEmbedded then
+        frame = KrowiV_EmbeddedDualItemListFrame
+    else
+        frame = KrowiV_DualItemListFrame;
         frame:ClearAllPoints();
         frame:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
         frame:SetHeight(MerchantFrame:GetHeight());
@@ -84,8 +86,17 @@ function ignoreList.Show()
     frame:Show();
 end
 
-function ignoreList.Hide()
-    if isEmbedded then
+function ignoreList:Hide()
+    if self.IsEmbedded then
         frame:Hide();
     end
+end
+
+function ignoreList.Update()
+    if not frame or not frame:IsShown() then
+        return;
+    end
+    frame:ClearListItems();
+    PopulateLeftListFrame();
+    PopulateRightListFrame();
 end
