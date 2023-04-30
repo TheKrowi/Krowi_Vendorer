@@ -17,14 +17,14 @@ local function LeftItemOnClick(self)
     KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.LeftItemOnClick(self, frame);
     -- addon.GUI.ItemListFrame.IgnoreList.Update();
-    addon.GUI.ItemListFrame.AutoSellList.Update();
+    KrowiV_AutoSellListFrame:Update();
 end
 
 local function RightItemOnClick(self)
     KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.RightItemOnClick(self, frame);
     -- addon.GUI.ItemListFrame.IgnoreList.Update();
-    addon.GUI.ItemListFrame.AutoSellList.Update();
+    KrowiV_AutoSellListFrame:Update();
 end
 
 local function PopulateLeftListFrame()
@@ -64,8 +64,9 @@ end
 function junkList:Show(isEmbedded)
     self.IsEmbedded = isEmbedded;
     if isEmbedded then
-        frame = KrowiV_EmbeddedDualItemListFrame
+        frame = KrowiV_EmbeddedJunkListFrame;
     else
+        frame = KrowiV_JunkListFrame;
         frame:ClearAllPoints();
         frame:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
         frame:SetHeight(MerchantFrame:GetHeight());

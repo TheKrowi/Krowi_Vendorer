@@ -7,4 +7,5 @@
     <Script file="ItemQuality.lua" />
     <Script file="CriteriaType.lua" />
     <Script file="ItemType.lua" />
+    <Script file="AutoSellRule.lua" />
 </Ui>

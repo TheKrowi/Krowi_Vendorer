@@ -53,7 +53,7 @@ hooksecurefunc("MerchantFrame_UpdateFilterString", PrepareMerchantFrame);
 hooksecurefunc(MerchantFrame, "Show", function(self)
 	SetMerchantFilter(LE_LOOT_FILTER_ALL);
 
-	addon.GUI.ItemListFrame.AutoSellList:Show();
+	KrowiV_AutoSellListFrame:ShowWithMerchantFrame();
 end);
 
 MerchantFrameBottomRightBorder:SetTexCoord(91 / 256, (91 + 76) / 256, 0, 0.4765625);
@@ -133,6 +133,7 @@ function merchantFrame.UpdateIgnoreInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
+	addon.GUI.ItemListFrame.JunkList:Hide();
 	addon.GUI.ItemListFrame.IgnoreList:Show(true);
 end
 
@@ -153,5 +154,6 @@ function merchantFrame.UpdateJunkInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
+	addon.GUI.ItemListFrame.IgnoreList:Hide();
 	addon.GUI.ItemListFrame.JunkList:Show(true);
 end

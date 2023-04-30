@@ -47,3 +47,186 @@ function autoSell.CheckRules(itemInfo)
         end
     end
 end
+
+autoSell.ItemClassMatrix = {
+    ["DEATHKNIGHT"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Plate] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Axe1H] = true,
+            [Enum.ItemWeaponSubclass.Axe2H] = true,
+            [Enum.ItemWeaponSubclass.Mace1H] = true,
+            [Enum.ItemWeaponSubclass.Mace2H] = true,
+            [Enum.ItemWeaponSubclass.Polearm] = true,
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Sword2H] = true
+        }
+    },
+    ["DEMONHUNTER"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Leather] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Axe1H] = true,
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Warglaive] = true,
+            [Enum.ItemWeaponSubclass.Unarmed] = true
+        }
+    },
+    ["DRUID"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Leather] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Mace1H] = true,
+            [Enum.ItemWeaponSubclass.Mace2H] = true,
+            [Enum.ItemWeaponSubclass.Polearm] = true,
+            [Enum.ItemWeaponSubclass.Staff] = true,
+            [Enum.ItemWeaponSubclass.Bearclaw] = true,
+            [Enum.ItemWeaponSubclass.Catclaw] = true,
+            [Enum.ItemWeaponSubclass.Unarmed] = true,
+            [Enum.ItemWeaponSubclass.Dagger] = true
+        }
+    },
+    ["EVOKER"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Mail] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Axe1H] = true,
+            [Enum.ItemWeaponSubclass.Axe2H] = true,
+            [Enum.ItemWeaponSubclass.Mace1H] = true,
+            [Enum.ItemWeaponSubclass.Mace2H] = true,
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Sword2H] = true,
+            [Enum.ItemWeaponSubclass.Staff] = true,
+            [Enum.ItemWeaponSubclass.Unarmed] = true,
+            [Enum.ItemWeaponSubclass.Dagger] = true
+        }
+    },
+    ["HUNTER"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Mail] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Axe1H] = true,
+            [Enum.ItemWeaponSubclass.Axe2H] = true,
+            [Enum.ItemWeaponSubclass.Bows] = true,
+            [Enum.ItemWeaponSubclass.Guns] = true,
+            [Enum.ItemWeaponSubclass.Polearm] = true,
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Sword2H] = true,
+            [Enum.ItemWeaponSubclass.Staff] = true,
+            [Enum.ItemWeaponSubclass.Unarmed] = true,
+            [Enum.ItemWeaponSubclass.Dagger] = true,
+            [Enum.ItemWeaponSubclass.Crossbow] = true
+        }
+    },
+    ["MAGE"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Cloth] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Staff] = true,
+            [Enum.ItemWeaponSubclass.Dagger] = true,
+            [Enum.ItemWeaponSubclass.Wand] = true
+        }
+    },
+    ["MONK"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Leather] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Axe1H] = true,
+            [Enum.ItemWeaponSubclass.Mace1H] = true,
+            [Enum.ItemWeaponSubclass.Polearm] = true,
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Staff] = true,
+            [Enum.ItemWeaponSubclass.Unarmed] = true
+        }
+    },
+    ["PALADIN"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Plate] = true,
+            [Enum.ItemArmorSubclass.Shield] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Axe1H] = true,
+            [Enum.ItemWeaponSubclass.Axe2H] = true,
+            [Enum.ItemWeaponSubclass.Mace1H] = true,
+            [Enum.ItemWeaponSubclass.Mace2H] = true,
+            [Enum.ItemWeaponSubclass.Polearm] = true,
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Sword2H] = true
+        }
+    },
+    ["PRIEST"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Cloth] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Mace1H] = true,
+            [Enum.ItemWeaponSubclass.Staff] = true,
+            [Enum.ItemWeaponSubclass.Dagger] = true,
+            [Enum.ItemWeaponSubclass.Wand] = true
+        }
+    },
+    ["ROGUE"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Leather] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Axe1H] = true,
+            [Enum.ItemWeaponSubclass.Mace1H] = true,
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Unarmed] = true,
+            [Enum.ItemWeaponSubclass.Dagger] = true
+        }
+    },
+    ["SHAMAN"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Mail] = true,
+            [Enum.ItemArmorSubclass.Shield] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Axe1H] = true,
+            [Enum.ItemWeaponSubclass.Axe2H] = true,
+            [Enum.ItemWeaponSubclass.Mace1H] = true,
+            [Enum.ItemWeaponSubclass.Mace2H] = true,
+            [Enum.ItemWeaponSubclass.Staff] = true,
+            [Enum.ItemWeaponSubclass.Unarmed] = true,
+            [Enum.ItemWeaponSubclass.Dagger] = true
+        }
+    },
+    ["WARLOCK"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Cloth] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Staff] = true,
+            [Enum.ItemWeaponSubclass.Dagger] = true,
+            [Enum.ItemWeaponSubclass.Wand] = true
+        }
+    },
+    ["WARRIOR"] = {
+        [Enum.ItemClass.Armor] = {
+            [Enum.ItemArmorSubclass.Plate] = true,
+            [Enum.ItemArmorSubclass.Shield] = true
+        },
+        [Enum.ItemClass.Weapon] = {
+            [Enum.ItemWeaponSubclass.Axe1H] = true,
+            [Enum.ItemWeaponSubclass.Axe2H] = true,
+            [Enum.ItemWeaponSubclass.Mace1H] = true,
+            [Enum.ItemWeaponSubclass.Mace2H] = true,
+            [Enum.ItemWeaponSubclass.Polearm] = true,
+            [Enum.ItemWeaponSubclass.Sword1H] = true,
+            [Enum.ItemWeaponSubclass.Sword2H] = true,
+            [Enum.ItemWeaponSubclass.Staff] = true,
+            [Enum.ItemWeaponSubclass.Unarmed] = true,
+            [Enum.ItemWeaponSubclass.Dagger] = true
+        }
+    }
+};

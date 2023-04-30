@@ -43,7 +43,6 @@ function loadHelper:OnEvent(event, arg1, arg2)
             KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
             -- addon.GUI.ItemListFrame.JunkList.Init(true);
             -- addon.GUI.ItemListFrame.IgnoreList.Init(true);
-            addon.GUI.ItemListFrame.AutoSellList:Init();
 
             addon.Icon.Load();
 

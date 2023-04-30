@@ -1,4 +1,4 @@
--- [[ Exported at 2023-04-28 22-59-10 ]] --
+-- [[ Exported at 2023-04-30 21-57-40 ]] --
 -- [[ This code is automatically generated as an export from ]] --
 -- [[ an SQLite database and is not meant for manual edit. ]] --
 
@@ -48,11 +48,12 @@ L["Delete rule Desc"] = "Delete this rule.";
 L["Enabled Desc"] = "Enable / disable this rule. Disabled rules are not evaluated.";
 L["Invalid Rule"] = "This rule is not valid. Check the errors below.";
 L["Item types and sub types"] = "Item types and sub types";
-L["No item type"] = "No item type or sub types are defined. This rule will apply to all items.";
+L["No item types"] = "No item types or sub types are defined. This rule will apply to all items.";
+L["Item Types are read only"] = "This rule is a preset rule. Item types and sub types are read only. Any changes made to the dropdown lists will be reverted.";
 L["Add new item type"] = "Add new item type";
 L["Add new item type Desc"] = "Add a new item type with the option to add sub types to this rule. These are evaluated as OR. This means that an item will be sold if it applies to at least 1 item type or sub type.";
 L["Conditions"] = "Conditions";
-L["No condition"] = "No condition is defined. This rule will apply to all items based on the item type and/or sub types (if defined).";
+L["No conditions"] = "No conditions are defined. This rule will apply to all items based on the item type and/or sub types (if defined).";
 L["Add new condition"] = "Add new condition";
 L["Add new condition Desc"] = "Add a new condition to this rule. These are evaluated as AND. This means that an item only will be sold if it applies to all conditions.";
 L["Select sub type"] = "Select sub type";
@@ -91,4 +92,8 @@ L["x of y items sold in safe mode"] = "[KV] {x} of {y} items sold in safe mode";
 L["Auto Repair No Guild Funds Use Personal"] = "[KV] Not enough guild funds to repair, trying personal funds.";
 L["Auto Repair No Personal"] = "[KV] Not enough personal funds to repair.";
 L["Auto Repair Repaired"] = "[KV] Repaired {g}g {s}s {c}c.";
+L["Junk List"] = "Junk List";
+L["Junk"] = "Junk";
+L["Artifact Relic"] = "Artifact Relic";
+L["Unusable Equipment"] = "Unusable Equipment";
 

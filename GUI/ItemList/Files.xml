@@ -2,5 +2,20 @@
     <Script file="ItemListFrame.lua"/>
     <Script file="JunkList.lua"/>
     <Script file="IgnoreList.lua"/>
-    <Script file="AutoSellList.lua"/>
+
+    <Frame name="KrowiV_JunkListFrame" inherits="KrowiV_DualItemListFrame_Template"/>
+    <Frame name="KrowiV_IgnoreListFrame" inherits="KrowiV_DualItemListFrame_Template"/>
+
+    <Frame name="KrowiV_EmbeddedJunkListFrame" inherits="KrowiV_DualItemList_Template" parent="MerchantFrame" hidden="true">
+        <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+        </Anchors>
+    </Frame>
+    <Frame name="KrowiV_EmbeddedIgnoreListFrame" inherits="KrowiV_DualItemList_Template" parent="MerchantFrame" hidden="true">
+        <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+        </Anchors>
+    </Frame>
 </Ui>

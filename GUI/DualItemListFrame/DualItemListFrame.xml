@@ -1,7 +1,7 @@
 <Ui>
     <Script file="DualItemListFrameMixin.lua"/>
 
-    <Frame name="KrowiV_DualItemListFrame" mixin="KrowiV_DualItemListFrameMixin" inherits="ButtonFrameTemplate" toplevel="true" movable="true" enableMouse="true" parent="MerchantFrame" hidden="true">
+    <Frame name="KrowiV_DualItemListFrame_Template" mixin="KrowiV_DualItemListFrameMixin" inherits="ButtonFrameTemplate" toplevel="true" movable="true" enableMouse="true" virtual="true">
         <Size x="610" y="444"/>
         <Frames>
             <Frame name="$parentEmbeddedItemList" parentKey="EmbeddedItemList" inherits="KrowiV_DualItemList_Template" setAllPoints="true">

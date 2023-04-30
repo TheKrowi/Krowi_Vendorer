@@ -199,7 +199,12 @@
         "PanelTemplates_SetTab",
         "tremovebyval",
         "ItemLocation",
-        "C_Item"
+        "C_Item",
+        "KrowiV_EmbeddedIgnoreListFrame",
+        "KrowiV_IgnoreListFrame",
+        "KrowiV_EmbeddedJunkListFrame",
+        "KrowiV_JunkListFrame",
+        "KrowiV_AutoSellListFrame"
     ],
     "fsdeploy.nodes": [
         {
