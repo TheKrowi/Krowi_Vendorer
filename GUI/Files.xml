@@ -10,5 +10,7 @@
     <Include file="SingleItemListFrame/SingleItemListFrame.xml"/>
     <Include file="AutoSellListFrame/AutoSellListFrame.xml"/>
     <Include file="ItemList/Files.xml"/>
+    <Include file="JunkListFrame/JunkListFrame.xml"/>
+    <Include file="IgnoreListFrame/IgnoreListFrame.xml"/>
     <Include file="ItemTooltip/Files.xml"/>
 </Ui>

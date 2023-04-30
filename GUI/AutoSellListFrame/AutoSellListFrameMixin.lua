@@ -79,6 +79,7 @@ function KrowiV_AutoSellListFrameMixin:OnEvent(event, arg1, arg2)
 end
 
 function KrowiV_AutoSellListFrameMixin:OnShow()
+    self:RegisterEvent("BAG_UPDATE");
     self:Update();
 end
 
@@ -141,7 +142,8 @@ local function ItemOnClick(self, button)
         KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = true;
         KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
         frame:RemoveListItem(self.ElementData);
-        -- addon.GUI.ItemListFrame.IgnoreList.Update();
+        KrowiV_EmbeddedIgnoreListFrame:Update();
+        KrowiV_EmbeddedJunkListFrame:Update();
         -- Update Ignore List here
     end
 end
@@ -153,7 +155,6 @@ function KrowiV_AutoSellListFrameMixin:ShowWithMerchantFrame()
     self:SetPoint("BOTTOM");
     self.Button1:Show();
     self.Button2:Show();
-    self:RegisterEvent("BAG_UPDATE");
     self:RegisterListItemsForClicks("LeftButtonUp", "RightButtonUp");
     self:SetListItemsOnClick(ItemOnClick);
     self:Show();

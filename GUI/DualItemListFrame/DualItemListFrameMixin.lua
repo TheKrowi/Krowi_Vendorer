@@ -47,9 +47,10 @@ function KrowiV_DualItemListFrameMixin:RegisterListItemsForClicks(side, ...)
 end
 
 function KrowiV_DualItemListFrameMixin:ClearListItems(side)
-    if side == dualItemListSide.Left then
+    if side == nil or side == dualItemListSide.Left then
         self.EmbeddedItemList.LeftList:ClearListItems();
-    elseif side == dualItemListSide.Right then
+    end
+    if side == nil or side == dualItemListSide.Right then
         self.EmbeddedItemList.RightList:ClearListItems();
     end
 end

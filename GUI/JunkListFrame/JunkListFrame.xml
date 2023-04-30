@@ -1,0 +1,27 @@
+<Ui>
+    <Script file="JunkListFrameMixin.lua"/>
+
+    <Frame name="KrowiV_JunkListFrame" mixin="KrowiV_JunkListFrameMixin" inherits="KrowiV_DualItemListFrame_Template" hidden="true">
+        <Scripts>
+            <OnLoad inherit="prepend" function="KrowiV_JunkListFrameMixin_OnLoad"/>
+			<OnEvent method="OnEvent"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+        </Scripts>
+    </Frame>
+    <Frame name="KrowiV_EmbeddedJunkListFrame" mixin="KrowiV_JunkListFrameMixin" inherits="KrowiV_DualItemList_Template" parent="MerchantFrame" hidden="true">
+        <KeyValues>
+            <KeyValue key="IsEmbedded" value="true" type="boolean"/>
+        </KeyValues>
+        <Anchors>
+            <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad inherit="prepend" function="KrowiV_JunkListFrameMixin_OnLoad"/>
+			<OnEvent method="OnEvent"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+        </Scripts>
+    </Frame>
+</Ui>

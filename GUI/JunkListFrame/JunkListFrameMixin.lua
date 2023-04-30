@@ -2,28 +2,41 @@
 local _, addon = ...;
 local itemListFrame = addon.GUI.ItemListFrame;
 local dualItemListSide = addon.Objects.DualItemListSide;
-itemListFrame.JunkList = {};
-local junkList = itemListFrame.JunkList;
 local frame;
 
--- function junkList.Init()
---     KrowiV_SavedData = KrowiV_SavedData or {};
---     KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
---     KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
--- end
+KrowiV_JunkListFrameMixin = {};
+
+function KrowiV_JunkListFrameMixin_OnLoad(self)
+    frame = self;
+end
+
+function KrowiV_JunkListFrameMixin:OnEvent(event, arg1, arg2)
+    if event == "BAG_UPDATE" then
+        self:Update();
+    end
+end
+
+function KrowiV_JunkListFrameMixin:OnShow()
+    self:RegisterEvent("BAG_UPDATE");
+    self:Update();
+end
+
+function KrowiV_JunkListFrameMixin:OnHide()
+    self:UnregisterEvent("BAG_UPDATE");
+end
 
 local function LeftItemOnClick(self)
     KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = true;
     KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.LeftItemOnClick(self, frame);
-    -- addon.GUI.ItemListFrame.IgnoreList.Update();
+    KrowiV_EmbeddedIgnoreListFrame:Update();
     KrowiV_AutoSellListFrame:Update();
 end
 
 local function RightItemOnClick(self)
     KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.RightItemOnClick(self, frame);
-    -- addon.GUI.ItemListFrame.IgnoreList.Update();
+    KrowiV_EmbeddedIgnoreListFrame:Update();
     KrowiV_AutoSellListFrame:Update();
 end
 
@@ -61,42 +74,28 @@ local function PopulateRightListFrame()
     end
 end
 
-function junkList:Show(isEmbedded)
-    self.IsEmbedded = isEmbedded;
-    if isEmbedded then
-        frame = KrowiV_EmbeddedJunkListFrame;
-    else
-        frame = KrowiV_JunkListFrame;
-        frame:ClearAllPoints();
-        frame:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
-        frame:SetHeight(MerchantFrame:GetHeight());
-        frame:SetTitle(addon.L["Junk List"]);
-        frame:SetIcon("Interface/Icons/Inv_Gizmo_03");
-        frame:SetListInfo(dualItemListSide.Left, addon.L["Left-click an item to add it to the junk list."]);
-        frame:SetListInfo(dualItemListSide.Right, addon.L["Right-click an item to remove it from the junk list."]);
+function KrowiV_JunkListFrameMixin:ShowWithMerchantFrame()
+    if not self.IsEmbedded then
+        self:ClearAllPoints();
+        self:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
+        self:SetHeight(MerchantFrame:GetHeight());
+        self:SetTitle(addon.L["Junk List"]);
+        self:SetIcon("Interface/Icons/Inv_Gizmo_03");
+        self:SetListInfo(dualItemListSide.Left, addon.L["Left-click an item to add it to the junk list."]);
+        self:SetListInfo(dualItemListSide.Right, addon.L["Right-click an item to remove it from the junk list."]);
     end
-    frame:ClearListItems(dualItemListSide.Left);
-    frame:RegisterListItemsForClicks(dualItemListSide.Left, "LeftButtonUp");
-    frame:SetListItemsOnClick(dualItemListSide.Left, LeftItemOnClick);
-    frame:ClearListItems(dualItemListSide.Right);
-    frame:RegisterListItemsForClicks(dualItemListSide.Right, "RightButtonUp");
-    frame:SetListItemsOnClick(dualItemListSide.Right, RightItemOnClick);
-    PopulateLeftListFrame();
-    PopulateRightListFrame();
-    frame:Show();
+    self:RegisterListItemsForClicks(dualItemListSide.Left, "LeftButtonUp");
+    self:SetListItemsOnClick(dualItemListSide.Left, LeftItemOnClick);
+    self:RegisterListItemsForClicks(dualItemListSide.Right, "RightButtonUp");
+    self:SetListItemsOnClick(dualItemListSide.Right, RightItemOnClick);
+    self:Show();
 end
 
-function junkList:Hide()
-    if self.IsEmbedded then
-        frame:Hide();
-    end
-end
-
-function junkList.Update()
-    if not frame or not frame:IsShown() then
+function KrowiV_JunkListFrameMixin:Update()
+    if not self:IsShown() then
         return;
     end
-    frame:ClearListItems();
+    self:ClearListItems();
     PopulateLeftListFrame();
     PopulateRightListFrame();
 end

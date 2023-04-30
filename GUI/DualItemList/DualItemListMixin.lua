@@ -41,9 +41,10 @@ function KrowiV_DualItemListMixin:RegisterListItemsForClicks(side, ...)
 end
 
 function KrowiV_DualItemListMixin:ClearListItems(side)
-    if side == addon.Objects.DualItemListSide.Left then
+    if side == nil or side == addon.Objects.DualItemListSide.Left then
         self.LeftList:ClearListItems();
-    elseif side == addon.Objects.DualItemListSide.Right then
+    end
+    if side == nil or side == addon.Objects.DualItemListSide.Right then
         self.RightList:ClearListItems();
     end
 end

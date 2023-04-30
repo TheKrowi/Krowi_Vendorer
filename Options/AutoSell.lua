@@ -178,7 +178,6 @@ do -- [[ ItemType ]]
     end
 
     local function AddItemTypeTable(scopeName, rule, _itemType)
-        print(scopeName, rule, _itemType, "AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.ItemTypes.args")
         KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.ItemTypes.args", _itemType.Guid, {
             order = OrderPP(), type = "group", inline = true,
             name = "",

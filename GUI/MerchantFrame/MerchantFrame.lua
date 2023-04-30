@@ -7,8 +7,8 @@ local merchantItemsContainer = addon.GUI.MerchantItemsContainer;
 local originalWidth, originalHeight = MerchantFrame:GetSize();
 
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
-	addon.GUI.ItemListFrame.JunkList:Hide();
-	addon.GUI.ItemListFrame.IgnoreList:Hide();
+	KrowiV_EmbeddedJunkListFrame:Hide();
+	KrowiV_EmbeddedIgnoreListFrame:Hide();
 	local numColumns = addon.Options.db.NumColumns - merchantItemsContainer.DefaultMerchantInfoNumColumns;
 	local numRows = addon.Options.db.NumRows - merchantItemsContainer.DefaultMerchantInfoNumRows;
 	local itemWidth = merchantItemsContainer.OffsetX + merchantItemsContainer.ItemWidth;
@@ -32,8 +32,8 @@ hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
 end);
 
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
-	addon.GUI.ItemListFrame.JunkList:Hide();
-	addon.GUI.ItemListFrame.IgnoreList:Hide();
+	KrowiV_EmbeddedJunkListFrame:Hide();
+	KrowiV_EmbeddedIgnoreListFrame:Hide();
 	MerchantFrame:SetSize(originalWidth, originalHeight);
 	KrowiV_BottomExtensionRightBorder:Hide();
 	KrowiV_BottomExtensionLeftBorder:Hide();
@@ -89,16 +89,6 @@ function KrowiV_ShowJunkList_OnLoad(self)
 	PanelTemplates_SetNumTabs(MerchantFrame, MerchantFrame.numTabs + 1);
 end
 
-function KrowiV_ShowIgnoreList_OnClick(self)
-	PanelTemplates_SetTab(MerchantFrame, self:GetID());
-	addon.ItemListFrame.IgnoreList:Show(true);
-end
-
-function KrowiV_ShowJunkList_OnClick(self)
-	PanelTemplates_SetTab(MerchantFrame, self:GetID());
-	addon.ItemListFrame.JunkList:Show(true);
-end
-
 function MerchantFrame_Update()
 	if MerchantFrame.lastTab ~= MerchantFrame.selectedTab then
 		MerchantFrame_CloseStackSplitFrame();
@@ -133,8 +123,8 @@ function merchantFrame.UpdateIgnoreInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
-	addon.GUI.ItemListFrame.JunkList:Hide();
-	addon.GUI.ItemListFrame.IgnoreList:Show(true);
+	KrowiV_EmbeddedJunkListFrame:Hide();
+	KrowiV_EmbeddedIgnoreListFrame:ShowWithMerchantFrame();
 end
 
 function merchantFrame.UpdateJunkInfo()
@@ -154,6 +144,6 @@ function merchantFrame.UpdateJunkInfo()
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
-	addon.GUI.ItemListFrame.IgnoreList:Hide();
-	addon.GUI.ItemListFrame.JunkList:Show(true);
+	KrowiV_EmbeddedIgnoreListFrame:Hide();
+	KrowiV_EmbeddedJunkListFrame:ShowWithMerchantFrame(true);
 end

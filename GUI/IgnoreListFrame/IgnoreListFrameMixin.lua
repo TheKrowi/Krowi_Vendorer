@@ -2,28 +2,45 @@
 local _, addon = ...;
 local itemListFrame = addon.GUI.ItemListFrame;
 local dualItemListSide = addon.Objects.DualItemListSide;
-itemListFrame.IgnoreList = {};
-local ignoreList = itemListFrame.IgnoreList;
 local frame;
 
--- function ignoreList.Init()
---     KrowiV_SavedData = KrowiV_SavedData or {};
---     KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
---     KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
--- end
+KrowiV_IgnoreListFrameMixin = {};
+
+function KrowiV_IgnoreListFrameMixin_OnLoad(self)
+    frame = self;
+    -- self:SetScript("OnEvent", self.OnEvent);
+    -- self:SetTitle(addon.L["Auto Sell List"]);
+    -- self:SetIcon("Interface/Icons/Inv_Gizmo_03");
+    -- self:SetListInfo(addon.L["Auto Sell List Info"]);
+end
+
+function KrowiV_IgnoreListFrameMixin:OnEvent(event, arg1, arg2)
+    if event == "BAG_UPDATE" then
+        self:Update();
+    end
+end
+
+function KrowiV_IgnoreListFrameMixin:OnShow()
+    self:RegisterEvent("BAG_UPDATE");
+    self:Update();
+end
+
+function KrowiV_IgnoreListFrameMixin:OnHide()
+    self:UnregisterEvent("BAG_UPDATE");
+end
 
 local function LeftItemOnClick(self)
     KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = true;
     KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.LeftItemOnClick(self, frame);
-    -- addon.GUI.ItemListFrame.JunkList.Update();
+    KrowiV_EmbeddedJunkListFrame:Update();
     KrowiV_AutoSellListFrame:Update();
 end
 
 local function RightItemOnClick(self)
     KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.RightItemOnClick(self, frame);
-    -- addon.GUI.ItemListFrame.JunkList.Update();
+    KrowiV_EmbeddedJunkListFrame:Update();
     KrowiV_AutoSellListFrame:Update();
 end
 
@@ -61,42 +78,28 @@ local function PopulateRightListFrame()
     end
 end
 
-function ignoreList:Show(isEmbedded)
-    self.IsEmbedded = isEmbedded;
-    if isEmbedded then
-        frame = KrowiV_EmbeddedIgnoreListFrame;
-    else
-        frame = KrowiV_IgnoreListFrame;
-        frame:ClearAllPoints();
-        frame:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
-        frame:SetHeight(MerchantFrame:GetHeight());
-        frame:SetTitle(addon.L["Ignore List"]);
-        frame:SetIcon("Interface/Icons/Inv_Shield_1h_NewPlayer_a_02");
-        frame:SetListInfo(dualItemListSide.Left, addon.L["Left-click an item to add it to the ignore list."]);
-        frame:SetListInfo(dualItemListSide.Right, addon.L["Right-click an item to remove it from the ignore list."]);
+function KrowiV_IgnoreListFrameMixin:ShowWithMerchantFrame()
+    if not self.IsEmbedded then
+        self:ClearAllPoints();
+        self:SetPoint("TOPLEFT", MerchantFrame, "TOPRIGHT", 10, 0);
+        self:SetHeight(MerchantFrame:GetHeight());
+        self:SetTitle(addon.L["Ignore List"]);
+        self:SetIcon("Interface/Icons/Inv_Shield_1h_NewPlayer_a_02");
+        self:SetListInfo(dualItemListSide.Left, addon.L["Left-click an item to add it to the ignore list."]);
+        self:SetListInfo(dualItemListSide.Right, addon.L["Right-click an item to remove it from the ignore list."]);
     end
-    frame:ClearListItems(dualItemListSide.Left);
-    frame:RegisterListItemsForClicks(dualItemListSide.Left, "LeftButtonUp");
-    frame:SetListItemsOnClick(dualItemListSide.Left, LeftItemOnClick);
-    frame:ClearListItems(dualItemListSide.Right);
-    frame:RegisterListItemsForClicks(dualItemListSide.Right, "RightButtonUp");
-    frame:SetListItemsOnClick(dualItemListSide.Right, RightItemOnClick);
-    PopulateLeftListFrame();
-    PopulateRightListFrame();
-    frame:Show();
+    self:RegisterListItemsForClicks(dualItemListSide.Left, "LeftButtonUp");
+    self:SetListItemsOnClick(dualItemListSide.Left, LeftItemOnClick);
+    self:RegisterListItemsForClicks(dualItemListSide.Right, "RightButtonUp");
+    self:SetListItemsOnClick(dualItemListSide.Right, RightItemOnClick);
+    self:Show();
 end
 
-function ignoreList:Hide()
-    if self.IsEmbedded then
-        frame:Hide();
-    end
-end
-
-function ignoreList.Update()
-    if not frame or not frame:IsShown() then
+function KrowiV_IgnoreListFrameMixin:Update()
+    if not self:IsShown() then
         return;
     end
-    frame:ClearListItems();
+    self:ClearListItems();
     PopulateLeftListFrame();
     PopulateRightListFrame();
 end
