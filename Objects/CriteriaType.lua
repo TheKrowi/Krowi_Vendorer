@@ -5,18 +5,21 @@ objects.CriteriaType = {};
 local criteriaType = objects.CriteriaType;
 local equalityOperator = addon.Objects.EqualityOperator;
 local itemQuality = addon.Objects.ItemQuality;
+local inventoryType = addon.Objects.InventoryType;
 local itemLocation = ItemLocation:CreateEmpty();
 
 criteriaType.List = {
     addon.L["Item Level"],
     addon.L["Soulbound"],
-    addon.L["Quality"]
+    addon.L["Quality"],
+    addon.L["Inventory Type"]
 };
 
 criteriaType.Enum = addon.Util.Enum2{
     "ItemLevel",
     "Soulbound",
-    "Quality"
+    "Quality",
+    "InventoryType"
 };
 
 do --[[ Rule evaluation functions ]]
@@ -36,6 +39,11 @@ do --[[ Rule evaluation functions ]]
         return result, "Item is " .. itemQuality.List[quality];
     end
 
+    local function InventoryType_Func(_inventoryType, inventoryTypes)
+        local result = inventoryTypes[_inventoryType];
+        return result, "Item is " .. inventoryType.List[_inventoryType];
+    end
+
     function criteriaType.Func(condition, itemInfo)
         if condition.CriteriaType == criteriaType.Enum.ItemLevel then
             return ItemLevel_Func(itemInfo.ItemLevel, condition.Operator, condition.Value);
@@ -43,6 +51,8 @@ do --[[ Rule evaluation functions ]]
             return Soulbound_Func(itemInfo.Bag, itemInfo.Slot);
         elseif condition.CriteriaType == criteriaType.Enum.Quality then
             return Quality_Func(itemInfo.Quality, condition.Qualities);
+        elseif condition.CriteriaType == criteriaType.Enum.InventoryType then
+            return InventoryType_Func(itemInfo.InventoryType, condition.InventoryTypes)
         end
     end
 end
@@ -77,6 +87,10 @@ do --[[ Rule validity checking ]]
         elseif condition.CriteriaType == criteriaType.Enum.Quality then
             if condition.NumSelectedQualities == 0 then
                 return false, addon.L["At least one quality must be selected"];
+            end
+        elseif condition.CriteriaType == criteriaType.Enum.InventoryType then
+            if condition.NumSelectedInventoryTypes == 0 then
+                return false, addon.L["At least one inventory type must be selected"];
             end
         end
         return true, "";

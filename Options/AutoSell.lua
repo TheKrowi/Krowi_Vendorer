@@ -9,6 +9,7 @@ local criteriaType = addon.Objects.CriteriaType;
 local equalityOperator = addon.Objects.EqualityOperator;
 local itemType = addon.Objects.ItemType;
 local itemQuality = addon.Objects.ItemQuality;
+local inventoryType = addon.Objects.InventoryType;
 local scope = addon.Objects.Scope;
 local autoSellRule = addon.Objects.AutoSellRule;
 
@@ -124,6 +125,12 @@ do -- [[ Rule ]]
                             fontSize = "medium",
                             hidden = function() return rule.Conditions and #rule.Conditions > 0; end,
                             disabled = function() return rule.IsPreset; end
+                        },
+                        ConditionsAreReadOnly = {
+                            order = OrderPP(), type = "description", width = rule.IsPreset and "full" or AdjustedWidth(1.1),
+                            name = addon.L["Conditions are read only"],
+                            fontSize = "medium",
+                            hidden = function() return not(rule.Conditions and #rule.Conditions > 0) or not rule.IsPreset; end
                         },
                         AddNewCondition = {
                             order = OrderPP(), type = "execute",
@@ -267,8 +274,10 @@ do -- [[ Condition ]]
             values = equalityOperator.List,
             get = function() return condition.Operator; end,
             set = function(_, value)
-                condition.Operator = value;
-                CheckIfConditionIsValid(scopeName, rule, condition);
+                if not rule.IsPreset then
+                    condition.Operator = value;
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
             end,
             disabled = function() return rule.IsPreset; end
         });
@@ -277,8 +286,10 @@ do -- [[ Condition ]]
             name = "",
             get = function() return tostring(condition.Value or ""); end,
             set = function(_, value)
-                autoSellRule.SetItemLevel(condition, value);
-                CheckIfConditionIsValid(scopeName, rule, condition);
+                if not rule.IsPreset then
+                    autoSellRule.SetItemLevel(condition, value);
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
             end,
             disabled = function() return rule.IsPreset; end
         });
@@ -305,11 +316,32 @@ do -- [[ Condition ]]
             values = itemQuality.List,
             get = function(_, index) return condition.Qualities[index]; end,
             set = function(_, index, value)
-                autoSellRule.SetQuality(condition, index, value)
-                CheckIfConditionIsValid(scopeName, rule, condition);
+                if not rule.IsPreset then
+                    autoSellRule.SetQuality(condition, index, value)
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
             end,
             control = "Dropdown",
-            disabled = function() return rule.IsPreset; end
+            -- disabled = function() return rule.IsPreset; end
+        });
+    end
+
+    local function ConditionCriteriaTypeSet_InventoryType(scopeName, rule, condition)
+        condition.InventoryTypes = condition.InventoryTypes or {};
+        condition.NumSelectedInventoryTypes = condition.NumSelectedInventoryTypes or 0;
+        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
+            order = OrderPP(), type = "multiselect", width = AdjustedWidth(0.9),
+            name = "",
+            values = inventoryType.List,
+            get = function(_, index) return condition.InventoryTypes[index]; end,
+            set = function(_, index, value)
+                if not rule.IsPreset then
+                    autoSellRule.SetInventoryType(condition, index, value)
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
+            end,
+            control = "Dropdown",
+            -- disabled = function() return rule.IsPreset; end
         });
     end
 
@@ -323,6 +355,8 @@ do -- [[ Condition ]]
             ConditionCriteriaTypeSet_Soulbound(scopeName, rule, condition);
         elseif value == criteriaType.Enum.Quality then
             ConditionCriteriaTypeSet_Quality(scopeName, rule, condition);
+        elseif value == criteriaType.Enum.InventoryType then
+            ConditionCriteriaTypeSet_InventoryType(scopeName, rule, condition);
         end
         local deleteConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.DeleteCondition");
         deleteConditionTable.order = OrderPP();
@@ -352,8 +386,12 @@ do -- [[ Condition ]]
                     name = "",
                     values = criteriaType.List,
                     get = function() return condition.CriteriaType; end,
-                    set = function(_, value) ConditionCriteriaTypeSet(scopeName, rule, condition, value); end,
-                    disabled = function() return rule.IsPreset; end
+                    set = function(_, value)
+                        if not rule.IsPreset then
+                            ConditionCriteriaTypeSet(scopeName, rule, condition, value);
+                        end
+                    end,
+                    -- disabled = function() return rule.IsPreset; end
                 },
                 DeleteCondition = {
                     order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
@@ -417,11 +455,12 @@ local function AddUnusableEquipmentRule(_scope)
     end
     rule.IsPreset = true;
     rule.ItemTypes = nil;
+    rule.Conditions = nil;
     local itemClassMatrix = addon.Data.AutoSell.ItemClassMatrix[select(2, UnitClass("player"))];
     local _itemType = autoSellRule.AddNewItemType(rule, Enum.ItemClass.Armor);
     local armorMatrix = itemClassMatrix[Enum.ItemClass.Armor];
     for _, value in pairs(Enum.ItemArmorSubclass) do
-        if not armorMatrix[value] then
+        if not armorMatrix[value] and value ~= Enum.ItemArmorSubclass.Generic and value ~= Enum.ItemArmorSubclass.Cosmetic then
             autoSellRule.SetSubItemType(_itemType, value, true);
         end
     end
@@ -430,6 +469,12 @@ local function AddUnusableEquipmentRule(_scope)
     for _, value in pairs(Enum.ItemWeaponSubclass) do
         if not weaponMatrix[value] and value ~= Enum.ItemWeaponSubclass.Fishingpole then
             autoSellRule.SetSubItemType(_itemType, value, true);
+        end
+    end
+    local condition = autoSellRule.AddNewCondition(rule, criteriaType.Enum.InventoryType);
+    for _, value in pairs(Enum.InventoryType) do
+        if value ~= Enum.InventoryType.IndexCloakType then
+            autoSellRule.SetInventoryType(condition, value, true);
         end
     end
 end

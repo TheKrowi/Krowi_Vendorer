@@ -110,7 +110,8 @@ local function ProcessItem(bag, slot, item)
         ItemTypeId = classID,
         ItemSubTypeId = subclassID,
         BindType = bindType,
-        Quality = item:GetItemQuality()
+        Quality = item:GetItemQuality(),
+        InventoryType = item:GetInventoryType()
     };
 
     if autoSell.CheckRules(itemInfo) then

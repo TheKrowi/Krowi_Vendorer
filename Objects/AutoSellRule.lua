@@ -89,15 +89,25 @@ do -- [[ Creation and modification ]]
         condition.Qualities[index] = value;
     end
 
+    function autoSellRule.SetInventoryType(condition, index, value)
+        condition.NumSelectedInventoryTypes = (condition.NumSelectedInventoryTypes or 0) + (value and 1 or -1);
+        condition.InventoryTypes = condition.InventoryTypes or {};
+        condition.InventoryTypes[index] = value;
+    end
+
     function autoSellRule.SetCriteriaType(condition, value)
         condition.CriteriaType = value;
-        if value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.Quality then
+        if value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.Quality or value == criteriaType.Enum.InventoryType then
             condition.Operator = nil;
             condition.Value = nil;
         end
-        if value == criteriaType.Enum.ItemLevel or value == criteriaType.Enum.Soulbound then
+        if value == criteriaType.Enum.ItemLevel or value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.InventoryType then
             condition.Qualities = nil;
             condition.NumSelectedQualities = nil;
+        end
+        if value == criteriaType.Enum.ItemLevel or value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.Quality then
+            condition.InventoryTypes = nil;
+            condition.NumSelectedInventoryTypes = nil;
         end
     end
 
