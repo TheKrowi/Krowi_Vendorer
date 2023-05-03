@@ -48,6 +48,65 @@ function autoSell.CheckRules(itemInfo)
     end
 end
 
+function autoSell.CheckRuleWithFeedback(rule, itemInfo)
+    if rule.IsDisabled or rule.IsInvalid then
+        return nil; -- Do not add feedback about this
+    end
+
+    local doSell, feedback = false, {};
+
+    -- If there are item types, either the type must match or when defined, also the sub type must match
+    if rule.QuickItemTypes then
+        local itemType = rule.QuickItemTypes[itemInfo.ItemTypeId];
+        if not itemType then
+            doSell = false;
+            tinsert(feedback, {false, "itemtypebad"});
+        else
+            doSell = true;
+            tinsert(feedback, {true, "itemtypegood"});
+
+            if type(itemType) == "table" and not itemType[itemInfo.ItemSubTypeId] then
+                doSell = false;
+                tinsert(feedback, {false, "itemsubtypebad"});
+            else
+                doSell = true;
+                tinsert(feedback, {true, "itemsubtypegood"});
+            end
+        end
+    end
+
+    -- If there are conditions, all conditions must match
+    if rule.Conditions then
+        for _, condition in next, rule.Conditions do
+            local result = criteriaType.Func(condition, itemInfo);
+            if not result then
+                tinsert(feedback, {false, "conditionbad"});
+            else
+                tinsert(feedback, {true, "conditiongood"});
+            end
+        end
+    end
+
+    return doSell, feedback;
+end
+
+function autoSell.CheckRulesWithFeedback(itemInfo)
+    local feedback = {};
+    for _, rule in next, KrowiV_SavedData.Rules do
+        local d, f = autoSell.CheckRuleWithFeedback(rule, itemInfo);
+        if d ~= nil then
+            tinsert(feedback, {rule.Name, d, f});
+        end
+    end
+    local character = addon.GetCurrentCharacter();
+    for _, rule in next, character.Rules do
+        local d, f = autoSell.CheckRuleWithFeedback(rule, itemInfo);
+        if d ~= nil then
+            tinsert(feedback, {rule.Name, d, f});
+        end    end
+    return feedback;
+end
+
 autoSell.ItemClassMatrix = {
     ["DEATHKNIGHT"] = {
         [Enum.ItemClass.Armor] = {
