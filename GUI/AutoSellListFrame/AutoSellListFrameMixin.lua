@@ -59,6 +59,13 @@ function KrowiV_AutoSellListFrameMixin:OnLoad()
         co = coroutine.create(SellItems);
         coroutine.resume(co);
     end);
+    self.Button1:SetScript("OnEnter", function(selfFunc)
+        GameTooltip:SetOwner(selfFunc, "ANCHOR_RIGHT");
+        GameTooltip:AddLine("Click: Sell all items");
+        GameTooltip:AddLine("Shift-Click: Sell max 12 items (safe mode)");
+        GameTooltip:AddLine("Lines to show the number of currencies this will give you");
+        GameTooltip:Show();
+    end);
     self.Button2:SetText(addon.L["Sell 12 Items"]);
     self.Button2:SetScript("OnClick", function()
         maxNumItems = 12;
@@ -73,7 +80,7 @@ function KrowiV_AutoSellListFrameMixin:OnEvent(event, arg1, arg2)
         if co ~= nil then
             coroutine.resume(co);
         else
-            self:Update();
+            addon.Util.DelayFunction("MerchantFrame_UpdateBuybackInfo", 0.1, self.Update, self);
         end
     end
 end
@@ -106,6 +113,7 @@ local function ProcessItem(bag, slot, item)
     local itemInfo = {
         Bag = bag,
         Slot = slot,
+        Link = link,
         ItemLevel = item:GetCurrentItemLevel(),
         ItemTypeId = classID,
         ItemSubTypeId = subclassID,

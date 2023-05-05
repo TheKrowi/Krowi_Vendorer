@@ -105,6 +105,7 @@ local function ProcessItem(_tooltip, bag, slot, item)
     local itemInfo = {
         Bag = bag,
         Slot = slot,
+        Link = link,
         ItemLevel = item:GetCurrentItemLevel(),
         ItemTypeId = classID,
         ItemSubTypeId = subclassID,
@@ -112,14 +113,13 @@ local function ProcessItem(_tooltip, bag, slot, item)
         Quality = item:GetItemQuality(),
         InventoryType = item:GetInventoryType()
     };
-    print(link, classID, subclassID, bindType, itemInfo.ItemLevel, itemInfo.Quality, itemInfo.InventoryType, itemInfo.Location)
     GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
     local feedback = autoSell.CheckRulesWithFeedback(itemInfo);
     AddTableToTooltip(_tooltip, feedback)
 
-    -- local itemName, _, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
-    -- itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
-    -- expacID, setID, isCraftingReagent = GetItemInfo(link);
+    local itemName, _, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
+    itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
+    expacID, setID, isCraftingReagent = GetItemInfo(link);
     -- -- classID, subclassID return numerical values, 2 = weapon, sub is tye of weapon, try to link this to class
     -- local itemId = GetItemInfoInstant(link);
     -- if not itemId or not itemQuality or not itemLevel then
@@ -159,24 +159,24 @@ local function ProcessItem(_tooltip, bag, slot, item)
     --     end
     -- end
 
-    -- GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
-    -- _tooltip:AddDoubleLine("itemName", itemName);
-    -- _tooltip:AddDoubleLine("itemLink", link);
-    -- _tooltip:AddDoubleLine("itemQuality", itemQuality);
-    -- _tooltip:AddDoubleLine("itemLevel", itemLevel);
-    -- _tooltip:AddDoubleLine("itemMinLevel", itemMinLevel);
-    -- _tooltip:AddDoubleLine("itemType", itemType);
-    -- _tooltip:AddDoubleLine("itemSubType", itemSubType);
-    -- _tooltip:AddDoubleLine("itemStackCount", itemStackCount);
-    -- _tooltip:AddDoubleLine("itemEquipLoc", itemEquipLoc);
-    -- _tooltip:AddDoubleLine("itemTexture", itemTexture);
-    -- _tooltip:AddDoubleLine("sellPrice", sellPrice);
-    -- _tooltip:AddDoubleLine("classID", classID);
-    -- _tooltip:AddDoubleLine("subclassID", subclassID);
-    -- _tooltip:AddDoubleLine("bindType", bindType);
-    -- _tooltip:AddDoubleLine("expacID", expacID);
-    -- _tooltip:AddDoubleLine("setID", setID);
-    -- _tooltip:AddDoubleLine("isCraftingReagent", isCraftingReagent);
+    GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
+    _tooltip:AddDoubleLine("itemName", itemName);
+    _tooltip:AddDoubleLine("itemLink", link);
+    _tooltip:AddDoubleLine("itemQuality", itemQuality);
+    _tooltip:AddDoubleLine("itemLevel", itemLevel);
+    _tooltip:AddDoubleLine("itemMinLevel", itemMinLevel);
+    _tooltip:AddDoubleLine("itemType", itemType);
+    _tooltip:AddDoubleLine("itemSubType", itemSubType);
+    _tooltip:AddDoubleLine("itemStackCount", itemStackCount);
+    _tooltip:AddDoubleLine("itemEquipLoc", itemEquipLoc);
+    _tooltip:AddDoubleLine("itemTexture", itemTexture);
+    _tooltip:AddDoubleLine("sellPrice", sellPrice);
+    _tooltip:AddDoubleLine("classID", classID);
+    _tooltip:AddDoubleLine("subclassID", subclassID);
+    _tooltip:AddDoubleLine("bindType", bindType);
+    _tooltip:AddDoubleLine("expacID", expacID);
+    _tooltip:AddDoubleLine("setID", setID);
+    _tooltip:AddDoubleLine("isCraftingReagent", isCraftingReagent);
 
     -- local playerKnowsTransmogFromItem, isValidAppearanceForCharacter, playerKnowsTransmog, characterCanLearnTransmog;
     -- local canIMogIt = CanIMogIt; --LibStub("AceAddon-3.0"):GetAddon("CanIMogIt");

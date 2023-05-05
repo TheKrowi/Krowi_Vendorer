@@ -1,6 +1,5 @@
 <Ui>
     <Script file="GUI.lua"/>
-    <Include file="OptionsButton/OptionsButton.xml"/>
     <Script file="MerchantItemsContainer.lua"/>
     <Include file="MerchantFrame/MerchantFrame.xml"/>
     <Include file="ScrollableListItem/ScrollableListItem.xml"/>
@@ -13,4 +12,5 @@
     <Include file="JunkListFrame/JunkListFrame.xml"/>
     <Include file="IgnoreListFrame/IgnoreListFrame.xml"/>
     <Include file="ItemTooltip/Files.xml"/>
+    <Include file="OptionsButton/OptionsButton.xml"/>
 </Ui>

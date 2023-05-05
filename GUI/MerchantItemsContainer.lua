@@ -39,22 +39,32 @@ local function GetItemSlot(index)
 	return frame;
 end
 
-function merchantItemsContainer:PrepareMerchantInfo()
-    infoNumRows, infoNumColumns = addon.Options.db.NumRows, addon.Options.db.NumColumns;
+function merchantItemsContainer:GetHighestNumRows()
+    return addon.Options.db.NumRows > self.DefaultBuybackInfoNumRows and addon.Options.db.NumRows or self.DefaultBuybackInfoNumRows;
 end
 
-function merchantItemsContainer:PrepareBuybackInfo()
-    infoNumRows, infoNumColumns = self.DefaultBuybackInfoNumRows, self.DefaultBuybackInfoNumColumns;
+function merchantItemsContainer:GetHighestNumColumns()
+    return addon.Options.db.NumColumns > self.DefaultBuybackInfoNumColumns and addon.Options.db.NumColumns or self.DefaultBuybackInfoNumColumns;
 end
 
-function merchantItemsContainer.LoadMaxNumItemSlots()
-    MERCHANT_ITEMS_PER_PAGE = infoNumRows * infoNumColumns;
+function merchantItemsContainer:LoadMaxNumItemSlots()
+    local highestNumRows = self:GetHighestNumRows();
+    local highestNumColumns = self:GetHighestNumColumns();
+    MERCHANT_ITEMS_PER_PAGE = highestNumRows * highestNumColumns;
     if #itemSlotTable < MERCHANT_ITEMS_PER_PAGE then
         for i = 1, MERCHANT_ITEMS_PER_PAGE, 1 do
             local itemSlot = GetItemSlot(i);
             itemSlot:Hide();
         end
     end
+end
+
+function merchantItemsContainer:PrepareMerchantInfo()
+    infoNumRows, infoNumColumns = addon.Options.db.NumRows, addon.Options.db.NumColumns;
+end
+
+function merchantItemsContainer:PrepareBuybackInfo()
+    infoNumRows, infoNumColumns = self.DefaultBuybackInfoNumRows, self.DefaultBuybackInfoNumColumns;
 end
 
 function merchantItemsContainer:DrawItemSlot(index, row, column, offsetX, offsetY)
@@ -100,7 +110,8 @@ function merchantItemsContainer:DrawForMerchantInfo()
 	DrawMerchantBuyBackItem(true);
 end
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
-	merchantItemsContainer:DrawForMerchantInfo();
+    -- Delay is to address the updating from BAG_UPDATE when sorting the inventory
+    addon.Util.DelayFunction("MerchantFrame_UpdateMerchantInfo", 0.1, merchantItemsContainer.DrawForMerchantInfo, merchantItemsContainer);
 end);
 
 function merchantItemsContainer:DrawForBuybackInfo()
@@ -109,7 +120,8 @@ function merchantItemsContainer:DrawForBuybackInfo()
 	DrawMerchantBuyBackItem(false);
 end
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
-	merchantItemsContainer:DrawForBuybackInfo();
+    -- Delay is to address the updating from BAG_UPDATE when sorting the inventory
+    addon.Util.DelayFunction("MerchantFrame_UpdateBuybackInfo", 0.1, merchantItemsContainer.DrawForBuybackInfo, merchantItemsContainer);
 end);
 
 local orgGetMerchantNumItems = GetMerchantNumItems;

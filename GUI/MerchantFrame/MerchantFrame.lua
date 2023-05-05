@@ -6,6 +6,35 @@ local merchantItemsContainer = addon.GUI.MerchantItemsContainer;
 
 local originalWidth, originalHeight = MerchantFrame:GetSize();
 
+do -- [[ Set some permanent MerchantFrame changes ]]
+	MerchantFrameBottomRightBorder:SetTexCoord(91 / 256, (91 + 76) / 256, 0, 0.4765625);
+
+	local bottomExtensionRightBorder = MerchantFrame:CreateTexture("KrowiV_BottomExtensionRightBorder");
+	bottomExtensionRightBorder:SetSize(76, 61);
+	bottomExtensionRightBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
+	bottomExtensionRightBorder:SetTexCoord(0, 0.296875, 0.4765625, 0.953125);
+	bottomExtensionRightBorder:SetPoint("BOTTOMRIGHT", MerchantFrameInset, "BOTTOMRIGHT", 3, 0);
+
+	local bottomExtensionLeftBorder = MerchantFrame:CreateTexture("KrowiV_BottomExtensionLeftBorder");
+	bottomExtensionLeftBorder:SetSize(89, 61);
+	bottomExtensionLeftBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
+	bottomExtensionLeftBorder:SetTexCoord((91 + 76) / 256, 1, 0, 0.4765625);
+	bottomExtensionLeftBorder:SetPoint("TOPLEFT", MerchantFrameBottomRightBorder, "TOPRIGHT", 0, 0);
+
+	local bottomExtensionMidBorder = MerchantFrame:CreateTexture("KrowiV_BottomExtensionMidBorder");
+	bottomExtensionMidBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
+	bottomExtensionMidBorder:SetTexCoord(8 / 256, (8 + 151) / 256, 0, 0.4765625);
+	bottomExtensionMidBorder:SetPoint("TOPLEFT", bottomExtensionLeftBorder, "TOPRIGHT", 0, 0);
+	bottomExtensionMidBorder:SetPoint("BOTTOMRIGHT", bottomExtensionRightBorder, "BOTTOMLEFT", 0, 0);
+
+	MerchantPrevPageButton:SetPoint("BOTTOMLEFT", MerchantFrameBottomLeftBorder, "TOPLEFT", 8, -5);
+	MerchantNextPageButton:SetPoint("BOTTOMRIGHT", KrowiV_BottomExtensionRightBorder, "TOPRIGHT", -7, -5);
+end
+
+function merchantFrame:Load()
+	merchantItemsContainer:LoadMaxNumItemSlots();
+end
+
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
 	KrowiV_EmbeddedJunkListFrame:Hide();
 	KrowiV_EmbeddedIgnoreListFrame:Hide();
@@ -40,44 +69,20 @@ hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
 	KrowiV_BottomExtensionMidBorder:Hide();
 end);
 
-local function PrepareMerchantFrame()
-    if MerchantFrame.selectedTab == 1 then
+-- Hook onto MerchantFrame_UpdateFilterString so we're ready for MerchantFrame_UpdateMerchantInfo and/or MerchantFrame_UpdateBuybackInfo
+hooksecurefunc("MerchantFrame_UpdateFilterString", function()
+	if MerchantFrame.selectedTab == 1 then
 		merchantItemsContainer:PrepareMerchantInfo();
 	else
 		merchantItemsContainer:PrepareBuybackInfo();
 	end
-    merchantItemsContainer.LoadMaxNumItemSlots(); -- Make sure MerchantFrame_Update can set all items
-end
-hooksecurefunc("MerchantFrame_UpdateFilterString", PrepareMerchantFrame);
+end);
 
 hooksecurefunc(MerchantFrame, "Show", function(self)
 	SetMerchantFilter(LE_LOOT_FILTER_ALL);
 
 	KrowiV_AutoSellListFrame:ShowWithMerchantFrame();
 end);
-
-MerchantFrameBottomRightBorder:SetTexCoord(91 / 256, (91 + 76) / 256, 0, 0.4765625);
-
-local bottomExtensionRightBorder = MerchantFrame:CreateTexture("KrowiV_BottomExtensionRightBorder");
-bottomExtensionRightBorder:SetSize(76, 61);
-bottomExtensionRightBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
-bottomExtensionRightBorder:SetTexCoord(0, 0.296875, 0.4765625, 0.953125);
-bottomExtensionRightBorder:SetPoint("BOTTOMRIGHT", MerchantFrameInset, "BOTTOMRIGHT", 3, 0);
-
-local bottomExtensionLeftBorder = MerchantFrame:CreateTexture("KrowiV_BottomExtensionLeftBorder");
-bottomExtensionLeftBorder:SetSize(89, 61);
-bottomExtensionLeftBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
-bottomExtensionLeftBorder:SetTexCoord((91 + 76) / 256, 1, 0, 0.4765625);
-bottomExtensionLeftBorder:SetPoint("TOPLEFT", MerchantFrameBottomRightBorder, "TOPRIGHT", 0, 0);
-
-local bottomExtensionMidBorder = MerchantFrame:CreateTexture("KrowiV_BottomExtensionMidBorder");
-bottomExtensionMidBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
-bottomExtensionMidBorder:SetTexCoord(8 / 256, (8 + 151) / 256, 0, 0.4765625);
-bottomExtensionMidBorder:SetPoint("TOPLEFT", bottomExtensionLeftBorder, "TOPRIGHT", 0, 0);
-bottomExtensionMidBorder:SetPoint("BOTTOMRIGHT", bottomExtensionRightBorder, "BOTTOMLEFT", 0, 0);
-
-MerchantPrevPageButton:SetPoint("BOTTOMLEFT", MerchantFrameBottomLeftBorder, "TOPLEFT", 8, -5);
-MerchantNextPageButton:SetPoint("BOTTOMRIGHT", KrowiV_BottomExtensionRightBorder, "TOPRIGHT", -7, -5);
 
 function KrowiV_ShowIgnoreList_OnLoad(self)
 	self:SetText(addon.L["Ignore List"]);

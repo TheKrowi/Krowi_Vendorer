@@ -44,12 +44,14 @@ function loadHelper:OnEvent(event, arg1, arg2)
             -- addon.GUI.ItemListFrame.JunkList.Init(true);
             -- addon.GUI.ItemListFrame.IgnoreList.Init(true);
 
+            addon.GUI.MerchantFrame:Load();
+
             addon.Icon.Load();
 
             addon.GUI.ItemTooltip.Load();
         end
     elseif event == "MERCHANT_UPDATE" then
-    --     print("MERCHANT_UPDATE");
+        -- print("MERCHANT_UPDATE");
     elseif event == "GUILDBANK_UPDATE_MONEY" then
     --     print("GUILDBANK_UPDATE_MONEY");
     elseif event == "HEIRLOOMS_UPDATED" then

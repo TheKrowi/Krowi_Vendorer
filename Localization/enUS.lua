@@ -1,4 +1,4 @@
--- [[ Exported at 2023-04-30 21-57-40 ]] --
+-- [[ Exported at 2023-05-05 12-08-47 ]] --
 -- [[ This code is automatically generated as an export from ]] --
 -- [[ an SQLite database and is not meant for manual edit. ]] --
 
@@ -86,7 +86,7 @@ L["Auto Sell List"] = "Auto Sell List";
 L["Auto Sell List Info"] = "Left-click: sell individual item\nRight-click: ignore item";
 L["Sell All Items"] = "Sell All Items";
 L["Sell 12 Items"] = "Sell 12 Items";
-L["Selling item"] = "[KV] Selling item";
+L["Selling item"] = "[KV] Selling item {item}";
 L["x of y items sold"] = "[KV] {x} of {y} items sold";
 L["x of y items sold in safe mode"] = "[KV] {x} of {y} items sold in safe mode";
 L["Auto Repair No Guild Funds Use Personal"] = "[KV] Not enough guild funds to repair, trying personal funds.";

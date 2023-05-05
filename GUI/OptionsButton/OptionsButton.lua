@@ -1,7 +1,9 @@
 -- [[ Namespaces ]] --
 local _, addon = ...;
+local merchantItemsContainer = addon.GUI.MerchantItemsContainer;
 
 local function UpdateView()
+	merchantItemsContainer:LoadMaxNumItemSlots();
 	MerchantFrame_Update();
 end
 
