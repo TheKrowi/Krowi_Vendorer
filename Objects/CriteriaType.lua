@@ -25,23 +25,23 @@ criteriaType.Enum = addon.Util.Enum2{
 do --[[ Rule evaluation functions ]]
     local function ItemLevel_Func(itemLevel, operator, value)
         local result = equalityOperator.Func[operator](itemLevel, value);
-        return result, "Item is " .. equalityOperator.List[operator] .. " " .. value;
+        return result, "Item level is " .. equalityOperator.List[operator] .. " " .. value;
     end
 
     local function Soulbound_Func(bag, slot)
         itemLocation:SetBagAndSlot(bag, slot);
         local result = C_Item.IsBound(itemLocation);
-        return result, "Item is soulbound";
+        return result, "Is soulbound";
     end
 
     local function Quality_Func(quality, qualities)
         local result = qualities[quality];
-        return result, "Item is " .. itemQuality.List[quality];
+        return result, "Quality is " .. itemQuality.List[quality];
     end
 
     local function InventoryType_Func(_inventoryType, inventoryTypes)
         local result = inventoryTypes[_inventoryType];
-        return result, "Item is " .. inventoryType.List[_inventoryType];
+        return result, "Inventory type is " .. inventoryType.List[_inventoryType];
     end
 
     function criteriaType.Func(condition, itemInfo)

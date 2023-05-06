@@ -8,6 +8,7 @@ local sections = tooltip.Sections;
 local criteriaType = addon.Objects.CriteriaType;
 local equalityOperator = addon.Objects.EqualityOperator;
 local autoSell = addon.Data.AutoSell;
+local tooltipDetails = addon.Objects.AutoSellRule.TooltipDetails.Enum;
 
 -- local characterItemMatrixCached;
 -- local function GetCharacterItemMatrix()
@@ -94,12 +95,16 @@ local function AddTableToTooltip(_tooltip, table)
         if type(value) == "table" then
             AddTableToTooltip(_tooltip, value)
         else
-            _tooltip:AddDoubleLine(key, value);
+            _tooltip:AddDoubleLine(key, tostring(value));
         end
     end
 end
 
 local function ProcessItem(_tooltip, bag, slot, item)
+    if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.None then
+        return;
+    end
+
     local link = item:GetItemLink();
     local classID, subclassID, bindType = select(12, GetItemInfo(link));
     local itemInfo = {
@@ -113,52 +118,50 @@ local function ProcessItem(_tooltip, bag, slot, item)
         Quality = item:GetItemQuality(),
         InventoryType = item:GetInventoryType()
     };
+
+    local doSell, feedback = autoSell.CheckRulesWithFeedback(itemInfo);
+
     GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
-    local feedback = autoSell.CheckRulesWithFeedback(itemInfo);
-    AddTableToTooltip(_tooltip, feedback)
+    _tooltip:AddLine(addon.MetaData.Title);
+    _tooltip:AddLine(doSell and ("|T136814:0|t " .. addon.L["This item is junk"]:SetColorLightGreen()) or ("|T136813:0|t " .. addon.L["This item is not junk"]:SetColorLightRed()));
+    if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.Basic then
+        return;
+    end
+
+    for _, result in next, feedback do
+        local ruleName, doSellRule, ruleResults = unpack(result);
+        local ruleText = addon.L["TAB"] .. "|T13681" .. (doSellRule and "4" or "3") .. ":0|t " .. ruleName;
+        _tooltip:AddLine(doSellRule and ruleText:SetColorLightGreen() or ruleText:SetColorLightRed());
+        if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.Detailed then
+            for _, _result in next, ruleResults do
+                local conditionResult, text = unpack(_result);
+                local conditionText = addon.L["TAB"] .. addon.L["TAB"] .. "|T13681" .. (conditionResult and "4" or "3") .. ":0|t " .. text;
+                _tooltip:AddLine(conditionResult and conditionText:SetColorLightGreen() or conditionText:SetColorLightRed());
+            end
+        end
+    end
+    
+    -- local playerKnowsTransmogFromItem, isValidAppearanceForCharacter, playerKnowsTransmog, characterCanLearnTransmog;
+    -- local canIMogIt = CanIMogIt; --LibStub("AceAddon-3.0"):GetAddon("CanIMogIt");
+    -- if canIMogIt then
+    --     playerKnowsTransmogFromItem = canIMogIt:PlayerKnowsTransmogFromItem(itemLink);
+    --     isValidAppearanceForCharacter = canIMogIt:IsValidAppearanceForCharacter(itemLink)
+    --     playerKnowsTransmog = canIMogIt:PlayerKnowsTransmog(itemLink)
+    --     characterCanLearnTransmog = canIMogIt:CharacterCanLearnTransmog(itemLink)
+    -- end
+    -- GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
+    -- _tooltip:AddDoubleLine("CanIMogIt", canIMogIt and "yes" or "no");
+    -- _tooltip:AddDoubleLine("playerKnowsTransmogFromItem", playerKnowsTransmogFromItem and "yes" or "no");
+    -- _tooltip:AddDoubleLine("isValidAppearanceForCharacter", isValidAppearanceForCharacter and "yes" or "no");
+    -- _tooltip:AddDoubleLine("playerKnowsTransmog", playerKnowsTransmog and "yes" or "no");
+    -- _tooltip:AddDoubleLine("characterCanLearnTransmog", characterCanLearnTransmog and "yes" or "no");
+    if not addon.Options.db.Debug.TooltipShowItemInfo then
+        return;
+    end
 
     local itemName, _, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
-    itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
+    itemStackCount, itemEquipLoc, itemTexture, sellPrice, _, _, _,
     expacID, setID, isCraftingReagent = GetItemInfo(link);
-    -- -- classID, subclassID return numerical values, 2 = weapon, sub is tye of weapon, try to link this to class
-    -- local itemId = GetItemInfoInstant(link);
-    -- if not itemId or not itemQuality or not itemLevel then
-    --     return;
-    -- end
-    -- itemLevel = GetDetailedItemLevelInfo(link) or itemLevel;
-
-    -- local itemInfo = {
-    --     Bag = bag,
-    --     Slot = slot,
-    --     ItemLevel = itemLevel,
-    --     ItemTypeId = classID,
-    --     ItemSubTypeId = subclassID,
-    --     BindType = bindType,
-    --     Quality = itemQuality
-    -- };
-
-    -- local doSell, results = false, {};
-    -- for _, rule in next, KrowiV_SavedData.Rules do
-    --     if rule.IsValid then
-    --         doSell, results = CheckRule(doSell, results, rule, itemInfo);
-    --     end
-    -- end
-
-    -- GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
-    -- _tooltip:AddLine(addon.MetaData.Title);
-    -- _tooltip:AddLine(doSell and addon.L["This item is junk"]:SetColorLightRed() or addon.L["This item is not junk"]:SetColorLightGreen());
-    -- for i, result in next, feedback do
-    --     local ruleName, ruleResults = unpack(result);
-    --     local ruleText = addon.L["TAB"] .. "- " .. ruleName;
-    --     local doSellRule = false;
-    --     _tooltip:AddLine(doSellRule and ruleText:SetColorLightRed() or ruleText:SetColorLightGreen());
-    --     for _, _result in next, ruleResults do
-    --         local conditionResult, text = unpack(_result);
-    --         local conditionText = addon.L["TAB"] .. addon.L["TAB"] .. "- " .. text;
-    --         _tooltip:AddLine(conditionResult and conditionText:SetColorLightRed() or conditionText:SetColorLightGreen());
-    --     end
-    -- end
-
     GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
     _tooltip:AddDoubleLine("itemName", itemName);
     _tooltip:AddDoubleLine("itemLink", link);
@@ -178,21 +181,6 @@ local function ProcessItem(_tooltip, bag, slot, item)
     _tooltip:AddDoubleLine("setID", setID);
     _tooltip:AddDoubleLine("isCraftingReagent", isCraftingReagent);
 
-    -- local playerKnowsTransmogFromItem, isValidAppearanceForCharacter, playerKnowsTransmog, characterCanLearnTransmog;
-    -- local canIMogIt = CanIMogIt; --LibStub("AceAddon-3.0"):GetAddon("CanIMogIt");
-    -- if canIMogIt then
-    --     playerKnowsTransmogFromItem = canIMogIt:PlayerKnowsTransmogFromItem(itemLink);
-    --     isValidAppearanceForCharacter = canIMogIt:IsValidAppearanceForCharacter(itemLink)
-    --     playerKnowsTransmog = canIMogIt:PlayerKnowsTransmog(itemLink)
-    --     characterCanLearnTransmog = canIMogIt:CharacterCanLearnTransmog(itemLink)
-    -- end
-    -- GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
-    -- _tooltip:AddDoubleLine("CanIMogIt", canIMogIt and "yes" or "no");
-    -- _tooltip:AddDoubleLine("playerKnowsTransmogFromItem", playerKnowsTransmogFromItem and "yes" or "no");
-    -- _tooltip:AddDoubleLine("isValidAppearanceForCharacter", isValidAppearanceForCharacter and "yes" or "no");
-    -- _tooltip:AddDoubleLine("playerKnowsTransmog", playerKnowsTransmog and "yes" or "no");
-    -- _tooltip:AddDoubleLine("characterCanLearnTransmog", characterCanLearnTransmog and "yes" or "no");
-    
     _tooltip:Show();
 end
 

@@ -3,7 +3,23 @@ local _, addon = ...;
 local objects = addon.Objects;
 objects.AutoSellRule = {};
 local autoSellRule = objects.AutoSellRule;
+autoSellRule.TooltipDetails = {};
+local tooltipDetails = autoSellRule.TooltipDetails;
 local criteriaType = addon.Objects.CriteriaType;
+
+tooltipDetails.List = {
+    addon.L["None"],
+    addon.L["Basic"],
+    addon.L["Rules"],
+    addon.L["Detailed"]
+};
+
+tooltipDetails.Enum = addon.Util.Enum2{
+    "None",
+    "Basic",
+    "Rules",
+    "Detailed"
+};
 
 -- We can't work with instances because we need to save the rules to the SavedVariables
 -- and don't want to pollute the object with references to functions

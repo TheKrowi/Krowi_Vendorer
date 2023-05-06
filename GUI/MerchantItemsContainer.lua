@@ -71,12 +71,12 @@ function merchantItemsContainer:PrepareBuybackInfo()
     infoNumRows, infoNumColumns = self.DefaultBuybackInfoNumRows, self.DefaultBuybackInfoNumColumns;
 end
 
--- local function HideRemainingItemSlots(startIndex)
---     local numItemSlots = #itemSlotTable;
---     for i = startIndex, numItemSlots, 1 do
---         itemSlotTable[i]:Hide();
---     end
--- end
+local function HideRemainingItemSlots(startIndex)
+    local numItemSlots = #itemSlotTable;
+    for i = startIndex, numItemSlots, 1 do
+        itemSlotTable[i]:Hide();
+    end
+end
 
 function merchantItemsContainer:DrawItemSlot(index, row, column, offsetX, offsetY)
     local itemSlot = GetItemSlot(index);
@@ -104,7 +104,6 @@ function merchantItemsContainer:DrawItemSlots(numRows, numColumns, offsetX, offs
         end
     end
     -- print(numRows * numColumns)
-    -- HideRemainingItemSlots(numRows * numColumns + 1);
 end
 
 local function DrawMerchantBuyBackItem(show)
@@ -129,6 +128,7 @@ end);
 
 function merchantItemsContainer:DrawForBuybackInfo()
 	self:DrawItemSlots(infoNumRows, infoNumColumns, self.OffsetX, self.OffsetBuybackInfoY);
+    HideRemainingItemSlots(infoNumRows * infoNumColumns + 1);
 	DrawMerchantBuyBackItem(false);
 end
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()

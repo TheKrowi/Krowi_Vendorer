@@ -30,15 +30,16 @@ options.Defaults = {
             },
             ItemLevel = 0,
             Operator = 1,
-            PrintChatMessage = true
+            PrintChatMessage = true,
+            TooltipDetails = 2 -- Basic
         },
         AutoRepair = {
             IsEnabled = true,
             IsGuildEnabled = true,
             PrintChatMessage = true
         },
-        Tooltip = {
-            ShowAutoSellRules = false
+        Debug = {
+            TooltipShowItemInfo = false
         }
     }
 };

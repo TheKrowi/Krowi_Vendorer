@@ -3,6 +3,7 @@ local _, addon = ...;
 addon.Data.AutoSell = {};
 local autoSell = addon.Data.AutoSell;
 local criteriaType = addon.Objects.CriteriaType;
+local itemType = addon.Objects.ItemType;
 
 function autoSell.CheckRule(rule, itemInfo)
     if rule.IsDisabled or rule.IsInvalid then
@@ -11,12 +12,12 @@ function autoSell.CheckRule(rule, itemInfo)
 
     -- If there are item types, either the type must match or when defined, also the sub type must match
     if rule.QuickItemTypes then
-        local itemType = rule.QuickItemTypes[itemInfo.ItemTypeId];
-        if not itemType then
+        local _itemType = rule.QuickItemTypes[itemInfo.ItemTypeId];
+        if not _itemType then
             return false;
         end
 
-        if type(itemType) == "table" and not itemType[itemInfo.ItemSubTypeId] then
+        if type(_itemType) == "table" and not _itemType[itemInfo.ItemSubTypeId] then
             return false;
         end
     end
@@ -53,24 +54,22 @@ function autoSell.CheckRuleWithFeedback(rule, itemInfo)
         return nil; -- Do not add feedback about this
     end
 
-    local doSell, feedback = false, {};
+    local doSell, feedback = true, {};
 
     -- If there are item types, either the type must match or when defined, also the sub type must match
     if rule.QuickItemTypes then
-        local itemType = rule.QuickItemTypes[itemInfo.ItemTypeId];
-        if not itemType then
+        local _itemType = rule.QuickItemTypes[itemInfo.ItemTypeId];
+        if not _itemType then
             doSell = false;
-            tinsert(feedback, {false, "itemtypebad"});
+            tinsert(feedback, {false, "Type is " .. itemType.List[itemInfo.ItemTypeId]});
         else
-            doSell = true;
-            tinsert(feedback, {true, "itemtypegood"});
+            tinsert(feedback, {true, "Type is " .. itemType.List[itemInfo.ItemTypeId]});
 
-            if type(itemType) == "table" and not itemType[itemInfo.ItemSubTypeId] then
+            if type(_itemType) == "table" and not _itemType[itemInfo.ItemSubTypeId] then
                 doSell = false;
-                tinsert(feedback, {false, "itemsubtypebad"});
+                tinsert(feedback, {false, "Sub-type is " .. itemType.SubTypeList[itemInfo.ItemTypeId][itemInfo.ItemSubTypeId]});
             else
-                doSell = true;
-                tinsert(feedback, {true, "itemsubtypegood"});
+                tinsert(feedback, {true, "Sub-type is " .. itemType.SubTypeList[itemInfo.ItemTypeId][itemInfo.ItemSubTypeId]});
             end
         end
     end
@@ -78,11 +77,12 @@ function autoSell.CheckRuleWithFeedback(rule, itemInfo)
     -- If there are conditions, all conditions must match
     if rule.Conditions then
         for _, condition in next, rule.Conditions do
-            local result = criteriaType.Func(condition, itemInfo);
+            local result, text = criteriaType.Func(condition, itemInfo);
             if not result then
-                tinsert(feedback, {false, "conditionbad"});
+                doSell = false;
+                tinsert(feedback, {false, text});
             else
-                tinsert(feedback, {true, "conditiongood"});
+                tinsert(feedback, {true, text});
             end
         end
     end
@@ -91,20 +91,23 @@ function autoSell.CheckRuleWithFeedback(rule, itemInfo)
 end
 
 function autoSell.CheckRulesWithFeedback(itemInfo)
-    local feedback = {};
+    local feedback, doSell = {}, false;
     for _, rule in next, KrowiV_SavedData.Rules do
         local d, f = autoSell.CheckRuleWithFeedback(rule, itemInfo);
-        if d ~= nil then
+        doSell = doSell or d;
+        if f ~= nil then
             tinsert(feedback, {rule.Name, d, f});
         end
     end
     local character = addon.GetCurrentCharacter();
     for _, rule in next, character.Rules do
         local d, f = autoSell.CheckRuleWithFeedback(rule, itemInfo);
-        if d ~= nil then
+        doSell = doSell or d;
+        if f ~= nil then
             tinsert(feedback, {rule.Name, d, f});
-        end    end
-    return feedback;
+        end
+    end
+    return doSell, feedback;
 end
 
 autoSell.ItemClassMatrix = {

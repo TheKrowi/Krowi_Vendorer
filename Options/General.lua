@@ -119,9 +119,9 @@ options.OptionsTable.args["General"] = {
                         TooltipShowAutoSellRules = {
                             order = OrderPP(), type = "toggle", width = AdjustedWidth(),
                             name = addon.L["TooltipShowAutoSellRules"],
-                            desc = addon.L["TooltipShowAutoSellRules Desc"]:AddDefaultValueText_KV("Tooltip.ShowAutoSellRules"),
-                            get = function() return addon.Options.db.Tooltip.ShowAutoSellRules; end,
-                            set = function(_, value) addon.Options.db.Tooltip.ShowAutoSellRules = value; end
+                            desc = addon.L["TooltipShowAutoSellRules Desc"]:AddDefaultValueText_KV("Debug.TooltipShowItemInfo"),
+                            get = function() return addon.Options.db.Debug.TooltipShowItemInfo; end,
+                            set = function(_, value) addon.Options.db.Debug.TooltipShowItemInfo = value; end
                         },
                         Blank1 = {order = OrderPP(), type = "description", width = AdjustedWidth(2), name = ""},
                         -- ScreenshotMode = {

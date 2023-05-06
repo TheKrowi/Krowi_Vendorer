@@ -50,7 +50,7 @@ do -- [[ Rule ]]
     local function AddRuleTable(scopeName, rule)
         KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args", rule.Guid, {
             order = OrderPP(), type = "group",
-            name = function() return "|T13681" .. (not rule.IsDisabled and "4" or "3") .. ":0|t " .. rule.Name; end,
+            name = function() return "|T13681" .. (rule.IsDisabled and "3" or "4") .. ":0|t " .. rule.Name; end,
             args = {
                 Name = {
                     order = OrderPP(), type = "input", width = AdjustedWidth(1.5),
@@ -379,7 +379,7 @@ do -- [[ Condition ]]
             args = {
                 If = {
                     order = OrderPP(), type = "description", width = AdjustedWidth(0.1), fontSize = "medium",
-                    name = addon.L["If"],
+                    name = addon.L["If"]
                 },
                 CriteriaType = {
                     order = OrderPP(), type = "select", width = AdjustedWidth(0.6),
@@ -521,20 +521,6 @@ options.OptionsTable.args["AutoSell"] = {
     type = "group", childGroups = "tab",
     name = addon.L["Auto Sell"],
     args = {
-        -- Tooltip = {
-        --     order = OrderPP(), type = "group",
-        --     name = addon.L["Tooltip"],
-        --     args = {
-        --         -- Operator = {
-        --         --     order = OrderPP(), type = "select", width = AdjustedWidth(),
-        --         --     name = addon.L["Operator"],
-        --         --     desc = addon.L["Operator Desc"]:AddDefaultValueText_KV("AutoSell.Operator", addon.Operators),
-        --         --     values = addon.Operators,
-        --         --     get = function() return KrowiV_SavedData.Operator; end,
-        --         --     set = function(_, value) KrowiV_SavedData.Operator = value; end
-        --         -- },
-        --     }
-        -- },
         AccountRules = {
             order = OrderPP(), type = "group",
             name = addon.L["Account Rules"],
@@ -595,46 +581,31 @@ options.OptionsTable.args["AutoSell"] = {
                 }
             }
         },
-        -- PresetRules = {
-        --     order = OrderPP(), type = "group",
-        --     name = addon.L["Preset Rules"],
-        --     args = {
-        --         Description = {
-        --             order = OrderPP(), type = "description", width = "full",
-        --             name = addon.L["Preset Rules Desc"],
-        --             fontSize = "medium"
-        --         },
-        --         JunkRuleName = {
-        --             order = OrderPP(), type = "description", width = AdjustedWidth(1),
-        --             name = addon.L["Junk"],
-        --             fontSize = "medium"
-        --         },
-        --         JunkRuleAccount = {
-        --             order = OrderPP(), type = "execute", width = AdjustedWidth(1),
-        --             name = "Add to Account", desc = "",
-        --             func = function(_, value) AddJunkRule(scope.Account); end
-        --         },
-        --         JunkRuleCharacter = {
-        --             order = OrderPP(), type = "execute", width = AdjustedWidth(1),
-        --             name = "Add to Character", desc = "",
-        --             func = function(_, value) AddJunkRule(scope.Character); end
-        --         },
-        --         ArtifactRelicRuleName = {
-        --             order = OrderPP(), type = "description", width = AdjustedWidth(1),
-        --             name = addon.L["Artifact Relic"],
-        --             fontSize = "medium"
-        --         },
-        --         ArtifactRelicRuleAccount = {
-        --             order = OrderPP(), type = "execute", width = AdjustedWidth(1),
-        --             name = "Add to Account", desc = "",
-        --             func = function(_, value) AddArtifactRelicRule(scope.Account); end
-        --         },
-        --         ArtifactRelicRuleCharacter = {
-        --             order = OrderPP(), type = "execute", width = AdjustedWidth(1),
-        --             name = "Add to Character", desc = "",
-        --             func = function(_, value) AddArtifactRelicRule(scope.Character); end
-        --         }
-        --     }
-        -- }
+        Tooltip = {
+            order = OrderPP(), type = "group",
+            name = addon.L["Tooltip"],
+            args = {
+                -- LevelsOfDetails = {
+                --     order = OrderPP(), type = "select", width = AdjustedWidth(),
+                --     name = addon.L["Levels of details"],
+                --     desc = addon.L["Levels of details Desc"]:AddDefaultValueText_KV("AutoSell.Operator", addon.Operators),
+                --     values = addon.Operators,
+                --     get = function() return KrowiV_SavedData.Operator; end,
+                --     set = function(_, value) KrowiV_SavedData.Operator = value; end
+                -- },
+                LevelsOfDetails = {
+                    order = OrderPP(), type = "description", width = AdjustedWidth(), fontSize = "medium",
+                    name = addon.L["Levels of details"]
+                },
+                LevelsOfDetailsList = {
+                    order = OrderPP(), type = "select", width = AdjustedWidth(),
+                    name = addon.L["Levels of details"],
+                    desc = addon.L["Levels of details Desc"]:AddDefaultValueText_KV("AutoSell.TooltipDetails", autoSellRule.TooltipDetails.List),
+                    values = autoSellRule.TooltipDetails.List,
+                    get = function() return addon.Options.db.AutoSell.TooltipDetails; end,
+                    set = function(_, value) addon.Options.db.AutoSell.TooltipDetails = value; end
+                },
+            }
+        }
     }
 };
