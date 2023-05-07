@@ -204,7 +204,11 @@
         "KrowiV_IgnoreListFrame",
         "KrowiV_EmbeddedJunkListFrame",
         "KrowiV_JunkListFrame",
-        "KrowiV_AutoSellListFrame"
+        "KrowiV_AutoSellListFrame",
+        "ButtonFrameTemplate_HideButtonBar",
+        "ButtonFrameTemplate_HideAttic",
+        "SelectionBehaviorFlags",
+        "SelectionBehaviorMixin"
     ],
     "fsdeploy.nodes": [
         {

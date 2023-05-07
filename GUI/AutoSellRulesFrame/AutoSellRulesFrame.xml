@@ -1,0 +1,142 @@
+<Ui>
+    <Script file="AutoSellRulesFrameMixin.lua"/>
+
+    <EventButton name="KrowiV_AutoSellRulesButton_Template" mixin="KrowiV_AutoSellRulesButtonMixin" virtual="true">
+        <Size y="30"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Background" atlas="PetList-ButtonBackground">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="0" y="0"/>
+                        <Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <FontString inherits="GameFontNormal" justifyH="LEFT" parentKey="Name">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.Background" x="5" y="0"/>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.Background" x="-5" y="0"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <HighlightTexture atlas="PetList-ButtonHighlight"/>
+        <Scripts>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnClick method="OnClick"/>
+        </Scripts>
+    </EventButton>
+
+    <Frame name="KrowiV_AutoSellRulesFrame" mixin="KrowiV_AutoSellRulesFrameMixin" inherits="ButtonFrameTemplate" parent="UIParent" hidden="true" toplevel="true" movable="true" enableMouse="true">
+        <Size x="720" y="480"/>
+         <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Layers>
+            <Layer level="BORDER">
+                <FontString inherits="GameFontNormal" justifyH="CENTER" parentKey="ItemListInfo">
+                    <Size x="100" y="100"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.TopTileStreaks" x="55"/>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" relativeKey="$parent.Inset" x="-30"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button parentKey="AddNewRuleButton" mixin="KrowiV_AddNewRuleButtonMixin" motionScriptsWhileDisabled="true" inherits="MagicButtonTemplate">
+                <Size x="140" y="22"/>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad inherit="prepend" method="OnLoad"/>
+                    <OnClick method="OnClick"/>
+                </Scripts>
+            </Button>
+            <Button parentKey="DeleteRuleButton" mixin="KrowiV_DeleteRuleButtonMixin" motionScriptsWhileDisabled="true" inherits="MagicButtonTemplate">
+                <Size x="140" y="22"/>
+                <Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.AddNewRuleButton" relativePoint="TOPRIGHT" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad inherit="prepend" method="OnLoad"/>
+                    <OnClick method="OnClick"/>
+                </Scripts>
+            </Button>
+            <Frame parentKey="RulesList" inherits="InsetFrameTemplate">
+                <Size x="200" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+                    <Anchor point="BOTTOMLEFT" relativeKey="$parent.Inset"/>
+                </Anchors>
+                <Frames>
+                    <Frame parentKey="ScrollBox" inherits="WowScrollBoxList"/>
+                    <EventFrame parentKey="ScrollBar" inherits="WowTrimScrollBar">
+                        <Anchors>
+                            <Anchor point="TOPRIGHT"/>
+                            <Anchor point="BOTTOMRIGHT"/>
+                        </Anchors>
+                    </EventFrame>
+                </Frames>
+            </Frame>
+            <Frame parentKey="RuleFrame" inherits="InsetFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.RulesList" relativePoint="TOPRIGHT"/>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString parentKey="NameLabel" inherits="GameFontNormalMed1" text="Name" justifyH="Left">
+                            <Size x="150" y="19"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="10" y="-10"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <EditBox parentKey="Name" inherits="InputBoxTemplate" mixin="KrowiV_RulesFrameNameMixin" autoFocus="false">
+                        <Size x="200" y="19"/>
+                        <Anchors>
+                            <Anchor point="LEFT" relativeKey="$parent.NameLabel" relativePoint="RIGHT"/>
+                        </Anchors>
+                        <Frames>
+                            <Button parentKey="CommitChange" inherits="UIPanelButtonTemplate" mixin="KrowiV_RulesFrameNameCommitChangeMixin" text="OKAY" hidden="true">
+                                <Size x="40" y="20"/>
+                                <Anchors>
+                                    <Anchor point="RIGHT"/>
+                                </Anchors>
+                                <Scripts>
+                                    <OnClick method="OnClick"/>
+                                </Scripts>
+                            </Button>
+                        </Frames>
+                        <Scripts>
+                            <OnLoad method="OnLoad"/>
+                            <OnEscapePressed method="OnEscapePressed"/>
+                            <OnEnterPressed method="OnEnterPressed"/>
+                            <OnTextChanged method="OnTextChanged"/>
+                            <OnEditFocusGained method="OnEditFocusGained"/>
+                        </Scripts>
+                    </EditBox>
+                </Frames>
+            </Frame>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+			<!-- <OnEvent method="OnEvent"/> -->
+			<OnShow method="OnShow"/>
+			<!-- <OnHide method="OnHide"/> -->
+            <OnMouseDown>
+				self:StartMoving();
+				self.anchorframe = nil;
+			</OnMouseDown>
+			<OnMouseUp>
+				self:StopMovingOrSizing();
+			</OnMouseUp>
+        </Scripts>
+    </Frame>
+</Ui>

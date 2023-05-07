@@ -13,4 +13,5 @@
     <Include file="IgnoreListFrame/IgnoreListFrame.xml"/>
     <Include file="ItemTooltip/Files.xml"/>
     <Include file="OptionsButton/OptionsButton.xml"/>
+    <Include file="AutoSellRulesFrame/AutoSellRulesFrame.xml"/>
 </Ui>
