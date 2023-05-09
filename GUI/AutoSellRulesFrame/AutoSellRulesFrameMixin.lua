@@ -64,7 +64,7 @@ function KrowiV_AutoSellRulesFrameMixin:OnLoad()
     AddManagedScrollBarVisibilityBehavior(self.RulesList);
     AddSelectionBehavior(self.RulesList);
 
-    -- addon.Util.DelayFunction("KrowiV_AutoSellRulesFrameMixin", 1, self.Show, self); -- For testing
+    addon.Util.DelayFunction("KrowiV_AutoSellRulesFrameMixin", 1, self.Show, self); -- For testing
 end
 
 function KrowiV_AutoSellRulesFrameMixin:OnShow()
@@ -155,9 +155,11 @@ function KrowiV_AddNewRuleButtonMixin:OnClick()
     local rules = GetRules(_scope);
     local rule = autoSellRule.CreateNewRule(rules);
     self:GetParent():Update();
-    -- ScrollBoxSelectionChanged(self:GetParent(), rule, true); -- Select the first rule in the list
-
-    -- addon.Util.DelayFunction("KrowiV_AutoSellRulesFrameMixin:AppendRule", 0.1, ScrollBoxSelectionChanged, self, rule, true); -- For testing
+    self:GetParent().RulesList.SelectionBehavior:ClearSelections();
+    self:GetParent().RulesList.SelectionBehavior:SelectElementData(rule);
+    if KrowiV_AutoSellListFrame and KrowiV_AutoSellListFrame:IsShown() then
+        KrowiV_AutoSellListFrame:Update();
+    end
 end
 
 KrowiV_DeleteRuleButtonMixin = {};
@@ -168,14 +170,18 @@ function KrowiV_DeleteRuleButtonMixin:OnLoad()
 end
 
 function KrowiV_DeleteRuleButtonMixin:OnClick()
+    local selectedIndex = self:GetParent().RulesList.ScrollBox:FindIndex(selectedRule);
+    local newSelectedRule = self:GetParent().RulesList.ScrollBox:Find(selectedIndex + 1) or self:GetParent().RulesList.ScrollBox:Find(selectedIndex - 1);
     local _scope = GetScope(selectedTab);
-    addon.Util.TableRemoveByValue(GetRules(_scope), selectedRule);
+    local rules = GetRules(_scope);
+    autoSellRule.DeleteRule(rules, selectedRule);
     self:GetParent():Update();
+    self:GetParent().RulesList.SelectionBehavior:ClearSelections();
+    self:GetParent().RulesList.SelectionBehavior:SelectElementData(newSelectedRule);
     if KrowiV_AutoSellListFrame and KrowiV_AutoSellListFrame:IsShown() then
         KrowiV_AutoSellListFrame:Update();
     end
 end
-
 
 KrowiV_AutoSellRulesButtonMixin = {};
 
@@ -183,12 +189,12 @@ function KrowiV_AutoSellRulesButtonMixin:Init(rule)
     self.Rule = rule;
     self.Name:SetText("|T13681" .. (rule.IsDisabled and "3" or "4") .. ":0|t " .. rule.Name);
 
-    -- if rule == selectedRule then
-	-- 	self:LockHighlight();
-    --     self:GetParent():GetParent():GetParent():GetParent():SetSelectedRule(rule);
-    --     return;
-	-- end
-	-- self:UnlockHighlight();
+     -- We need this here to properly select new rules
+    if rule == selectedRule then
+		self:LockHighlight();
+        return;
+	end
+	self:UnlockHighlight();
 end
 
 function KrowiV_AutoSellRulesButtonMixin:OnEnter()

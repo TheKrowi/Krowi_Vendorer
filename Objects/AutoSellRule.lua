@@ -139,6 +139,10 @@ do -- [[ Creation and modification ]]
         tinsert(rule.Conditions, condition);
         return condition;
     end
+
+    function autoSellRule.DeleteRule(rulesTable, rule)
+        addon.Util.TableRemoveByValue(rulesTable, rule);
+    end
 end
 
 do -- [[ Validation ]]
