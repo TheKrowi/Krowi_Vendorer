@@ -28,6 +28,7 @@ function KrowiV_AutoSellRulesFrameMixin:OnLoad()
     rulesFrame = self;
     rulesList = self.RulesList;
     ruleFrame = self.RuleFrame;
+    self.SelectedTab = 1;
 
     addon.Util.DelayFunction("KrowiV_AutoSellRulesFrameMixin", 1, self.Show, self); -- For testing
 end
@@ -45,6 +46,25 @@ function KrowiV_AutoSellRulesFrameMixin:SetListInfo(text)
     self.ItemListInfo:SetText(text);
 end
 
+local scope = addon.Objects.Scope;
+function KrowiV_AutoSellRulesFrameMixin.GetScope(tabIndex)
+    if tabIndex == 1 then
+        return scope.Account;
+    elseif tabIndex == 2 then
+        return scope.Character;
+    else
+        return;
+    end
+end
+
+function KrowiV_AutoSellRulesFrameMixin.GetRules(_scope)
+    if _scope == scope.Character then
+        local character = addon.GetCurrentCharacter();
+        return character.Rules;
+    end
+    return KrowiV_SavedData.Rules;
+end
+
 KrowiV_AddNewRuleButtonMixin = {};
 
 function KrowiV_AddNewRuleButtonMixin:OnLoad()
@@ -54,8 +74,8 @@ end
 
 local autoSellRule = addon.Objects.AutoSellRule;
 function KrowiV_AddNewRuleButtonMixin:OnClick()
-    local _scope = GetScope(selectedTab);
-    local rules = GetRules(_scope);
+    local _scope = rulesFrame.GetScope(rulesFrame.SelectedTab);
+    local rules = rulesFrame.GetRules(_scope);
     local rule = autoSellRule.CreateNewRule(rules);
     rulesFrame:Update();
     rulesList.SelectionBehavior:ClearSelections();
@@ -75,8 +95,8 @@ end
 function KrowiV_DeleteRuleButtonMixin:OnClick()
     local selectedIndex = rulesList.ScrollBox:FindIndex(selectedRule);
     local newSelectedRule = rulesList.ScrollBox:Find(selectedIndex + 1) or rulesList.ScrollBox:Find(selectedIndex - 1);
-    local _scope = GetScope(selectedTab);
-    local rules = GetRules(_scope);
+    local _scope = rulesFrame.GetScope(rulesFrame.SelectedTab);
+    local rules = rulesFrame.GetRules(_scope);
     autoSellRule.DeleteRule(rules, selectedRule);
     rulesFrame:Update();
     rulesList.SelectionBehavior:ClearSelections();
@@ -86,80 +106,24 @@ function KrowiV_DeleteRuleButtonMixin:OnClick()
     end
 end
 
-KrowiV_AddTestButtonMixin = {};
 
-local items = {};
 
-function KrowiV_AddTestButtonMixin:OnClick()
-    -- tinsert(items, {
-    --     Extend = random(10, 50),
-    --     Text = "Text" .. tostring(random(10, 50)),
-    --     Level = random(1, 3)
-    -- });
-    KrowiV_Test4 = KrowiV_Test4 or {};
-    tinsert(items, CreateSettingsListSectionHeaderInitializer(addon.L["General"]))
-    tinsert(items, Settings.CreateCheckBoxInitializer(CreateAndInitFromMixin(ProxySettingMixin, addon.L["Enabled"], "variable", KrowiV_Test4, Settings.VarType.Boolean, false, nil, nil, nil), function()
-        local container = Settings.CreateControlTextContainer();
-        container:Add(0, VIDEO_OPTIONS_DISABLED);
-        container:Add(1, VIDEO_OPTIONS_ENABLED);
-        return container:GetData();
-    end, addon.L["Enabled Desc"]))
-	local newDataProvider = CreateDataProvider();
-    -- newDataProvider:SetSortComparator(SortRules, true);
-    for _, rule in next, items do
-        newDataProvider:Insert(rule);
-    end
-    -- newDataProvider:Sort();
-	self:GetParent().RuleFrame.ScrollBox:SetDataProvider(newDataProvider, true);
-end
 
-KrowiV_RulesFrameNameMixin = CreateFromMixins(CallbackRegistryMixin);
-KrowiV_RulesFrameNameMixin:GenerateCallbackEvents(
-    {
-        "OnValueChanged",
-    }
-);
 
-function KrowiV_RulesFrameNameMixin:OnLoad()
-    CallbackRegistryMixin.OnLoad(self);
-    self:SetTextInsets(6, 0, 3, 3);
-    self:GetParent().NameLabel:SetText(addon.L["Name"]);
-end
 
-function KrowiV_RulesFrameNameMixin:OnEscapePressed()
-    self:SetTextInsets(6, 0, 3, 3);
-    self:ClearFocus();
-end
 
-function KrowiV_RulesFrameNameMixin:OnEnterPressed()
-    selectedRule.Name = self:GetText();
-    self:TriggerEvent(self.Event.OnValueChanged, self:GetText());
-    self:SetTextInsets(6, 0, 3, 3);
-    self:ClearFocus();
-    self.CommitChange:Hide();
-end
 
-function KrowiV_RulesFrameNameMixin:OnTextChanged()
-    if not self:HasFocus() then
-        return;
-    end
-    local value = self:GetText();
-    if tostring(value) ~= tostring(self.PrevText) then
-        self.PrevText = value;
-        self:SetTextInsets(6, 40, 3, 3);
-        self.CommitChange:Show();
-    end
-end
 
-function KrowiV_RulesFrameNameMixin:OnEditFocusGained()
-    self:HighlightText(0, 0);
-end
 
-KrowiV_RulesFrameNameCommitChangeMixin = {};
 
-function KrowiV_RulesFrameNameCommitChangeMixin:OnClick()
-    self:GetParent():OnEnterPressed();
-end
+
+
+
+
+
+
+
+
 
 KrowiV_RulesFrameIsEnabledMixin = CreateFromMixins(CallbackRegistryMixin);
 KrowiV_RulesFrameIsEnabledMixin:GenerateCallbackEvents(

@@ -212,7 +212,10 @@
         "DefaultTooltipMixin",
         "CreateSettingsListSectionHeaderInitializer",
         "ProxySettingMixin",
-        "CreateAndInitFromMixin"
+        "CreateAndInitFromMixin",
+        "SettingsTooltip",
+        "SettingsControlMixin",
+        "SettingsListElementMixin"
     ],
     "fsdeploy.nodes": [
         {

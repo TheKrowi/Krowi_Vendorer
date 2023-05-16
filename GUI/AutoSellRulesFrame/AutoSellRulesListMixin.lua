@@ -1,5 +1,6 @@
 -- [[ Namespaces ]] --
 local _, addon = ...;
+addon.GUI.AutoSellRulesFrame = {};
 local rulesFrame, rulesList;
 
 KrowiV_AutoSellRulesListMixin = {};
@@ -56,36 +57,11 @@ local function AddSelectionBehavior(self)
 end
 
 function KrowiV_AutoSellRulesListMixin:OnLoad()
-    print("KrowiV_AutoSellRulesListMixin:OnLoad")
     CreateScrollView(self);
     AddManagedScrollBarVisibilityBehavior(self);
     AddSelectionBehavior(self);
     rulesList = self;
     rulesFrame = rulesList:GetParent();
-end
-
--- function KrowiV_AutoSellRulesListMixin:OnShow()
---     print("KrowiV_AutoSellRulesListMixin:OnShow")
---     self:Update();
--- end
-
-local scope = addon.Objects.Scope;
-local function GetScope(tabIndex)
-    if tabIndex == 1 then
-        return scope.Account;
-    elseif tabIndex == 2 then
-        return scope.Character;
-    else
-        return;
-    end
-end
-
-local function GetRules(_scope)
-    if _scope == scope.Character then
-        local character = addon.GetCurrentCharacter();
-        return character.Rules;
-    end
-    return KrowiV_SavedData.Rules;
 end
 
 local function SortRules(a, b)
@@ -98,10 +74,9 @@ local function SortRules(a, b)
     end
 end
 
-local selectedTab = 1;
 local function UpdateDataProvider(self, retainScrollPosition)
-    local _scope = GetScope(selectedTab);
-    local rules = GetRules(_scope);
+    local _scope = rulesFrame.GetScope(rulesFrame.SelectedTab);
+    local rules = rulesFrame.GetRules(_scope);
     table.sort(rules, SortRules);
     -- local scopeName = addon.Objects.ScopeList[_scope];
 
@@ -115,7 +90,7 @@ local function UpdateDataProvider(self, retainScrollPosition)
 end
 
 function KrowiV_AutoSellRulesListMixin:Update(retainScrollPosition)
-	if selectedTab == nil then
+	if rulesFrame.SelectedTab == nil then
 		return;
 	end
 

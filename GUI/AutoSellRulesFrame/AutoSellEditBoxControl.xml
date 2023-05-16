@@ -1,0 +1,56 @@
+<Ui>
+    <Script file="AutoSellEditBoxMixin.lua"/>
+
+    <EditBox name="KrowiV_AutoSellEditBox_Template" inherits="          " mixin="KrowiV_AutoSellEditBoxMixin" autoFocus="false" virtual="true">
+        <Size x="250" y="29"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Left" atlas="common-search-border-left" useAtlasSize="false">
+                    <Size x="10" y="24"/>
+                    <Anchors>
+                        <Anchor point="LEFT" x="1" y="0"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Right" atlas="common-search-border-right">
+                    <Size x="10" y="24"/>
+                    <Anchors>
+                        <Anchor point="RIGHT" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Middle" atlas="common-search-border-middle">
+                    <Size x="10" y="24"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent.Left" relativePoint="RIGHT"/>
+                        <Anchor point="RIGHT" relativeKey="$parent.Right" relativePoint="LEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button parentKey="CommitChange" inherits="UIPanelButtonTemplate" mixin="KrowiV_AutoSellEditBoxCommitChangeMixin" text="OKAY" hidden="true">
+                <Size x="40" y="25"/>
+                <Anchors>
+                    <Anchor point="RIGHT" x="1"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick method="OnClick"/>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnEscapePressed method="OnEscapePressed"/>
+            <OnEnterPressed method="OnEnterPressed"/>
+            <OnTextChanged method="OnTextChanged"/>
+            <OnEditFocusGained method="OnEditFocusGained"/>
+        </Scripts>
+        <FontString inherits="ChatFontNormal"/>
+    </EditBox>
+
+    <Frame name="KrowiV_AutoSellEditBoxControl_Template" inherits="SettingsListElementTemplate" mixin="KrowiV_AutoSellEditBoxControlMixin" virtual="true">
+        <Size x="280" y="26"/>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Frame>
+</Ui>

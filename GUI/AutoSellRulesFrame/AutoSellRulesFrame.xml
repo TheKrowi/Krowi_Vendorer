@@ -1,4 +1,5 @@
 <Ui>
+    <Include file="AutoSellEditBoxControl.xml"/>
     <Script file="AutoSellRulesFrameMixin.lua"/>
     <Script file="AutoSellRulesListMixin.lua"/>
     <Script file="AutoSellRuleFrameMixin.lua"/>
@@ -32,47 +33,58 @@
         </Scripts>
     </EventButton>
 
-    <EventButton name="KrowiV_AutoSellRulesElement_Template" mixin="KrowiV_AutoSellRulesElementMixin" virtual="true">
-        <!-- <KeyValues>
-            <KeyValue key="Extend" value="30" type="number"/>
-        </KeyValues> -->
-        <Size y="30"/>
+    <EditBox name="KrowiV_SettingsEditBox_Template" inherits="InputBoxScriptTemplate" mixin="KrowiV_SettingsEditBoxMixin" autoFocus="false" virtual="true">
+        <Size x="250" y="29"/>
         <Layers>
-            <Layer level="OVERLAY">
-                <FontString parentKey="Text" inherits="GameFontNormal" justifyH="LEFT" wordwrap="false"/>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Left" atlas="common-search-border-left" useAtlasSize="false">
+                    <Size x="10" y="24"/>
+                    <Anchors>
+                        <Anchor point="LEFT" x="1" y="0"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Right" atlas="common-search-border-right">
+                    <Size x="10" y="24"/>
+                    <Anchors>
+                        <Anchor point="RIGHT" x="0" y="0"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="Middle" atlas="common-search-border-middle">
+                    <Size x="10" y="24"/>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeKey="$parent.Left" relativePoint="RIGHT"/>
+                        <Anchor point="RIGHT" relativeKey="$parent.Right" relativePoint="LEFT"/>
+                    </Anchors>
+                </Texture>
             </Layer>
         </Layers>
-        <!-- <HighlightTexture atlas="PetList-ButtonHighlight"/> -->
         <Frames>
-            <Frame parentKey="Tooltip" mixin="DefaultTooltipMixin" setAllPoints="true">
-                <!-- <Anchors>
-                    <Anchor point="TOPLEFT"/>
-                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" x="0"/>
-                </Anchors> -->
-                <Layers>
-                    <Layer level="BACKGROUND">
-                        <Texture parentKey="HoverBackground" inherits="HoverBackgroundTemplate"/>
-                    </Layer>
-                </Layers>
-                <Scripts>
-                    <OnLoad method="OnLoad"/>
-                </Scripts>
-            </Frame>
-            <!-- <Frame parentKey="NewFeature" inherits="NewFeatureLabelTemplate" frameLevel="100" hidden="true">
-                <Size x="1" y="1"/>
+            <Button parentKey="CommitChange" inherits="UIPanelButtonTemplate" mixin="KrowiV_SettingsEditBoxCommitChangeMixin" text="OKAY" hidden="true">
+                <Size x="40" y="25"/>
                 <Anchors>
-                    <Anchor point="RIGHT" relativeKey="$parent.Text" relativePoint="LEFT" x="-20" y="3"/>
+                    <Anchor point="RIGHT" x="1"/>
                 </Anchors>
-            </Frame> -->
+                <Scripts>
+                    <OnClick method="OnClick"/>
+                </Scripts>
+            </Button>
         </Frames>
         <Scripts>
             <OnLoad method="OnLoad"/>
-            <!-- <OnEnter method="OnEnter"/>
-            <OnLeave method="OnLeave"/> -->
-            <!-- <OnClick method="OnClick"/> -->
+            <OnEscapePressed method="OnEscapePressed"/>
+            <OnEnterPressed method="OnEnterPressed"/>
+            <OnTextChanged method="OnTextChanged"/>
+            <OnEditFocusGained method="OnEditFocusGained"/>
         </Scripts>
-    </EventButton>
+        <FontString inherits="ChatFontNormal"/>
+    </EditBox>
 
+    <Frame name="KrowiV_SettingsEditBoxControl_Template" inherits="SettingsListElementTemplate" mixin="KrowiV_SettingsEditBoxControlMixin" virtual="true">
+        <Size x="280" y="26"/>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Frame>
 
     <Frame name="KrowiV_AutoSellRulesFrame" mixin="KrowiV_AutoSellRulesFrameMixin" inherits="ButtonFrameTemplate" parent="UIParent" hidden="true" toplevel="true" movable="true" enableMouse="true">
         <Size x="720" y="480"/>
@@ -111,16 +123,6 @@
                     <OnClick method="OnClick"/>
                 </Scripts>
             </Button>
-            <Button parentKey="AddTestButton" mixin="KrowiV_AddTestButtonMixin" motionScriptsWhileDisabled="true" inherits="MagicButtonTemplate">
-                <Size x="140" y="22"/>
-                <Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.DeleteRuleButton" relativePoint="TOPRIGHT" />
-                </Anchors>
-                <Scripts>
-                    <!-- <OnLoad inherit="prepend" method="OnLoad"/> -->
-                    <OnClick method="OnClick"/>
-                </Scripts>
-            </Button>
             <Frame parentKey="RulesList" mixin="KrowiV_AutoSellRulesListMixin" inherits="InsetFrameTemplate">
                 <Size x="200" />
                 <Anchors>
@@ -138,7 +140,6 @@
                 </Frames>
                 <Scripts>
                     <OnLoad method="OnLoad"/>
-                    <!-- <OnShow method="OnShow"/> -->
                 </Scripts>
             </Frame>
             <Frame parentKey="RuleFrame" mixin="KrowiV_AutoSellRuleFrameMixin" inherits="InsetFrameTemplate">
@@ -264,7 +265,6 @@
                 </Frames>
                 <Scripts>
                     <OnLoad method="OnLoad"/>
-                    <!-- <OnShow method="OnShow"/> -->
                 </Scripts>
             </Frame>
         </Frames>

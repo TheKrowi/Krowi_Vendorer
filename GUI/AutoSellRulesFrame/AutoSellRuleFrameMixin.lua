@@ -18,7 +18,7 @@ local function CreateScrollView(self)
         local extent = elementData:GetExtent();
 		return extent or self.ScrollView:CreateTemplateExtent(elementData:GetTemplate());
     end);
-    self.ScrollView:SetPadding(0, 0, 0, 0, 1);
+    self.ScrollView:SetPadding(0, 0, 0, 0, 9);
     ScrollUtil.InitScrollBoxListWithScrollBar(self.ScrollBox, self.ScrollBar, self.ScrollView);
 end
 
@@ -37,7 +37,6 @@ local function AddManagedScrollBarVisibilityBehavior(self)
 end
 
 function KrowiV_AutoSellRuleFrameMixin:OnLoad()
-    print("KrowiV_AutoSellRuleFrameMixin:OnLoad")
     CreateScrollView(self);
     AddManagedScrollBarVisibilityBehavior(self);
     ruleFrame = self;
@@ -60,10 +59,27 @@ local function CreateCheckBoxInitializer(rule)
     return Settings.CreateElementInitializer("SettingsCheckBoxControlTemplate", data);
 end
 
+local function CreateEditBoxInitializer(rule)
+    local data = Settings.CreateSettingInitializerData(
+        CreateAndInitFromMixin(
+            ProxySettingMixin,
+            addon.L["Name"],
+            "Name",
+            rule,
+            Settings.VarType.String,
+            ""
+        ),
+        nil,
+        addon.L["Name Desc"]
+    );
+    data.RulesFrame = rulesFrame;
+    return Settings.CreateElementInitializer("KrowiV_AutoSellEditBoxControl_Template", data);
+end
+
 function KrowiV_AutoSellRuleFrameMixin:SetSelectedRule(rule)
     local newDataProvider = CreateDataProvider();
     newDataProvider:Insert(CreateSettingsListSectionHeaderInitializer(addon.L["General"]));
-    -- Insert name
+    newDataProvider:Insert(CreateEditBoxInitializer(rule));
     newDataProvider:Insert(CreateCheckBoxInitializer(rule));
 	self.ScrollBox:SetDataProvider(newDataProvider, false);
 end
