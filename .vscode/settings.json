@@ -208,7 +208,11 @@
         "ButtonFrameTemplate_HideButtonBar",
         "ButtonFrameTemplate_HideAttic",
         "SelectionBehaviorFlags",
-        "SelectionBehaviorMixin"
+        "SelectionBehaviorMixin",
+        "DefaultTooltipMixin",
+        "CreateSettingsListSectionHeaderInitializer",
+        "ProxySettingMixin",
+        "CreateAndInitFromMixin"
     ],
     "fsdeploy.nodes": [
         {

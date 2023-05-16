@@ -107,6 +107,9 @@ local function ProcessItem(_tooltip, bag, slot, item)
 
     local link = item:GetItemLink();
     local classID, subclassID, bindType = select(12, GetItemInfo(link));
+    if classID == nil then
+        return; -- Temporary solution to handle items that return nothing from GetItemInfo like M+ Keystones
+    end
     local itemInfo = {
         Bag = bag,
         Slot = slot,
@@ -119,28 +122,35 @@ local function ProcessItem(_tooltip, bag, slot, item)
         InventoryType = item:GetInventoryType()
     };
 
-    local doSell, feedback = autoSell.CheckRulesWithFeedback(itemInfo);
+    -- local status, err = pcall(function() -- Wrapped in pcall for now to get rid of bugs
+        local doSell, feedback = autoSell.CheckRulesWithFeedback(itemInfo);
 
-    GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
-    _tooltip:AddLine(addon.MetaData.Title);
-    _tooltip:AddLine(doSell and ("|T136814:0|t " .. addon.L["This item is junk"]:SetColorLightGreen()) or ("|T136813:0|t " .. addon.L["This item is not junk"]:SetColorLightRed()));
-    if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.Basic then
-        return;
-    end
+        GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
+        _tooltip:AddLine(addon.MetaData.Title);
+        _tooltip:AddLine(doSell and ("|T136814:0|t " .. addon.L["This item is junk"]:SetColorLightGreen()) or ("|T136813:0|t " .. addon.L["This item is not junk"]:SetColorLightRed()));
+        if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.Basic then
+            return;
+        end
 
-    for _, result in next, feedback do
-        local ruleName, doSellRule, ruleResults = unpack(result);
-        local ruleText = addon.L["TAB"] .. "|T13681" .. (doSellRule and "4" or "3") .. ":0|t " .. ruleName;
-        _tooltip:AddLine(doSellRule and ruleText:SetColorLightGreen() or ruleText:SetColorLightRed());
-        if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.Detailed then
-            for _, _result in next, ruleResults do
-                local conditionResult, text = unpack(_result);
-                local conditionText = addon.L["TAB"] .. addon.L["TAB"] .. "|T13681" .. (conditionResult and "4" or "3") .. ":0|t " .. text;
-                _tooltip:AddLine(conditionResult and conditionText:SetColorLightGreen() or conditionText:SetColorLightRed());
+        for _, result in next, feedback do
+            local ruleName, doSellRule, ruleResults = unpack(result);
+            local ruleText = addon.L["TAB"] .. "|T13681" .. (doSellRule and "4" or "3") .. ":0|t " .. ruleName;
+            _tooltip:AddLine(doSellRule and ruleText:SetColorLightGreen() or ruleText:SetColorLightRed());
+            if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.Detailed then
+                for _, _result in next, ruleResults do
+                    local conditionResult, text = unpack(_result);
+                    local conditionText = addon.L["TAB"] .. addon.L["TAB"] .. "|T13681" .. (conditionResult and "4" or "3") .. ":0|t " .. text;
+                    _tooltip:AddLine(conditionResult and conditionText:SetColorLightGreen() or conditionText:SetColorLightRed());
+                end
             end
         end
-    end
-    
+    -- end);
+    -- if not status then
+    --     KrowiV_SavedData = KrowiV_SavedData or {};
+    --     KrowiV_SavedData.DebugErrors = KrowiV_SavedData.DebugErrors or {};
+    --     tinsert(KrowiV_SavedData.DebugErrors, err);
+    -- end;
+
     -- local playerKnowsTransmogFromItem, isValidAppearanceForCharacter, playerKnowsTransmog, characterCanLearnTransmog;
     -- local canIMogIt = CanIMogIt; --LibStub("AceAddon-3.0"):GetAddon("CanIMogIt");
     -- if canIMogIt then
@@ -181,7 +191,7 @@ local function ProcessItem(_tooltip, bag, slot, item)
     _tooltip:AddDoubleLine("setID", setID);
     _tooltip:AddDoubleLine("isCraftingReagent", isCraftingReagent);
 
-    _tooltip:Show();
+    -- _tooltip:Show();
 end
 
 local function ProcessItem100002(tooltip, localData)

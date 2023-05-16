@@ -1,5 +1,7 @@
 <Ui>
     <Script file="AutoSellRulesFrameMixin.lua"/>
+    <Script file="AutoSellRulesListMixin.lua"/>
+    <Script file="AutoSellRuleFrameMixin.lua"/>
 
     <EventButton name="KrowiV_AutoSellRulesButton_Template" mixin="KrowiV_AutoSellRulesButtonMixin" virtual="true">
         <Size y="30"/>
@@ -23,11 +25,54 @@
         </Layers>
         <HighlightTexture atlas="PetList-ButtonHighlight"/>
         <Scripts>
+            <OnLoad method="OnLoad"/>
             <OnEnter method="OnEnter"/>
             <OnLeave method="OnLeave"/>
             <OnClick method="OnClick"/>
         </Scripts>
     </EventButton>
+
+    <EventButton name="KrowiV_AutoSellRulesElement_Template" mixin="KrowiV_AutoSellRulesElementMixin" virtual="true">
+        <!-- <KeyValues>
+            <KeyValue key="Extend" value="30" type="number"/>
+        </KeyValues> -->
+        <Size y="30"/>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString parentKey="Text" inherits="GameFontNormal" justifyH="LEFT" wordwrap="false"/>
+            </Layer>
+        </Layers>
+        <!-- <HighlightTexture atlas="PetList-ButtonHighlight"/> -->
+        <Frames>
+            <Frame parentKey="Tooltip" mixin="DefaultTooltipMixin" setAllPoints="true">
+                <!-- <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOM" x="0"/>
+                </Anchors> -->
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture parentKey="HoverBackground" inherits="HoverBackgroundTemplate"/>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnLoad method="OnLoad"/>
+                </Scripts>
+            </Frame>
+            <!-- <Frame parentKey="NewFeature" inherits="NewFeatureLabelTemplate" frameLevel="100" hidden="true">
+                <Size x="1" y="1"/>
+                <Anchors>
+                    <Anchor point="RIGHT" relativeKey="$parent.Text" relativePoint="LEFT" x="-20" y="3"/>
+                </Anchors>
+            </Frame> -->
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <!-- <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/> -->
+            <!-- <OnClick method="OnClick"/> -->
+        </Scripts>
+    </EventButton>
+
 
     <Frame name="KrowiV_AutoSellRulesFrame" mixin="KrowiV_AutoSellRulesFrameMixin" inherits="ButtonFrameTemplate" parent="UIParent" hidden="true" toplevel="true" movable="true" enableMouse="true">
         <Size x="720" y="480"/>
@@ -66,7 +111,17 @@
                     <OnClick method="OnClick"/>
                 </Scripts>
             </Button>
-            <Frame parentKey="RulesList" inherits="InsetFrameTemplate">
+            <Button parentKey="AddTestButton" mixin="KrowiV_AddTestButtonMixin" motionScriptsWhileDisabled="true" inherits="MagicButtonTemplate">
+                <Size x="140" y="22"/>
+                <Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.DeleteRuleButton" relativePoint="TOPRIGHT" />
+                </Anchors>
+                <Scripts>
+                    <!-- <OnLoad inherit="prepend" method="OnLoad"/> -->
+                    <OnClick method="OnClick"/>
+                </Scripts>
+            </Button>
+            <Frame parentKey="RulesList" mixin="KrowiV_AutoSellRulesListMixin" inherits="InsetFrameTemplate">
                 <Size x="200" />
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
@@ -81,31 +136,76 @@
                         </Anchors>
                     </EventFrame>
                 </Frames>
+                <Scripts>
+                    <OnLoad method="OnLoad"/>
+                    <!-- <OnShow method="OnShow"/> -->
+                </Scripts>
             </Frame>
-            <Frame parentKey="RuleFrame" inherits="InsetFrameTemplate">
+            <Frame parentKey="RuleFrame" mixin="KrowiV_AutoSellRuleFrameMixin" inherits="InsetFrameTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.RulesList" relativePoint="TOPRIGHT"/>
                     <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
                 </Anchors>
                 <Layers>
                     <Layer level="OVERLAY">
+                        <!-- <FontString parentKey="GeneralLabel" inherits="GameFontHighlightLarge" text="General" justifyH="Left">
+                            <Size x="300" y="19"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="10" y="-15"/>
+                            </Anchors>
+                        </FontString>
                         <FontString parentKey="NameLabel" inherits="GameFontNormalMed1" text="Name" justifyH="Left">
                             <Size x="150" y="19"/>
                             <Anchors>
-                                <Anchor point="TOPLEFT" x="10" y="-10"/>
+                                <Anchor point="TOPLEFT" relativeKey="$parent.GeneralLabel" relativePoint="BOTTOMLEFT" x="25" y="-15"/>
                             </Anchors>
                         </FontString>
+                        <FontString parentKey="IsEnabledLabel" inherits="GameFontNormalMed1" text="Enabled" justifyH="Left">
+                            <Size x="150" y="19"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeKey="$parent.NameLabel" relativePoint="BOTTOMLEFT" y="-15"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="ItemTypesAndSubTypesLabel" inherits="GameFontHighlightLarge" text="Item types and sub types" justifyH="Left">
+                            <Size x="300" y="19"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeKey="$parent.IsEnabledLabel" relativePoint="BOTTOMLEFT" x="-25" y="-15"/>
+                            </Anchors>
+                        </FontString> -->
                     </Layer>
                 </Layers>
                 <Frames>
-                    <EditBox parentKey="Name" inherits="InputBoxTemplate" mixin="KrowiV_RulesFrameNameMixin" autoFocus="false">
-                        <Size x="200" y="19"/>
+                    <!-- <EditBox parentKey="Name" inherits="InputBoxScriptTemplate" mixin="KrowiV_RulesFrameNameMixin" autoFocus="false">
+                        <Size x="250" y="29"/>
                         <Anchors>
                             <Anchor point="LEFT" relativeKey="$parent.NameLabel" relativePoint="RIGHT"/>
                         </Anchors>
+                        <Layers>
+                            <Layer level="BACKGROUND">
+                                <Texture parentKey="Left" atlas="common-search-border-left" useAtlasSize="false">
+                                    <Size x="12" y="30"/>
+                                    <Anchors>
+                                        <Anchor point="LEFT" x="1" y="0"/>
+                                    </Anchors>
+                                </Texture>
+                                <Texture parentKey="Right" atlas="common-search-border-right">
+                                    <Size x="12" y="30"/>
+                                    <Anchors>
+                                        <Anchor point="RIGHT" x="0" y="0"/>
+                                    </Anchors>
+                                </Texture>
+                                <Texture parentKey="Middle" atlas="common-search-border-middle">
+                                    <Size x="10" y="30"/>
+                                    <Anchors>
+                                        <Anchor point="LEFT" relativeKey="$parent.Left" relativePoint="RIGHT"/>
+                                        <Anchor point="RIGHT" relativeKey="$parent.Right" relativePoint="LEFT"/>
+                                    </Anchors>
+                                </Texture>
+                            </Layer>
+                        </Layers>
                         <Frames>
                             <Button parentKey="CommitChange" inherits="UIPanelButtonTemplate" mixin="KrowiV_RulesFrameNameCommitChangeMixin" text="OKAY" hidden="true">
-                                <Size x="40" y="20"/>
+                                <Size x="40" y="32"/>
                                 <Anchors>
                                     <Anchor point="RIGHT"/>
                                 </Anchors>
@@ -121,8 +221,51 @@
                             <OnTextChanged method="OnTextChanged"/>
                             <OnEditFocusGained method="OnEditFocusGained"/>
                         </Scripts>
+                        <FontString inherits="ChatFontNormal"/>
                     </EditBox>
+                    <CheckButton parentKey="IsEnabled" mixin="KrowiV_RulesFrameIsEnabledMixin">
+                        <Size x="30" y="29"/>
+                        <Anchors>
+                            <Anchor point="LEFT" relativeKey="$parent.IsEnabledLabel" relativePoint="RIGHT"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="BACKGROUND">
+                                <Texture parentKey="HoverBackground" inherits="HoverBackgroundTemplate"/>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnLoad method="OnLoad"/>
+                            <OnEnter method="OnEnter"/>
+                            <OnLeave method="OnLeave"/>
+                            <OnClick method="OnClick"/>
+                        </Scripts>
+                        <NormalTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+                        <PushedTexture atlas="checkbox-minimal" useAtlasSize="true"/>
+                        <CheckedTexture atlas="checkmark-minimal" useAtlasSize="true"/>
+                        <DisabledCheckedTexture atlas="checkmark-minimal-disabled" useAtlasSize="true"/>
+                    </CheckButton>
+                    <Button inherits="UIPanelButtonTemplate" mixin="KrowiV_AddMoreButton">
+                        <Size x="30" y="30"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeKey="$parent.ItemTypesAndSubTypesLabel" relativePoint="BOTTOMLEFT" x="25" y="-15"/>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick method="OnClick"/>
+                        </Scripts>
+                    </Button> -->
+
+                    <Frame parentKey="ScrollBox" inherits="WowScrollBoxList"/>
+                    <EventFrame parentKey="ScrollBar" inherits="WowTrimScrollBar">
+                        <Anchors>
+                            <Anchor point="TOPRIGHT"/>
+                            <Anchor point="BOTTOMRIGHT"/>
+                        </Anchors>
+                    </EventFrame>
                 </Frames>
+                <Scripts>
+                    <OnLoad method="OnLoad"/>
+                    <!-- <OnShow method="OnShow"/> -->
+                </Scripts>
             </Frame>
         </Frames>
         <Scripts>

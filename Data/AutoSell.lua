@@ -61,9 +61,9 @@ function autoSell.CheckRuleWithFeedback(rule, itemInfo)
         local _itemType = rule.QuickItemTypes[itemInfo.ItemTypeId];
         if not _itemType then
             doSell = false;
-            tinsert(feedback, {false, "Type is " .. itemType.List[itemInfo.ItemTypeId]});
+            tinsert(feedback, {false, "Type is " .. (itemType.List[itemInfo.ItemTypeId] or itemInfo.ItemTypeId)});
         else
-            tinsert(feedback, {true, "Type is " .. itemType.List[itemInfo.ItemTypeId]});
+            tinsert(feedback, {true, "Type is " .. (itemType.List[itemInfo.ItemTypeId] or itemInfo.ItemTypeId)});
 
             if type(_itemType) == "table" and not _itemType[itemInfo.ItemSubTypeId] then
                 doSell = false;

@@ -3,7 +3,7 @@
 ## Version: 0.5-alpha1
 ## Author: Krowi-Frostmane EU
 ## LoadWith: Blizzard_MerchantFrame
-## SavedVariables: KrowiV_Options, KrowiV_SavedData, KrowiV_Test, KrowiV_Test2, KrowiV_Test3
+## SavedVariables: KrowiV_Options, KrowiV_SavedData, KrowiV_Test, KrowiV_Test2, KrowiV_Test3, KrowiV_Test4
 ## Notes: Enhances your vendoring.
 ## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
 ## X-Discord-Server-Name: Krowi's Addons
