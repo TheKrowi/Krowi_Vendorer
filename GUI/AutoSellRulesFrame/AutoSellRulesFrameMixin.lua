@@ -30,7 +30,7 @@ function KrowiV_AutoSellRulesFrameMixin:OnLoad()
     ruleFrame = self.RuleFrame;
     self.SelectedTab = 1;
 
-    addon.Util.DelayFunction("KrowiV_AutoSellRulesFrameMixin", 1, self.Show, self); -- For testing
+    -- addon.Util.DelayFunction("KrowiV_AutoSellRulesFrameMixin", 1, self.Show, self); -- For testing
 end
 
 function KrowiV_AutoSellRulesFrameMixin:OnShow()
