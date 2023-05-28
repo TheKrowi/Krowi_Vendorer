@@ -108,6 +108,9 @@ local function ProcessItem(_tooltip, bag, slot, item)
     local link = item:GetItemLink();
     local itemLevel = select(4, GetItemInfo(link));
     local classID, subclassID, bindType = select(12, GetItemInfo(link));
+    if classID == nil then
+        return; -- Temporary solution to handle items that return nothing from GetItemInfo like M+ Keystones
+    end
     local itemInfo = {
         Bag = bag,
         Slot = slot,
