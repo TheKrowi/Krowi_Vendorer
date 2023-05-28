@@ -109,12 +109,13 @@ local function ProcessItem(bag, slot, item)
         return;
     end
 
+    local itemLevel = select(4, GetItemInfo(link));
     local classID, subclassID, bindType = select(12, GetItemInfo(link));
     local itemInfo = {
         Bag = bag,
         Slot = slot,
         Link = link,
-        ItemLevel = item:GetCurrentItemLevel(),
+        ItemLevel = itemLevel, -- item:GetCurrentItemLevel(),
         ItemTypeId = classID,
         ItemSubTypeId = subclassID,
         BindType = bindType,
