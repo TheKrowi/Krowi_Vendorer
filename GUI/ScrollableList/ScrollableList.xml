@@ -10,6 +10,16 @@
                     <Anchor point="BOTTOMRIGHT"/>
                 </Anchors>
             </EventFrame>
+            <EditBox name="$parentSearchBox" inherits="SearchBoxTemplate" mixin="KrowiV_ScrollableListMixin" parentKey="SearchBox" letters="40">
+                <Size x="145" y="20"/>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent" relativePoint="TOPRIGHT" x="0" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnTextChanged method="OnSearchTextChanged"/>
+                    <OnHide method="ClearSearch"/>
+                </Scripts>
+            </EditBox>
         </Frames>
         <Scripts>
             <OnLoad method="OnLoad"/>

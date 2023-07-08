@@ -76,3 +76,34 @@ end
 function KrowiV_ScrollableListMixin:GetItems()
     return self.DataProvider:GetCollection();
 end
+
+function KrowiV_ScrollableListMixin:OnSearchTextChanged()
+    local dataProvider = self:GetParent().DataProvider;
+    -- print("OnSearchTextChanged()", self:GetText())
+    -- if strlen(self:GetText()) <= 0 then
+    --     dataProvider:Flush();
+    --     dataProvider:InsertTable(tempCollection);
+    --     return;
+    -- end
+    -- print("doing more")
+    self.TempCollection = self.TempCollection or dataProvider:GetCollection();
+    -- print(#tempCollection)
+    dataProvider:Flush();
+    dataProvider:InsertTable(self.TempCollection);
+    -- print(#dataProvider:GetCollection())
+    dataProvider:ReverseForEach(
+        function(elementData)
+            -- print(elementData.Name, self:GetText(), string.find(elementData.Name, self:GetText(), 1, true), #dataProvider:GetCollection())
+            if not string.find(elementData.Name:lower(), self:GetText(), 1, true) then
+                dataProvider:Remove(elementData);
+            end
+        end
+    );
+    -- KrowiV_AutoSellListFrame:Update();
+end
+
+function KrowiV_ScrollableListMixin:ClearSearch()
+    -- print("ClearSearch()")
+    self:SetText("");
+    self.TempCollection = nil;
+end
