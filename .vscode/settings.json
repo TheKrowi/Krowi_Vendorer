@@ -204,7 +204,8 @@
         "KrowiV_IgnoreListFrame",
         "KrowiV_EmbeddedJunkListFrame",
         "KrowiV_JunkListFrame",
-        "KrowiV_AutoSellListFrame"
+        "KrowiV_AutoSellListFrame",
+        "UndoFrame"
     ],
     "fsdeploy.nodes": [
         {

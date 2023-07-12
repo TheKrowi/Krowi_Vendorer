@@ -109,7 +109,7 @@ end
 local function DrawMerchantBuyBackItem(show)
     if show then
         MerchantBuyBackItem:ClearAllPoints();
-        MerchantBuyBackItem:SetPoint("BOTTOMRIGHT", MerchantFrameBottomRightBorder, "BOTTOMRIGHT", -4, 8);
+        MerchantBuyBackItem:SetPoint("BOTTOMRIGHT", MerchantFrameBottomLeftBorder, "BOTTOMRIGHT", -4, 8);
 	    MerchantBuyBackItem:Show();
     else
         MerchantBuyBackItem:Hide();
