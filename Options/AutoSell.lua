@@ -478,6 +478,9 @@ local function AddUnusableEquipmentRule(_scope)
         end
     end
     condition = autoSellRule.AddNewCondition(rule, criteriaType.Enum.Soulbound);
+    condition = autoSellRule.AddNewCondition(rule, criteriaType.Enum.ItemLevel);
+    condition.Operator = 1;
+    autoSellRule.SetItemLevel(condition, 1);
 end
 
 local function SortRules(a, b)
