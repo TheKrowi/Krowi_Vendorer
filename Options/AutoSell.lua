@@ -450,9 +450,10 @@ local function AddUnusableEquipmentRule(_scope)
     -- Data taken from https://wowpedia.fandom.com/wiki/Proficiency
     local rules = GetRules(_scope);
     local rule, isNew = autoSellRule.CreateNewRule(rules, "Rule-UnusableEquipment", addon.L["Unusable Equipment"] .. " (Preset)");
-    if isNew then
-        rule.IsDisabled = true;
-    end
+    -- if isNew then
+    --     rule.IsDisabled = true;
+    -- end
+    rule.IsDisabled = false; -- Do not disable this rule for now
     rule.IsPreset = true;
     rule.ItemTypes = nil;
     rule.Conditions = nil;
