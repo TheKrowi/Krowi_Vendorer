@@ -44,7 +44,7 @@ function loadHelper:OnEvent(event, arg1, arg2)
             -- addon.GUI.ItemListFrame.JunkList.Init(true);
             -- addon.GUI.ItemListFrame.IgnoreList.Init(true);
 
-            addon.GUI.MerchantFrame:Load();
+            -- addon.GUI.MerchantFrame:Load();
 
             addon.Icon.Load();
 

@@ -2,85 +2,99 @@
 local _, addon = ...;
 addon.GUI.MerchantFrame = {};
 local merchantFrame = addon.GUI.MerchantFrame;
-local merchantItemsContainer = addon.GUI.MerchantItemsContainer;
+-- local merchantItemsContainer = addon.GUI.MerchantItemsContainer;
 
 local originalWidth, originalHeight = MerchantFrame:GetSize();
 
-do -- [[ Set some permanent MerchantFrame changes ]]
-	-- MerchantFrameBottomRightBorder:SetTexCoord(91 / 256, (91 + 76) / 256, 0, 0.4765625);
+-- do -- [[ Set some permanent MerchantFrame changes ]]
+-- 	-- MerchantFrameBottomRightBorder:SetTexCoord(91 / 256, (91 + 76) / 256, 0, 0.4765625);
 
-	local bottomExtensionRightBorder = MerchantFrame:CreateTexture("KrowiV_BottomExtensionRightBorder");
-	bottomExtensionRightBorder:SetSize(76, 61);
-	bottomExtensionRightBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
-	bottomExtensionRightBorder:SetTexCoord(0, 0.296875, 0.4765625, 0.953125);
-	bottomExtensionRightBorder:SetPoint("BOTTOMRIGHT", MerchantFrameInset, "BOTTOMRIGHT", 3, 0);
+-- 	local bottomExtensionRightBorder = MerchantFrame:CreateTexture("KrowiMFE_BottomExtensionRightBorder");
+-- 	bottomExtensionRightBorder:SetSize(76, 61);
+-- 	bottomExtensionRightBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
+-- 	bottomExtensionRightBorder:SetTexCoord(0, 0.296875, 0.4765625, 0.953125);
+-- 	bottomExtensionRightBorder:SetPoint("BOTTOMRIGHT", MerchantFrameInset, "BOTTOMRIGHT", 3, 0);
 
-	local bottomExtensionLeftBorder = MerchantFrame:CreateTexture("KrowiV_BottomExtensionLeftBorder");
-	bottomExtensionLeftBorder:SetSize(89, 61);
-	bottomExtensionLeftBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
-	bottomExtensionLeftBorder:SetTexCoord((91 + 76) / 256, 1, 0, 0.4765625);
-	bottomExtensionLeftBorder:SetPoint("TOPLEFT", MerchantFrameBottomLeftBorder, "TOPRIGHT", 0, 0);
+-- 	local bottomExtensionLeftBorder = MerchantFrame:CreateTexture("KrowiMFE_BottomExtensionLeftBorder");
+-- 	bottomExtensionLeftBorder:SetSize(89, 61);
+-- 	bottomExtensionLeftBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
+-- 	bottomExtensionLeftBorder:SetTexCoord((91 + 76) / 256, 1, 0, 0.4765625);
+-- 	bottomExtensionLeftBorder:SetPoint("TOPLEFT", MerchantFrameBottomLeftBorder, "TOPRIGHT", 0, 0);
 
-	local bottomExtensionMidBorder = MerchantFrame:CreateTexture("KrowiV_BottomExtensionMidBorder");
-	bottomExtensionMidBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
-	bottomExtensionMidBorder:SetTexCoord(8 / 256, (8 + 151) / 256, 0, 0.4765625);
-	bottomExtensionMidBorder:SetPoint("TOPLEFT", bottomExtensionLeftBorder, "TOPRIGHT", 0, 0);
-	bottomExtensionMidBorder:SetPoint("BOTTOMRIGHT", bottomExtensionRightBorder, "BOTTOMLEFT", 0, 0);
+-- 	local bottomExtensionMidBorder = MerchantFrame:CreateTexture("KrowiMFE_BottomExtensionMidBorder");
+-- 	bottomExtensionMidBorder:SetTexture("Interface/MerchantFrame/UI-Merchant-BottomBorder");
+-- 	bottomExtensionMidBorder:SetTexCoord(8 / 256, (8 + 151) / 256, 0, 0.4765625);
+-- 	bottomExtensionMidBorder:SetPoint("TOPLEFT", bottomExtensionLeftBorder, "TOPRIGHT", 0, 0);
+-- 	bottomExtensionMidBorder:SetPoint("BOTTOMRIGHT", bottomExtensionRightBorder, "BOTTOMLEFT", 0, 0);
 
-	MerchantPrevPageButton:SetPoint("BOTTOMLEFT", MerchantFrameBottomLeftBorder, "TOPLEFT", 8, -5);
-	MerchantNextPageButton:SetPoint("BOTTOMRIGHT", KrowiV_BottomExtensionRightBorder, "TOPRIGHT", -7, -5);
-end
+-- 	MerchantPrevPageButton:SetPoint("BOTTOMLEFT", MerchantFrameBottomLeftBorder, "TOPLEFT", 8, -5);
+-- 	MerchantNextPageButton:SetPoint("BOTTOMRIGHT", KrowiMFE_BottomExtensionRightBorder, "TOPRIGHT", -7, -5);
+-- end
 
-function merchantFrame:Load()
-	merchantItemsContainer:LoadMaxNumItemSlots();
-end
+-- function merchantFrame:Load()
+-- 	merchantItemsContainer:LoadMaxNumItemSlots();
+-- end
 
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
 	KrowiV_EmbeddedJunkListFrame:Hide();
 	KrowiV_EmbeddedIgnoreListFrame:Hide();
-	local numColumns = addon.Options.db.NumColumns - merchantItemsContainer.DefaultMerchantInfoNumColumns;
-	local numRows = addon.Options.db.NumRows - merchantItemsContainer.DefaultMerchantInfoNumRows;
-	local itemWidth = merchantItemsContainer.OffsetX + merchantItemsContainer.ItemWidth;
-	local itemHeight = merchantItemsContainer.OffsetMerchantInfoY + merchantItemsContainer.ItemHeight;
+	-- local numColumns = addon.Options.db.NumColumns - merchantItemsContainer.DefaultMerchantInfoNumColumns;
+	-- local numRows = addon.Options.db.NumRows - merchantItemsContainer.DefaultMerchantInfoNumRows;
+	-- local itemWidth = merchantItemsContainer.OffsetX + merchantItemsContainer.ItemWidth;
+	-- local itemHeight = merchantItemsContainer.OffsetMerchantInfoY + merchantItemsContainer.ItemHeight;
 
-	local width = originalWidth + numColumns * itemWidth;
-	local height = originalHeight + numRows * itemHeight;
-	if not MerchantPageText:IsShown() then
-		height = height - 36;
+	-- local width = originalWidth + numColumns * itemWidth;
+	-- local height = originalHeight + numRows * itemHeight;
+	-- if not MerchantPageText:IsShown() then
+	-- 	height = height - 36;
+	-- end
+	if not KrowiMFE_MerchantItemsContainer then
+		MerchantFrame:SetSize(originalWidth, originalHeight);
 	end
-	MerchantFrame:SetSize(width, height);
-	KrowiV_BottomExtensionRightBorder:Show();
-	if numColumns > 0 then
-		KrowiV_BottomExtensionLeftBorder:Show();
-		KrowiV_BottomExtensionMidBorder:Show();
-	else
-		MerchantFrameBottomLeftBorder:Hide();
-		KrowiV_BottomExtensionLeftBorder:Hide();
-		KrowiV_BottomExtensionMidBorder:Hide();
+	-- KrowiMFE_BottomExtensionRightBorder:Show();
+	-- if numColumns > 0 then
+	-- 	KrowiMFE_BottomExtensionLeftBorder:Show();
+	-- 	KrowiMFE_BottomExtensionMidBorder:Show();
+	-- else
+	-- 	MerchantFrameBottomLeftBorder:Hide();
+	-- 	KrowiMFE_BottomExtensionLeftBorder:Hide();
+	-- 	KrowiMFE_BottomExtensionMidBorder:Hide();
+	-- end
+	-- UndoFrame:Show();
+	if not KrowiMFE_MerchantItemsContainer then
+		for i = 1, 10, 1 do
+			_G["MerchantItem" .. i]:Show();
+		end
 	end
-	UndoFrame:Show();
 end);
 
 hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
 	KrowiV_EmbeddedJunkListFrame:Hide();
 	KrowiV_EmbeddedIgnoreListFrame:Hide();
-	MerchantFrame:SetSize(originalWidth, originalHeight);
-	KrowiV_BottomExtensionRightBorder:Hide();
-	KrowiV_BottomExtensionLeftBorder:Hide();
-	KrowiV_BottomExtensionMidBorder:Hide();
-end);
-
--- Hook onto MerchantFrame_UpdateFilterString so we're ready for MerchantFrame_UpdateMerchantInfo and/or MerchantFrame_UpdateBuybackInfo
-hooksecurefunc("MerchantFrame_UpdateFilterString", function()
-	if MerchantFrame.selectedTab == 1 then
-		merchantItemsContainer:PrepareMerchantInfo();
-	else
-		merchantItemsContainer:PrepareBuybackInfo();
+	if not KrowiMFE_MerchantItemsContainer then
+		MerchantFrame:SetSize(originalWidth, originalHeight);
+	end
+	-- KrowiMFE_BottomExtensionRightBorder:Hide();
+	-- KrowiMFE_BottomExtensionLeftBorder:Hide();
+	-- KrowiMFE_BottomExtensionMidBorder:Hide();
+	if not KrowiMFE_MerchantItemsContainer then
+		for i = 1, 12, 1 do
+			_G["MerchantItem" .. i]:Show();
+		end
 	end
 end);
 
+-- Hook onto MerchantFrame_UpdateFilterString so we're ready for MerchantFrame_UpdateMerchantInfo and/or MerchantFrame_UpdateBuybackInfo
+-- hooksecurefunc("MerchantFrame_UpdateFilterString", function()
+-- 	if MerchantFrame.selectedTab == 1 then
+-- 		merchantItemsContainer:PrepareMerchantInfo();
+-- 	else
+-- 		merchantItemsContainer:PrepareBuybackInfo();
+-- 	end
+-- end);
+
 hooksecurefunc(MerchantFrame, "Show", function(self)
-	SetMerchantFilter(LE_LOOT_FILTER_ALL);
+	-- SetMerchantFilter(LE_LOOT_FILTER_ALL);
 
 	KrowiV_AutoSellListFrame:ShowWithMerchantFrame();
 end);
@@ -113,11 +127,23 @@ function MerchantFrame_Update()
 end
 
 function merchantFrame.UpdateIgnoreInfo()
-	merchantItemsContainer:HideAll();
+	if KrowiMFE_MerchantItemsContainer then
+		KrowiMFE_MerchantItemsContainer:HideAll();
+	else
+		for i = 1, 12, 1 do
+			_G["MerchantItem" .. i]:Hide();
+		end
+	end
 	-- MerchantFrameBottomRightBorder:Hide();
-	KrowiV_BottomExtensionRightBorder:Hide();
-	KrowiV_BottomExtensionLeftBorder:Hide();
-	KrowiV_BottomExtensionMidBorder:Hide();
+	if KrowiMFE_BottomExtensionRightBorder then
+		KrowiMFE_BottomExtensionRightBorder:Hide();
+	end
+	if KrowiMFE_BottomExtensionLeftBorder then
+		KrowiMFE_BottomExtensionLeftBorder:Hide();
+	end
+	if KrowiMFE_BottomExtensionMidBorder then
+		KrowiMFE_BottomExtensionMidBorder:Hide();
+	end
 	MerchantRepairAllButton:Hide();
 	MerchantRepairItemButton:Hide();
 	MerchantBuyBackItem:Hide();
@@ -135,11 +161,23 @@ function merchantFrame.UpdateIgnoreInfo()
 end
 
 function merchantFrame.UpdateJunkInfo()
-	merchantItemsContainer:HideAll();
+	if KrowiMFE_MerchantItemsContainer then
+		KrowiMFE_MerchantItemsContainer:HideAll();
+	else
+		for i = 1, 12, 1 do
+			_G["MerchantItem" .. i]:Hide();
+		end
+	end
 	-- MerchantFrameBottomRightBorder:Hide();
-	KrowiV_BottomExtensionRightBorder:Hide();
-	KrowiV_BottomExtensionLeftBorder:Hide();
-	KrowiV_BottomExtensionMidBorder:Hide();
+	if KrowiMFE_BottomExtensionRightBorder then
+		KrowiMFE_BottomExtensionRightBorder:Hide();
+	end
+	if KrowiMFE_BottomExtensionLeftBorder then
+		KrowiMFE_BottomExtensionLeftBorder:Hide();
+	end
+	if KrowiMFE_BottomExtensionMidBorder then
+		KrowiMFE_BottomExtensionMidBorder:Hide();
+	end
 	MerchantRepairAllButton:Hide();
 	MerchantRepairItemButton:Hide();
 	MerchantBuyBackItem:Hide();

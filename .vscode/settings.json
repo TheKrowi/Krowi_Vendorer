@@ -44,9 +44,9 @@
         "MerchantFrameBottomLeftBorder",
         "MerchantPrevPageButton",
         "MerchantNextPageButton",
-        "KrowiV_BottomExtensionRightBorder",
-        "KrowiV_BottomExtensionLeftBorder",
-        "KrowiV_BottomExtensionMidBorder",
+        "KrowiMFE_BottomExtensionRightBorder",
+        "KrowiMFE_BottomExtensionLeftBorder",
+        "KrowiMFE_BottomExtensionMidBorder",
         "CreateScrollBoxListLinearView",
         "ScrollUtil",
         "COLLECTIONS_FANFARE_ICON",
@@ -205,7 +205,8 @@
         "KrowiV_EmbeddedJunkListFrame",
         "KrowiV_JunkListFrame",
         "KrowiV_AutoSellListFrame",
-        "UndoFrame"
+        "UndoFrame",
+        "KrowiMFE_MerchantItemsContainer"
     ],
     "fsdeploy.nodes": [
         {

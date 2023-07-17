@@ -1,4 +1,4 @@
-<Ui>
+<!-- <Ui>
     <Script file="OptionsButton.lua"/>
     <Script file="OptionsButtonMixin.lua"/>
 
@@ -21,4 +21,4 @@
 			<OnMouseDown function="KrowiV_OptionsButton_OnMouseDown"/>
 		</Scripts>
 	</DropDownToggleButton>
-</Ui>
+</Ui> -->
