@@ -10,7 +10,7 @@ addon.IsDragonflightRetail = major == "10";
 -- [[ Ace ]] --
 addon.L = LibStub(addon.Libs.AceLocale):GetLocale(addonName);
 
-print(addon.MetaData.Title, "loaded");
+print(addon.Metadata.Title, "loaded");
 
 if MerchantFrame then
     print("already loaded")
@@ -29,24 +29,15 @@ loadHelper:RegisterEvent("MERCHANT_SHOW");
 function loadHelper:OnEvent(event, arg1, arg2)
     if event == "ADDON_LOADED" then
         if arg1 == "Krowi_Vendorer" then -- This always needs to load
-            KrowiV_InjectOptions:SetOptionsTable(addon.Options.OptionsTable);
-            KrowiV_InjectOptions:SetOptions(addon.Options.Defaults.profile);
-
-            -- addon.Data.AutoJunk.Load();
-
             addon.Objects.ItemType.Load();
 
-            addon.Options.Load(); -- Needs ItemType
+            addon.Options:Load(); -- Needs ItemType
 
             KrowiV_SavedData = KrowiV_SavedData or {};
             KrowiV_SavedData.IgnoredItems = KrowiV_SavedData.IgnoredItems or {};
             KrowiV_SavedData.JunkItems = KrowiV_SavedData.JunkItems or {};
-            -- addon.GUI.ItemListFrame.JunkList.Init(true);
-            -- addon.GUI.ItemListFrame.IgnoreList.Init(true);
 
-            -- addon.GUI.MerchantFrame:Load();
-
-            addon.Icon.Load();
+            addon.Icon:Load();
 
             addon.GUI.ItemTooltip.Load();
         end

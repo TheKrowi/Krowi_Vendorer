@@ -13,12 +13,12 @@ local inventoryType = addon.Objects.InventoryType;
 local scope = addon.Objects.Scope;
 local autoSellRule = addon.Objects.AutoSellRule;
 
-local OrderPP = KrowiV_InjectOptions.AutoOrderPlusPlus;
-local AdjustedWidth = KrowiV_InjectOptions.AdjustedWidth;
+local OrderPP = addon.InjectOptions.AutoOrderPlusPlus;
+local AdjustedWidth = addon.InjectOptions.AdjustedWidth;
 
 function autoSell.RegisterOptionsTable()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("Auto Sell", options.OptionsTable.args.AutoSell);
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Auto Sell", "Auto Sell", addon.MetaData.Title);
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Auto Sell", "Auto Sell", addon.Metadata.Title);
 end
 
 local function GetRules(_scope)
@@ -48,7 +48,7 @@ do -- [[ Rule ]]
     end
 
     local function AddRuleTable(scopeName, rule)
-        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args", rule.Guid, {
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args", rule.Guid, {
             order = OrderPP(), type = "group",
             name = function() return "|T13681" .. (rule.IsDisabled and "3" or "4") .. ":0|t " .. rule.Name; end,
             args = {
@@ -185,7 +185,7 @@ do -- [[ ItemType ]]
     end
 
     local function AddItemTypeTable(scopeName, rule, _itemType)
-        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.ItemTypes.args", _itemType.Guid, {
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.ItemTypes.args", _itemType.Guid, {
             order = OrderPP(), type = "group", inline = true,
             name = "",
             args = {
@@ -246,7 +246,7 @@ do -- [[ ItemType ]]
             }
         });
         CheckIfItemTypeIsValid(rule, _itemType);
-        local addNewItemClassTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.ItemTypes.args.AddNewItemType");
+        local addNewItemClassTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.ItemTypes.args.AddNewItemType");
         addNewItemClassTable.order = OrderPP();
     end
     autoSell.AddItemTypeTable = AddItemTypeTable;
@@ -262,13 +262,13 @@ end
 do -- [[ Condition ]]
     local function CheckIfConditionIsValid(scopeName, rule, condition)
         local description = autoSellRule.CheckIfConditionIsInalid(condition);
-        local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
+        local invalidConditionTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
         invalidConditionTable.name = description:SetColorLightRed();
         autoSell.CheckIfRuleIsValid(rule);
     end
 
     local function ConditionCriteriaTypeSet_ItemLevel(scopeName, rule, condition)
-        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Operator", {
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Operator", {
             order = OrderPP(), type = "select", width = AdjustedWidth(0.5),
             name = "",
             values = equalityOperator.List,
@@ -281,7 +281,7 @@ do -- [[ Condition ]]
             end,
             disabled = function() return rule.IsPreset; end
         });
-        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
             order = OrderPP(), type = "input", width = AdjustedWidth(0.4),
             name = "",
             get = function() return tostring(condition.Value or ""); end,
@@ -302,7 +302,7 @@ do -- [[ Condition ]]
     end
 
     local function ConditionCriteriaTypeSet_Soulbound(scopeName, rule, condition)
-        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Blank1", {
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Blank1", {
             order = OrderPP(), type = "description", width = AdjustedWidth(0.9), name = ""
         });
     end
@@ -310,7 +310,7 @@ do -- [[ Condition ]]
     local function ConditionCriteriaTypeSet_Quality(scopeName, rule, condition)
         condition.Qualities = condition.Qualities or {};
         condition.NumSelectedQualities = condition.NumSelectedQualities or 0;
-        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
             order = OrderPP(), type = "multiselect", width = AdjustedWidth(0.9),
             name = "",
             values = itemQuality.List,
@@ -329,7 +329,7 @@ do -- [[ Condition ]]
     local function ConditionCriteriaTypeSet_InventoryType(scopeName, rule, condition)
         condition.InventoryTypes = condition.InventoryTypes or {};
         condition.NumSelectedInventoryTypes = condition.NumSelectedInventoryTypes or 0;
-        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Value", {
             order = OrderPP(), type = "multiselect", width = AdjustedWidth(0.9),
             name = "",
             values = inventoryType.List,
@@ -358,10 +358,10 @@ do -- [[ Condition ]]
         elseif value == criteriaType.Enum.InventoryType then
             ConditionCriteriaTypeSet_InventoryType(scopeName, rule, condition);
         end
-        local deleteConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.DeleteCondition");
+        local deleteConditionTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.DeleteCondition");
         deleteConditionTable.order = OrderPP();
         CheckIfConditionIsValid(scopeName, rule, condition);
-        local invalidConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
+        local invalidConditionTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
         invalidConditionTable.order = OrderPP();
     end
     autoSell.ConditionCriteriaTypeSet = ConditionCriteriaTypeSet;
@@ -373,7 +373,7 @@ do -- [[ Condition ]]
     end
 
     local function AddConditionTable(scopeName, rule, condition)
-        KrowiV_InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args", condition.Guid, {
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args", condition.Guid, {
             order = OrderPP(), type = "group", inline = true,
             name = "",
             args = {
@@ -409,7 +409,7 @@ do -- [[ Condition ]]
             }
         });
         ConditionCriteriaTypeSet(scopeName, rule, condition, condition.CriteriaType);
-        local addNewConditionTable = KrowiV_InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args.AddNewCondition");
+        local addNewConditionTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args.AddNewCondition");
         addNewConditionTable.order = OrderPP();
     end
     autoSell.AddConditionTable = AddConditionTable;
@@ -592,7 +592,7 @@ options.OptionsTable.args["AutoSell"] = {
                 -- LevelsOfDetails = {
                 --     order = OrderPP(), type = "select", width = AdjustedWidth(),
                 --     name = addon.L["Levels of details"],
-                --     desc = addon.L["Levels of details Desc"]:AddDefaultValueText_KV("AutoSell.Operator", addon.Operators),
+                --     desc = addon.L["Levels of details Desc"]:KV_AddDefaultValueText("AutoSell.Operator", addon.Operators),
                 --     values = addon.Operators,
                 --     get = function() return KrowiV_SavedData.Operator; end,
                 --     set = function(_, value) KrowiV_SavedData.Operator = value; end
@@ -604,10 +604,10 @@ options.OptionsTable.args["AutoSell"] = {
                 LevelsOfDetailsList = {
                     order = OrderPP(), type = "select", width = AdjustedWidth(),
                     name = addon.L["Levels of details"],
-                    desc = addon.L["Levels of details Desc"]:AddDefaultValueText_KV("AutoSell.TooltipDetails", autoSellRule.TooltipDetails.List),
+                    desc = addon.L["Levels of details Desc"]:KV_AddDefaultValueText("AutoSell.TooltipDetails", autoSellRule.TooltipDetails.List),
                     values = autoSellRule.TooltipDetails.List,
-                    get = function() return addon.Options.db.AutoSell.TooltipDetails; end,
-                    set = function(_, value) addon.Options.db.AutoSell.TooltipDetails = value; end
+                    get = function() return addon.Options.db.profile.AutoSell.TooltipDetails; end,
+                    set = function(_, value) addon.Options.db.profile.AutoSell.TooltipDetails = value; end
                 },
             }
         }

@@ -19,13 +19,13 @@ local tooltipDetails = addon.Objects.AutoSellRule.TooltipDetails.Enum;
 -- local qualityCache, itemLevelCache;
 -- local validations = {
 --     function(itemId) -- Item's quality is marked for auto sell
---         local result = addon.Options.db.AutoSell.Quality[qualityCache + 1];
+--         local result = addon.Options.db.profile.AutoSell.Quality[qualityCache + 1];
 --         local text = addon.L["Item Quality"] .. ": " .. (result and addon.L["checked"] or addon.L["not checked"]);
 --         return result, text;
 --     end,
 --     function(itemId) -- Item's item level is below the set item level for auto sell
---         local result = itemLevelCache <= addon.Options.db.AutoSell.ItemLevel;
---         local text = addon.L["Item Level"] .. " " .. (result and addon.L["Below"] or addon.L["Above"]) .. " " .. tostring(addon.Options.db.AutoSell.ItemLevel):SetColorYellow();
+--         local result = itemLevelCache <= addon.Options.db.profile.AutoSell.ItemLevel;
+--         local text = addon.L["Item Level"] .. " " .. (result and addon.L["Below"] or addon.L["Above"]) .. " " .. tostring(addon.Options.db.profile.AutoSell.ItemLevel):SetColorYellow();
 --         return result, text;
 --     end,
 --     function(itemId)
@@ -101,7 +101,7 @@ local function AddTableToTooltip(_tooltip, table)
 end
 
 local function ProcessItem(_tooltip, bag, slot, item)
-    if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.None then
+    if addon.Options.db.profile.AutoSell.TooltipDetails == tooltipDetails.None then
         return;
     end
 
@@ -126,9 +126,9 @@ local function ProcessItem(_tooltip, bag, slot, item)
     local doSell, feedback = autoSell.CheckRulesWithFeedback(itemInfo);
 
     GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
-    _tooltip:AddLine(addon.MetaData.Title);
+    _tooltip:AddLine(addon.Metadata.Title);
     _tooltip:AddLine(doSell and ("|T136814:0|t " .. addon.L["This item is junk"]:SetColorLightGreen()) or ("|T136813:0|t " .. addon.L["This item is not junk"]:SetColorLightRed()));
-    if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.Basic then
+    if addon.Options.db.profile.AutoSell.TooltipDetails == tooltipDetails.Basic then
         return;
     end
 
@@ -136,7 +136,7 @@ local function ProcessItem(_tooltip, bag, slot, item)
         local ruleName, doSellRule, ruleResults = unpack(result);
         local ruleText = addon.L["TAB"] .. "|T13681" .. (doSellRule and "4" or "3") .. ":0|t " .. ruleName;
         _tooltip:AddLine(doSellRule and ruleText:SetColorLightGreen() or ruleText:SetColorLightRed());
-        if addon.Options.db.AutoSell.TooltipDetails == tooltipDetails.Detailed then
+        if addon.Options.db.profile.AutoSell.TooltipDetails == tooltipDetails.Detailed then
             for _, _result in next, ruleResults do
                 local conditionResult, text = unpack(_result);
                 local conditionText = addon.L["TAB"] .. addon.L["TAB"] .. "|T13681" .. (conditionResult and "4" or "3") .. ":0|t " .. text;
@@ -159,7 +159,7 @@ local function ProcessItem(_tooltip, bag, slot, item)
     -- _tooltip:AddDoubleLine("isValidAppearanceForCharacter", isValidAppearanceForCharacter and "yes" or "no");
     -- _tooltip:AddDoubleLine("playerKnowsTransmog", playerKnowsTransmog and "yes" or "no");
     -- _tooltip:AddDoubleLine("characterCanLearnTransmog", characterCanLearnTransmog and "yes" or "no");
-    if not addon.Options.db.Debug.TooltipShowItemInfo then
+    if not addon.Options.db.profile.Debug.TooltipShowItemInfo then
         return;
     end
 
@@ -189,7 +189,7 @@ local function ProcessItem(_tooltip, bag, slot, item)
 end
 
 local function ProcessItem100002(tooltip, localData)
-    if localData.guid and addon.Options.db.Tooltip.ShowAutoSellRules then
+    if localData.guid and addon.Options.db.profile.Tooltip.ShowAutoSellRules then
         local itemLocation = C_Item.GetItemLocation(localData.guid);
         if not itemLocation or not itemLocation:IsBagAndSlot() then
             return;
@@ -208,7 +208,7 @@ function tooltip.Load()
 
     -- -- Enable this again to show tooltip info
     -- hooksecurefunc(GameTooltip, "SetBagItem", function(self, bag, slot)
-    --     if addon.Options.db.Tooltip.ShowAutoSellRules then
+    --     if addon.Options.db.profile.Tooltip.ShowAutoSellRules then
     --         ProcessItem(self, bag, slot);
     --     end
     -- end);

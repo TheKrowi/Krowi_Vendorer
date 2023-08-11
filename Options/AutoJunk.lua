@@ -5,12 +5,12 @@ options.AutoJunk = {};
 local autoJunk = options.AutoJunk;
 tinsert(options.OptionsTables, autoJunk);
 
-local OrderPP = KrowiV_InjectOptions.AutoOrderPlusPlus;
-local AdjustedWidth = KrowiV_InjectOptions.AdjustedWidth;
+local OrderPP = addon.InjectOptions.AutoOrderPlusPlus;
+local AdjustedWidth = addon.InjectOptions.AdjustedWidth;
 
 function autoJunk.RegisterOptionsTable()
     -- LibStub("AceConfig-3.0"):RegisterOptionsTable("Auto Junk", options.OptionsTable.args.AutoJunk);
-    -- LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Auto Junk", "Auto Junk", addon.MetaData.Title);
+    -- LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Auto Junk", "Auto Junk", addon.Metadata.Title);
 end
 
 function autoJunk.PostLoad()
@@ -37,41 +37,41 @@ end
 --                         Poor = {
 --                             order = OrderPP(), type = "toggle", width = AdjustedWidth(0.5),
 --                             name = addon.L["Poor"]:SetColorPoor(),
---                             get = function() return addon.Options.db.AutoJunk.Quality[1]; end,
+--                             get = function() return addon.Options.db.profile.AutoJunk.Quality[1]; end,
 --                             set = function()
---                                 addon.Options.db.AutoJunk.Quality[1] = not addon.Options.db.AutoJunk.Quality[1];
+--                                 addon.Options.db.profile.AutoJunk.Quality[1] = not addon.Options.db.profile.AutoJunk.Quality[1];
 --                             end
 --                         },
 --                         Common = {
 --                             order = OrderPP(), type = "toggle", width = AdjustedWidth(0.5),
 --                             name = addon.L["Common"]:SetColorCommon(),
---                             get = function() return addon.Options.db.AutoJunk.Quality[2]; end,
+--                             get = function() return addon.Options.db.profile.AutoJunk.Quality[2]; end,
 --                             set = function()
---                                 addon.Options.db.AutoJunk.Quality[2] = not addon.Options.db.AutoJunk.Quality[2];
+--                                 addon.Options.db.profile.AutoJunk.Quality[2] = not addon.Options.db.profile.AutoJunk.Quality[2];
 --                             end
 --                         },
 --                         Uncommon = {
 --                             order = OrderPP(), type = "toggle", width = AdjustedWidth(0.5),
 --                             name = addon.L["Uncommon"]:SetColorUncommon(),
---                             get = function() return addon.Options.db.AutoJunk.Quality[3]; end,
+--                             get = function() return addon.Options.db.profile.AutoJunk.Quality[3]; end,
 --                             set = function()
---                                 addon.Options.db.AutoJunk.Quality[3] = not addon.Options.db.AutoJunk.Quality[3];
+--                                 addon.Options.db.profile.AutoJunk.Quality[3] = not addon.Options.db.profile.AutoJunk.Quality[3];
 --                             end
 --                         },
 --                         Rare = {
 --                             order = OrderPP(), type = "toggle", width = AdjustedWidth(0.5),
 --                             name = addon.L["Rare"]:SetColorRare(),
---                             get = function() return addon.Options.db.AutoJunk.Quality[4]; end,
+--                             get = function() return addon.Options.db.profile.AutoJunk.Quality[4]; end,
 --                             set = function()
---                                 addon.Options.db.AutoJunk.Quality[4] = not addon.Options.db.AutoJunk.Quality[4];
+--                                 addon.Options.db.profile.AutoJunk.Quality[4] = not addon.Options.db.profile.AutoJunk.Quality[4];
 --                             end
 --                         },
 --                         Epic = {
 --                             order = OrderPP(), type = "toggle", width = AdjustedWidth(0.5),
 --                             name = addon.L["Epic"]:SetColorEpic(),
---                             get = function() return addon.Options.db.AutoJunk.Quality[5]; end,
+--                             get = function() return addon.Options.db.profile.AutoJunk.Quality[5]; end,
 --                             set = function()
---                                 addon.Options.db.AutoJunk.Quality[5] = not addon.Options.db.AutoJunk.Quality[5];
+--                                 addon.Options.db.profile.AutoJunk.Quality[5] = not addon.Options.db.profile.AutoJunk.Quality[5];
 --                             end
 --                         }
 --                     }

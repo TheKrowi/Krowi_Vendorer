@@ -5,12 +5,12 @@ options.General = {};
 local general = options.General;
 tinsert(options.OptionsTables, general);
 
-local OrderPP = KrowiV_InjectOptions.AutoOrderPlusPlus;
-local AdjustedWidth = KrowiV_InjectOptions.AdjustedWidth;
+local OrderPP = addon.InjectOptions.AutoOrderPlusPlus;
+local AdjustedWidth = addon.InjectOptions.AdjustedWidth;
 
 function general.RegisterOptionsTable()
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(addon.MetaData.Title, options.OptionsTable.args.General);
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addon.MetaData.Title, addon.MetaData.Title, nil);
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(addon.Metadata.Title, options.OptionsTable.args.General);
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addon.Metadata.Title, addon.Metadata.Title, nil);
 end
 
 function general.PostLoad()
@@ -18,8 +18,8 @@ function general.PostLoad()
 end
 
 local function MinimapShowMinimapIconSet()
-    addon.Options.db.ShowMinimapIcon = not addon.Options.db.ShowMinimapIcon;
-    if addon.Options.db.ShowMinimapIcon then
+    addon.Options.db.profile.ShowMinimapIcon = not addon.Options.db.profile.ShowMinimapIcon;
+    if addon.Options.db.profile.ShowMinimapIcon then
         addon.Icon:Show("Krowi_VendorerLDB");
     else
         addon.Icon:Hide("Krowi_VendorerLDB");
@@ -40,22 +40,22 @@ options.OptionsTable.args["General"] = {
                     args = {
                         Version = {
                             order = OrderPP(), type = "description", width = AdjustedWidth(), fontSize = "medium",
-                            name = (addon.L["Version"] .. ": "):SetColorYellow() .. addon.MetaData.Version,
+                            name = (addon.L["Version"] .. ": "):SetColorYellow() .. addon.Metadata.Version,
                         },
                         Build = {
                             order = OrderPP(), type = "description", width = AdjustedWidth(), fontSize = "medium",
-                            name = (addon.L["Build"] .. ": "):SetColorYellow() .. addon.MetaData.Build,
+                            name = (addon.L["Build"] .. ": "):SetColorYellow() .. addon.Metadata.Build,
                         },
                         Blank1 = {order = OrderPP(), type = "description", width = AdjustedWidth(), name = ""},
                         Author = {
                             order = OrderPP(), type = "description", width = AdjustedWidth(2), fontSize = "medium",
-                            name = (addon.L["Author"] .. ": "):SetColorYellow() .. addon.MetaData.Author,
+                            name = (addon.L["Author"] .. ": "):SetColorYellow() .. addon.Metadata.Author,
                         },
                         Discord = {
                             order = OrderPP(), type = "execute", width = AdjustedWidth(),
                             name = addon.L["Discord"],
-                            desc = addon.L["Discord Desc"]:ReplaceVars(addon.MetaData.DiscordServerName),
-                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.MetaData.DiscordInviteLink); end
+                            desc = addon.L["Discord Desc"]:K_ReplaceVars(addon.Metadata.DiscordServerName),
+                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.Metadata.DiscordInviteLink); end
                         }
                     }
                 },
@@ -66,20 +66,20 @@ options.OptionsTable.args["General"] = {
                         CurseForge = {
                             order = OrderPP(), type = "execute", width = AdjustedWidth(),
                             name = addon.L["CurseForge"],
-                            desc = addon.L["CurseForge Desc"]:InjectAddonName_KV():ReplaceVars(addon.L["CurseForge"]),
-                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.MetaData.CurseForge); end
+                            desc = addon.L["CurseForge Desc"]:KV_InjectAddonName():K_ReplaceVars(addon.L["CurseForge"]),
+                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.Metadata.CurseForge); end
                         },
                         Wago = {
                             order = OrderPP(), type = "execute", width = AdjustedWidth(),
                             name = addon.L["Wago"],
-                            desc = addon.L["Wago Desc"]:InjectAddonName_KV():ReplaceVars(addon.L["Wago"]),
-                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.MetaData.Wago); end
+                            desc = addon.L["Wago Desc"]:KV_InjectAddonName():K_ReplaceVars(addon.L["Wago"]),
+                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.Metadata.Wago); end
                         },
                         WoWInterface = {
                             order = OrderPP(), type = "execute", width = AdjustedWidth(),
                             name = addon.L["WoWInterface"],
-                            desc = addon.L["WoWInterface Desc"]:InjectAddonName_KV():ReplaceVars(addon.L["WoWInterface"]),
-                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.MetaData.WoWInterface); end
+                            desc = addon.L["WoWInterface Desc"]:KV_InjectAddonName():K_ReplaceVars(addon.L["WoWInterface"]),
+                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.Metadata.WoWInterface); end
                         }
                     }
                 }
@@ -96,8 +96,8 @@ options.OptionsTable.args["General"] = {
                         ShowMinimapIcon = {
                             order = OrderPP(), type = "toggle", width = AdjustedWidth(),
                             name = addon.L["Show minimap icon"],
-                            desc = addon.L["Show minimap icon Desc"]:AddDefaultValueText_KV("ShowMinimapIcon"),
-                            get = function() return addon.Options.db.ShowMinimapIcon; end,
+                            desc = addon.L["Show minimap icon Desc"]:KV_AddDefaultValueText("ShowMinimapIcon"),
+                            get = function() return addon.Options.db.profile.ShowMinimapIcon; end,
                             set = MinimapShowMinimapIconSet
                         }
                     }
@@ -119,9 +119,9 @@ options.OptionsTable.args["General"] = {
                         TooltipShowAutoSellRules = {
                             order = OrderPP(), type = "toggle", width = AdjustedWidth(),
                             name = addon.L["TooltipShowAutoSellRules"],
-                            desc = addon.L["TooltipShowAutoSellRules Desc"]:AddDefaultValueText_KV("Debug.TooltipShowItemInfo"),
-                            get = function() return addon.Options.db.Debug.TooltipShowItemInfo; end,
-                            set = function(_, value) addon.Options.db.Debug.TooltipShowItemInfo = value; end
+                            desc = addon.L["TooltipShowAutoSellRules Desc"]:KV_AddDefaultValueText("Debug.TooltipShowItemInfo"),
+                            get = function() return addon.Options.db.profile.Debug.TooltipShowItemInfo; end,
+                            set = function(_, value) addon.Options.db.profile.Debug.TooltipShowItemInfo = value; end
                         },
                         Blank1 = {order = OrderPP(), type = "description", width = AdjustedWidth(2), name = ""},
                         -- ScreenshotMode = {
@@ -133,9 +133,9 @@ options.OptionsTable.args["General"] = {
                         AutoSellPrintChatMessage = {
                             order = OrderPP(), type = "toggle", width = AdjustedWidth(),
                             name = addon.L["AutoSellPrintChatMessage"],
-                            desc = addon.L["AutoSellPrintChatMessage Desc"]:AddDefaultValueText_KV("AutoSell.PrintChatMessage"),
-                            get = function() return addon.Options.db.AutoSell.PrintChatMessage; end,
-                            set = function(_, value) addon.Options.db.AutoSell.PrintChatMessage = value; end
+                            desc = addon.L["AutoSellPrintChatMessage Desc"]:KV_AddDefaultValueText("AutoSell.PrintChatMessage"),
+                            get = function() return addon.Options.db.profile.AutoSell.PrintChatMessage; end,
+                            set = function(_, value) addon.Options.db.profile.AutoSell.PrintChatMessage = value; end
                         },
                         -- Blank2 = {order = OrderPP(), type = "description", width = AdjustedWidth(), name = ""},
                         -- ExportCriteria = {
@@ -148,8 +148,8 @@ options.OptionsTable.args["General"] = {
                         --     order = OrderPP(), type = "toggle", width = AdjustedWidth(),
                         --     name = addon.L["Show placeholders filter"],
                         --     desc = addon.L["Show placeholders filter Desc"]:AddDefaultValueText_KAF("ShowPlaceholdersFilter"),
-                        --     get = function() return addon.Options.db.ShowPlaceholdersFilter; end,
-                        --     set = function() addon.Options.db.ShowPlaceholdersFilter = not addon.Options.db.ShowPlaceholdersFilter; end
+                        --     get = function() return addon.Options.db.profile.ShowPlaceholdersFilter; end,
+                        --     set = function() addon.Options.db.profile.ShowPlaceholdersFilter = not addon.Options.db.profile.ShowPlaceholdersFilter; end
                         -- }
                     }
                 }

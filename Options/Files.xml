@@ -1,4 +1,5 @@
 <Ui>
+    <Script file="..\Libs\Krowi_Util\Options\Options.lua" />
     <Script file="Options.lua" />
     <Script file="Defaults.lua" />
     
@@ -6,6 +7,5 @@
     <Script file="AutoSell.lua" />
     <Script file="AutoJunk.lua" />
     <Script file="AutoRepair.lua" />
-    <!-- <Script file="Plugins.lua" /> -->
-    <!-- <Script file="Credits.lua" /> -->
+    <Script file="..\Libs\Krowi_Util\Options\Profiles.lua" />
 </Ui>

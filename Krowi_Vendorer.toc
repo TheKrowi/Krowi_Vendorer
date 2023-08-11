@@ -1,10 +1,16 @@
 ## Interface: 100105
 ## Title: Krowi's |cFF1D92C2Vendorer|r
-## Version: 0.7-alpha1
+## X-Prefix: KrowiV
+## X-Acronym: KV
+## Version: 0.8
 ## Author: Krowi-Frostmane EU
 ## LoadWith: Blizzard_MerchantFrame
-## SavedVariables: KrowiV_Options, KrowiV_SavedData, KrowiV_Test, KrowiV_Test2, KrowiV_Test3
+## SavedVariables: KrowiV_Options, KrowiV_SavedData
 ## Notes: Enhances your vendoring.
+## AddonCompartmentFuncOnEnter: KrowiV_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: KrowiV_OnAddonCompartmentLeave
+## AddonCompartmentFunc: KrowiV_OnAddonCompartmentClick
+## IconTexture: interface/paperdollinfoframe/ui-gearmanager-itemintobag
 ## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
 ## X-Discord-Server-Name: Krowi's Addons
 ## X-CurseForge: https://www.curseforge.com/wow/addons/krowi-achievement-filter
@@ -14,13 +20,11 @@
 ## X-WoWInterface: https://www.wowinterface.com/downloads/info26229-KrowisAchievementFilter
 ## X-WoWInterface-Project-ID: 26229
 
-API.lua
-
 Libs\Files.xml
 
-Plugins\Files.xml
+API.lua
 
-MetaData.lua
+Plugins\Files.xml
 
 Localization\Files.xml
 
@@ -30,6 +34,7 @@ Globals.lua
 Objects\Files.xml
 
 Options\Files.xml
+Libs\Krowi_Util\Icon.lua
 Icon.lua
 
 Data\Files.xml

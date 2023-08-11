@@ -34,7 +34,7 @@ end
 local qualityCache;
 local validations = {
     function(itemId) return KrowiV_SavedData.IgnoredItems[itemId] end,
-    function(itemId) return not qualityCache or not addon.Options.db.AutoJunk.Quality[qualityCache + 1] end
+    function(itemId) return not qualityCache or not addon.Options.db.profile.AutoJunk.Quality[qualityCache + 1] end
 };
 
 local cachedInstanceId;
@@ -74,7 +74,7 @@ function autoJunk.EnableForInstanceId()
     end
 
     cachedInstanceId = (select(8, GetInstanceInfo()));
-    if addon.Options.db.AutoJunk.Instances[cachedInstanceId] then
+    if addon.Options.db.profile.AutoJunk.Instances[cachedInstanceId] then
         loadHelper:RegisterEvent("LOOT_READY");
     end
 end

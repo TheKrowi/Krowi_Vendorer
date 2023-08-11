@@ -16,19 +16,19 @@
 -- 	menu:Clear();
 
 -- 	local direction = addon.Objects.MenuItem:New({Text = addon.L["Direction"]});
--- 	self:AddRadioButton(menu, direction, addon.L["Rows first"], addon.Options.db, {"Direction"}, UpdateView);
--- 	self:AddRadioButton(menu, direction, addon.L["Columns first"], addon.Options.db, {"Direction"}, UpdateView);
+-- 	self:AddRadioButton(menu, direction, addon.L["Rows first"], addon.Options.db.profile, {"Direction"}, UpdateView);
+-- 	self:AddRadioButton(menu, direction, addon.L["Columns first"], addon.Options.db.profile, {"Direction"}, UpdateView);
 -- 	menu:Add(direction);
 
 -- 	local rows = addon.Objects.MenuItem:New({Text = addon.L["Rows"]});
 -- 	for i = 1, 10, 1 do
--- 		self:AddRadioButton(menu, rows, i, addon.Options.db, {"NumRows"}, UpdateView);
+-- 		self:AddRadioButton(menu, rows, i, addon.Options.db.profile, {"NumRows"}, UpdateView);
 -- 	end
 -- 	menu:Add(rows);
 
 -- 	local columns = addon.Objects.MenuItem:New({Text = addon.L["Columns"]});
 -- 	for i = 2, 6, 1 do
--- 		self:AddRadioButton(menu, columns, i, addon.Options.db, {"NumColumns"}, UpdateView);
+-- 		self:AddRadioButton(menu, columns, i, addon.Options.db.profile, {"NumColumns"}, UpdateView);
 -- 	end
 -- 	menu:Add(columns);
 

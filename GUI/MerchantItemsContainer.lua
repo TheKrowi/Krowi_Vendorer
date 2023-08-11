@@ -44,11 +44,11 @@
 -- end
 
 -- function merchantItemsContainer:GetHighestNumRows()
---     return addon.Options.db.NumRows > self.DefaultBuybackInfoNumRows and addon.Options.db.NumRows or self.DefaultBuybackInfoNumRows;
+--     return addon.Options.db.profile.NumRows > self.DefaultBuybackInfoNumRows and addon.Options.db.profile.NumRows or self.DefaultBuybackInfoNumRows;
 -- end
 
 -- function merchantItemsContainer:GetHighestNumColumns()
---     return addon.Options.db.NumColumns > self.DefaultBuybackInfoNumColumns and addon.Options.db.NumColumns or self.DefaultBuybackInfoNumColumns;
+--     return addon.Options.db.profile.NumColumns > self.DefaultBuybackInfoNumColumns and addon.Options.db.profile.NumColumns or self.DefaultBuybackInfoNumColumns;
 -- end
 
 -- function merchantItemsContainer:LoadMaxNumItemSlots()
@@ -64,7 +64,7 @@
 -- end
 
 -- function merchantItemsContainer:PrepareMerchantInfo()
---     infoNumRows, infoNumColumns = addon.Options.db.NumRows, addon.Options.db.NumColumns;
+--     infoNumRows, infoNumColumns = addon.Options.db.profile.NumRows, addon.Options.db.profile.NumColumns;
 -- end
 
 -- function merchantItemsContainer:PrepareBuybackInfo()
@@ -88,7 +88,7 @@
 -- end
 
 -- function merchantItemsContainer:DrawItemSlots(numRows, numColumns, offsetX, offsetY)
---     if addon.Options.db.Direction == addon.L["Columns first"] then
+--     if addon.Options.db.profile.Direction == addon.L["Columns first"] then
 --         for row = 1, numRows, 1 do
 --             for column = 1, numColumns, 1 do
 --                 local index = (column - 1) * numRows + row;

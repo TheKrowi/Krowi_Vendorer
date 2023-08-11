@@ -12,15 +12,15 @@ local function SellItems()
     local totalNumItems = maxNumItems or #items;
     for i = #items, 1, -1 do
         local item = items[i];
-        if addon.Options.db.AutoSell.PrintChatMessage then
-            print(addon.L["Selling item"]:ReplaceVars(item.Link));
+        if addon.Options.db.profile.AutoSell.PrintChatMessage then
+            print(addon.L["Selling item"]:K_ReplaceVars(item.Link));
         end
         C_Container.UseContainerItem(item.Bag, item.Slot);
         numItems = numItems + 1;
         frame:RemoveListItem(item);
         if maxNumItems and numItems >= maxNumItems then
-            if addon.Options.db.AutoSell.PrintChatMessage then
-                print(addon.L["x of y items sold in safe mode"]:ReplaceVars{
+            if addon.Options.db.profile.AutoSell.PrintChatMessage then
+                print(addon.L["x of y items sold in safe mode"]:K_ReplaceVars{
                     x = numItems,
                     y = totalNumItems
                 });
@@ -30,14 +30,14 @@ local function SellItems()
         coroutine.yield();
     end
 
-    if addon.Options.db.AutoSell.PrintChatMessage then
+    if addon.Options.db.profile.AutoSell.PrintChatMessage then
         if maxNumItems then
-            print(addon.L["x of y items sold in safe mode"]:ReplaceVars{
+            print(addon.L["x of y items sold in safe mode"]:K_ReplaceVars{
                 x = numItems,
                 y = totalNumItems
             });
         else
-            print(addon.L["x of y items sold"]:ReplaceVars{
+            print(addon.L["x of y items sold"]:K_ReplaceVars{
                 x = numItems,
                 y = totalNumItems
             });

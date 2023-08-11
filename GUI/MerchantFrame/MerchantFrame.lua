@@ -38,8 +38,8 @@ local originalWidth, originalHeight = MerchantFrame:GetSize();
 hooksecurefunc("MerchantFrame_UpdateMerchantInfo", function()
 	KrowiV_EmbeddedJunkListFrame:Hide();
 	KrowiV_EmbeddedIgnoreListFrame:Hide();
-	-- local numColumns = addon.Options.db.NumColumns - merchantItemsContainer.DefaultMerchantInfoNumColumns;
-	-- local numRows = addon.Options.db.NumRows - merchantItemsContainer.DefaultMerchantInfoNumRows;
+	-- local numColumns = addon.Options.db.profile.NumColumns - merchantItemsContainer.DefaultMerchantInfoNumColumns;
+	-- local numRows = addon.Options.db.profile.NumRows - merchantItemsContainer.DefaultMerchantInfoNumRows;
 	-- local itemWidth = merchantItemsContainer.OffsetX + merchantItemsContainer.ItemWidth;
 	-- local itemHeight = merchantItemsContainer.OffsetMerchantInfoY + merchantItemsContainer.ItemHeight;
 

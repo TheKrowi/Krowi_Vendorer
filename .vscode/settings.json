@@ -206,7 +206,8 @@
         "KrowiV_JunkListFrame",
         "KrowiV_AutoSellListFrame",
         "UndoFrame",
-        "KrowiMFE_MerchantItemsContainer"
+        "KrowiMFE_MerchantItemsContainer",
+        "NORMAL_FONT_COLOR_CODE"
     ],
     "fsdeploy.nodes": [
         {

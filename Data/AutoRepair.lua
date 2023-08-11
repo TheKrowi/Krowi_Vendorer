@@ -7,7 +7,7 @@ local co, fail;
 
 local function GetGuildBankRepairMoney()
     -- If player doesn't enable KV Guild Auto Repair
-    if not addon.Options.db.AutoRepair.IsGuildEnabled then
+    if not addon.Options.db.profile.AutoRepair.IsGuildEnabled then
         return 0;
     end
 
@@ -41,15 +41,15 @@ local function TryPersonalRepairs(playerMoney, repairAllCost)
     if playerMoney >= repairAllCost then
         RepairAllItems(false);
         PlaySound(SOUNDKIT.ITEM_REPAIR);
-        if addon.Options.db.AutoRepair.PrintChatMessage then
-            print(addon.L["Auto Repair Repaired"]:ReplaceVars { g = gold, s = silver, c = copper }:SetColorYellow());
+        if addon.Options.db.profile.AutoRepair.PrintChatMessage then
+            print(addon.L["Auto Repair Repaired"]:K_ReplaceVars { g = gold, s = silver, c = copper }:SetColorYellow());
         end
         return;
     end
 
     -- If I don't have any funds to repair
     if playerMoney < repairAllCost then
-        if addon.Options.db.AutoRepair.PrintChatMessage then
+        if addon.Options.db.profile.AutoRepair.PrintChatMessage then
             print(addon.L["Auto Repair No Personal"]:SetColorYellow());
         end
         return;
@@ -72,8 +72,8 @@ local function DoAutoRepair()
 
         if not fail then
             PlaySound(SOUNDKIT.ITEM_REPAIR);
-            if addon.Options.db.AutoRepair.PrintChatMessage then
-                print(addon.L["Auto Repair Repaired"]:ReplaceVars { g = gold, s = silver, c = copper }:SetColorYellow());
+            if addon.Options.db.profile.AutoRepair.PrintChatMessage then
+                print(addon.L["Auto Repair Repaired"]:K_ReplaceVars { g = gold, s = silver, c = copper }:SetColorYellow());
             end
             return;
         end
@@ -87,7 +87,7 @@ local function DoAutoRepair()
 
     -- If guild funds are available, but my repair cost is too much, try to repair from personal funds
     if guildBankMoney > 0 and repairAllCost > guildBankMoney then
-        if addon.Options.db.AutoRepair.PrintChatMessage then
+        if addon.Options.db.profile.AutoRepair.PrintChatMessage then
             print(addon.L["Auto Repair No Guild Funds Use Personal"]:SetColorYellow());
         end
         TryPersonalRepairs(playerMoney, repairAllCost)
@@ -99,7 +99,7 @@ end
 
 local function TryAutoRepairAsync()
     -- If player doesn't enable KV Auto Repair
-    if not addon.Options.db.AutoRepair.IsEnabled then return; end
+    if not addon.Options.db.profile.AutoRepair.IsEnabled then return; end
 
     local _, canRepair = GetRepairAllCost();
     -- If repairs aren't needed

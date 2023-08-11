@@ -93,7 +93,7 @@ do -- [[ Creation and modification ]]
         if strtrim(value) == "" then
             condition.Value = 0;
         elseif tonumber(value) == nil then
-            ShowAlert(addon.L["ItemLevel is not a valid item level."]:ReplaceVars(value));
+            ShowAlert(addon.L["ItemLevel is not a valid item level."]:K_ReplaceVars(value));
         else
             condition.Value = tonumber(value);
         end
