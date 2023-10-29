@@ -35,3 +35,21 @@ function addon.GetCurrentCharacter()
     end
     return KrowiV_SavedData.Characters[playerGUID], playerGUID;
 end
+
+function addon.GetItemInfo(bag, slot, item)
+    local link = item:GetItemLink();
+    local _, _, _, itemLevel, _, _, _, _, _, _, _, classID, subclassID, bindType, _, _, _ = GetItemInfo(link);
+
+    return {
+        Bag = bag,
+        Slot = slot,
+        Link = link,
+        ItemLevel = itemLevel, -- item:GetCurrentItemLevel(),
+        ItemTypeId = classID,
+        ItemSubTypeId = subclassID,
+        BindType = bindType,
+        Quality = item:GetItemQuality(),
+        InventoryType = item:GetInventoryType(),
+        IsCosmetic = IsCosmeticItem(link)
+    };
+end

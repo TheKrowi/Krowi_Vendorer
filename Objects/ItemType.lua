@@ -5,7 +5,7 @@ objects.ItemType = {};
 local itemType = objects.ItemType;
 
 -- itemType.List = tInvert(Enum.ItemClass);
-local obsoleteIds = {5, 6, 10, 11, 14};
+local obsoleteIds = {6, 10, 11, 14};
 -- for _, id in next, obsoleteIds do
 --     itemType.List[id] = nil;
 -- end

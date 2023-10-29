@@ -106,22 +106,11 @@ local function ProcessItem(_tooltip, bag, slot, item)
     end
 
     local link = item:GetItemLink();
-    local itemLevel = select(4, GetItemInfo(link));
     local classID, subclassID, bindType = select(12, GetItemInfo(link));
     if classID == nil then
         return; -- Temporary solution to handle items that return nothing from GetItemInfo like M+ Keystones
     end
-    local itemInfo = {
-        Bag = bag,
-        Slot = slot,
-        Link = link,
-        ItemLevel = itemLevel, -- item:GetCurrentItemLevel(),
-        ItemTypeId = classID,
-        ItemSubTypeId = subclassID,
-        BindType = bindType,
-        Quality = item:GetItemQuality(),
-        InventoryType = item:GetInventoryType()
-    };
+    local itemInfo = addon.GetItemInfo(bag, slot, item);
 
     local doSell, feedback = autoSell.CheckRulesWithFeedback(itemInfo);
 
@@ -184,6 +173,7 @@ local function ProcessItem(_tooltip, bag, slot, item)
     _tooltip:AddDoubleLine("expacID", expacID);
     _tooltip:AddDoubleLine("setID", setID);
     _tooltip:AddDoubleLine("isCraftingReagent", isCraftingReagent);
+    _tooltip:AddDoubleLine("IsCosmetic", itemInfo.IsCosmetic and "YES" or "NO");
 
     _tooltip:Show();
 end

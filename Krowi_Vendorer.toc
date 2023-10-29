@@ -10,7 +10,7 @@
 ## AddonCompartmentFuncOnEnter: KrowiV_OnAddonCompartmentEnter
 ## AddonCompartmentFuncOnLeave: KrowiV_OnAddonCompartmentLeave
 ## AddonCompartmentFunc: KrowiV_OnAddonCompartmentClick
-## IconTexture: interface/paperdollinfoframe/ui-gearmanager-itemintobag
+## IconTexture: interface/icons/inv_enchant_disenchant
 ## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
 ## X-Discord-Server-Name: Krowi's Addons
 ## X-CurseForge: https://www.curseforge.com/wow/addons/krowi-achievement-filter

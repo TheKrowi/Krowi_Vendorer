@@ -44,9 +44,9 @@
         "MerchantFrameBottomLeftBorder",
         "MerchantPrevPageButton",
         "MerchantNextPageButton",
-        "KrowiMFE_BottomExtensionRightBorder",
-        "KrowiMFE_BottomExtensionLeftBorder",
-        "KrowiMFE_BottomExtensionMidBorder",
+        "KrowiEVU_BottomExtensionRightBorder",
+        "KrowiEVU_BottomExtensionLeftBorder",
+        "KrowiEVU_BottomExtensionMidBorder",
         "CreateScrollBoxListLinearView",
         "ScrollUtil",
         "COLLECTIONS_FANFARE_ICON",
@@ -206,8 +206,9 @@
         "KrowiV_JunkListFrame",
         "KrowiV_AutoSellListFrame",
         "UndoFrame",
-        "KrowiMFE_MerchantItemsContainer",
-        "NORMAL_FONT_COLOR_CODE"
+        "KrowiEVU_MerchantItemsContainer",
+        "NORMAL_FONT_COLOR_CODE",
+        "IsCosmeticItem"
     ],
     "fsdeploy.nodes": [
         {
