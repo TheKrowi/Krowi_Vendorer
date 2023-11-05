@@ -152,7 +152,7 @@ function merchantFrame.UpdateIgnoreInfo()
 	MerchantFrameBottomLeftBorder:Hide();
 	-- MerchantFrameBottomRightBorder:Hide();
 	-- MerchantRepairText:Hide();
-	UndoFrame:Hide();
+	-- UndoFrame:Hide();
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
@@ -186,7 +186,7 @@ function merchantFrame.UpdateJunkInfo()
 	MerchantFrameBottomLeftBorder:Hide();
 	-- MerchantFrameBottomRightBorder:Hide();
 	-- MerchantRepairText:Hide();
-	UndoFrame:Hide();
+	-- UndoFrame:Hide();
 	MerchantPageText:Hide();
 	MerchantGuildBankRepairButton:Hide();
 	MerchantFrame:SetWidth(610);
