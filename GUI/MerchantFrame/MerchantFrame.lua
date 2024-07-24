@@ -114,7 +114,7 @@ function MerchantFrame_Update()
 		MerchantFrame_CloseStackSplitFrame();
 		MerchantFrame.lastTab = MerchantFrame.selectedTab;
 	end
-	MerchantFrame_UpdateFilterString()
+	MerchantFrame.FilterDropdown:Update();
 	if MerchantFrame.selectedTab == 1 then
 		MerchantFrame_UpdateMerchantInfo();
 	elseif MerchantFrame.selectedTab == 3 then
