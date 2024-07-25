@@ -13,12 +13,8 @@
 ## IconTexture: interface/icons/inv_enchant_disenchant
 ## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
 ## X-Discord-Server-Name: Krowi's Addons
-## X-CurseForge: https://www.curseforge.com/wow/addons/krowi-achievement-filter
-## X-Curse-Project-ID: 413582
-## X-Wago: https://addons.wago.io/addons/krowi-achievement-filter
-## X-Wago-Project-ID: XrNkx46a
-## X-WoWInterface: https://www.wowinterface.com/downloads/info26229-KrowisAchievementFilter
-## X-WoWInterface-Project-ID: 26229
+## X-CurseForge: https://legacy.curseforge.com/wow/addons/krowis-vendorer
+## X-Curse-Project-ID: 1070840
 
 Libs\Files.xml
 
