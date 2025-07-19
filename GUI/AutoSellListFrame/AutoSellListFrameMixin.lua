@@ -29,16 +29,36 @@ function StartEventDrivenSellLoop(maxNumItems)
     TriggerSellRound();
 end
 
+StaticPopupDialogs["CONFIRM_CURSOR_CLEAR"] = {
+    text = "You're currently holding an item. Please clear your cursor and click 'Retry' to continue destroying \"%s\".",
+    button1 = "Retry",
+    button2 = "Cancel",
+    OnAccept = function(self)
+        if CursorHasItem() then
+            print("Still holding an item. Try again.");
+            StaticPopup_Show("CONFIRM_CURSOR_CLEAR", self.data.Name, nil, self.data);
+        else
+            DestroyInProgress = false;
+            ProcessDestroyQueue(); -- Resume flow
+        end
+    end,
+    OnCancel = function()
+        print("Destruction paused. You can resume later.");
+        DestroyInProgress = false;
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+};
+
 StaticPopupDialogs["CONFIRM_DESTROY_ITEM"] = {
     text = "Do you want to destroy %s?",
     button1 = "Yes",
     button2 = "No",
     OnAccept = function(self)
         if CursorHasItem() then
-            print("Cannot destroy item while another item is on the cursor. Please clear your hands first.");
-            table.insert(DestroyQueue, self.data);
-            DestroyInProgress = false;
-            ProcessDestroyQueue();
+            table.insert(DestroyQueue, 1, self.data);
+            StaticPopup_Show("CONFIRM_CURSOR_CLEAR", self.data.Name, nil, self.data);
             return;
         end
         C_Container.PickupContainerItem(self.data.Bag, self.data.Slot);
