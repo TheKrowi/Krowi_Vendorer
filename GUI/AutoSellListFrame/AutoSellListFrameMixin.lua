@@ -5,46 +5,54 @@ local frame;
 
 KrowiV_AutoSellListFrameMixin = {};
 
-local co, maxNumItems;
-local function SellItems()
-    local numItems = 0;
-    local items = frame:GetItems();
-    local totalNumItems = maxNumItems or #items;
-    for i = #items, 1, -1 do
-        local item = items[i];
+local sellingLoopInProgress = false;
+local itemsToSell = {};
+local maxItemsToSell = nil;
+local itemsSoldCount = 0;
+local itemsToSellPerRound = 5; -- Number of items to sell per round
+
+function StartEventDrivenSellLoop(maxNumItems)
+    if sellingLoopInProgress then
+        print(addon.L["Selling in progress"]);
+        return;
+    end
+
+    print(addon.L["Selling started"]);
+    sellingLoopInProgress = true;
+    itemsToSell = frame:GetItems();
+    maxItemsToSell = maxNumItems or #itemsToSell;
+    itemsSoldCount = 0;
+
+    TriggerSellRound();
+end
+
+function TriggerSellRound()
+    if #itemsToSell == 0 or itemsSoldCount >= maxItemsToSell then
+        sellingLoopInProgress = false;
         if addon.Options.db.profile.AutoSell.PrintChatMessage then
-            print(addon.L["Selling item"]:K_ReplaceVars(item.Link));
-        end
-        C_Container.UseContainerItem(item.Bag, item.Slot);
-        numItems = numItems + 1;
-        frame:RemoveListItem(item);
-        if maxNumItems and numItems >= maxNumItems then
-            if addon.Options.db.profile.AutoSell.PrintChatMessage then
-                print(addon.L["x of y items sold in safe mode"]:K_ReplaceVars{
-                    x = numItems,
-                    y = totalNumItems
-                });
-            end
-            return;
-        end
-        coroutine.yield();
-    end
-
-    if addon.Options.db.profile.AutoSell.PrintChatMessage then
-        if maxNumItems then
-            print(addon.L["x of y items sold in safe mode"]:K_ReplaceVars{
-                x = numItems,
-                y = totalNumItems
-            });
-        else
             print(addon.L["x of y items sold"]:K_ReplaceVars{
-                x = numItems,
-                y = totalNumItems
+                x = itemsSoldCount,
+                y = maxItemsToSell
             });
+        end
+        return;
+    end
+
+    for i = 1, math.min(itemsToSellPerRound, #itemsToSell) do
+        local item = itemsToSell[i];
+        local info = C_Container.GetContainerItemInfo(item.Bag, item.Slot);
+        -- print(item.Link, info and info.hyperlink == item.Link, info and not info.isLocked)
+        if info and info.hyperlink == item.Link and not info.isLocked then
+            C_Container.UseContainerItem(item.Bag, item.Slot);
+        -- elseif info and info.isLocked and addon.Options.db.profile.AutoSell.PrintChatMessage then
+        --     print("Item busy, deferring: " .. item.Link)
         end
     end
 
-    co = nil;
+    -- Add delayed check just in case event doesn't arrive
+    C_Timer.After(0.2, function()
+        ProcessSold("FORCED_CHECK");
+    end)
 end
 
 function KrowiV_AutoSellListFrameMixin:OnLoad()
@@ -55,9 +63,8 @@ function KrowiV_AutoSellListFrameMixin:OnLoad()
     self:SetListInfo(addon.L["Auto Sell List Info"]);
     self.Button1:SetText(addon.L["Sell All Items"]);
     self.Button1:SetScript("OnClick", function()
-        maxNumItems = nil;
-        co = coroutine.create(SellItems);
-        coroutine.resume(co);
+        -- StartSellingThreads(5);
+        StartEventDrivenSellLoop();
     end);
     self.Button1:SetScript("OnEnter", function(selfFunc)
         GameTooltip:SetOwner(selfFunc, "ANCHOR_RIGHT");
@@ -68,20 +75,48 @@ function KrowiV_AutoSellListFrameMixin:OnLoad()
     end);
     self.Button2:SetText(addon.L["Sell 12 Items"]);
     self.Button2:SetScript("OnClick", function()
-        maxNumItems = 12;
-        co = coroutine.create(SellItems);
-        coroutine.resume(co);
+        StartEventDrivenSellLoop(12);
     end);
+end
+
+function ProcessSold(event)
+    -- print(event, " - Checking items to sell...");
+    local remaining = {};
+    local processCount = math.min(itemsToSellPerRound, #itemsToSell);
+    for i = 1, processCount do
+        local item = itemsToSell[i];
+        if item then
+            local info = C_Container.GetContainerItemInfo(item.Bag, item.Slot);
+            local isGone = not info or info.hyperlink ~= item.Link;
+            local isBusy = info and info.isLocked;
+
+            if isGone then
+                frame:RemoveListItem(item);
+                itemsSoldCount = itemsSoldCount + 1;
+                if addon.Options.db.profile.AutoSell.PrintChatMessage then
+                    print(addon.L["Sold item"]:K_ReplaceVars(item.Link))
+                end
+            else
+                table.insert(remaining, item);
+                if isBusy and addon.Options.db.profile.AutoSell.PrintChatMessage then
+                    print("Skipping busy item: " .. item.Link);
+                end
+            end
+        end
+    end
+
+    for i = processCount + 1, #itemsToSell do
+        table.insert(remaining, itemsToSell[i]);
+    end
+    itemsToSell = remaining;
+    TriggerSellRound();
 end
 
 function KrowiV_AutoSellListFrameMixin:OnEvent(event, arg1, arg2)
     if event == "BAG_UPDATE" then
-        -- print("BAG_UPDATE")
-        if co ~= nil then
-            coroutine.resume(co);
-        else
-            addon.Util.DelayFunction("MerchantFrame_UpdateBuybackInfo", 0.1, self.Update, self);
-        end
+        addon.Util.DelayFunction("MerchantFrame_UpdateBuybackInfo", 0.1, self.Update, self);
+    elseif (event == "BAG_UPDATE_DELAYED" or event == "FORCED_CHECK") and sellingLoopInProgress then
+        ProcessSold(event);
     end
 end
 

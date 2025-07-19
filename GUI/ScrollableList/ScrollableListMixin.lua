@@ -58,6 +58,9 @@ end
 
 function KrowiV_ScrollableListMixin:RemoveListItem(elementData)
     local index = self.DataProvider:FindIndex(elementData);
+    if not index then
+        return;
+    end
     self.DataProvider:RemoveIndex(index);
 end
 

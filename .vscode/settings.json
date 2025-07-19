@@ -208,7 +208,8 @@
         "UndoFrame",
         "KrowiEVU_MerchantItemsContainer",
         "NORMAL_FONT_COLOR_CODE",
-        "IsCosmeticItem"
+        "IsCosmeticItem",
+        "C_AddOns"
     ],
     "fsdeploy.nodes": [
         {

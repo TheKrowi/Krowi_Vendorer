@@ -96,4 +96,7 @@ L["Junk List"] = "Junk List";
 L["Junk"] = "Junk";
 L["Artifact Relic"] = "Artifact Relic";
 L["Unusable Equipment"] = "Unusable Equipment";
-
+L["Selling in progress"] = "[KV] Auto-sell already in progress. Please wait."
+L["Auto-sell complete"] = "[KV] Auto-sell complete.";
+L["Sold item"] = "[KV] Sold item: {item}";
+L["Selling started"] = "[KV] Auto-sell started.";
