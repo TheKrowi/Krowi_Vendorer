@@ -39,7 +39,7 @@ function KrowiV_ScrollableListMixin:OnLoad()
     ScrollUtil.AddManagedScrollBarVisibilityBehavior(self.ScrollBox, self.ScrollBar, anchorsWithBar, anchorsWithoutBar);
 end
 
-function KrowiV_ScrollableListMixin:AppendListItem(link, icon, color, name, onClick, bag, slot, ...)
+function KrowiV_ScrollableListMixin:AppendListItem(link, icon, color, name, onClick, bag, slot, isSellable, ...)
     local elementData =
     {
         Link = link,
@@ -49,7 +49,8 @@ function KrowiV_ScrollableListMixin:AppendListItem(link, icon, color, name, onCl
         OnClick = onClick and onClick or self.ListItemsOnClick,
         Bag = bag,
         Slot = slot,
-        MouseButtons = ... and ... or self.ListItemsMouseButtons
+        MouseButtons = ... and ... or self.ListItemsMouseButtons,
+        IsSellable = isSellable
     };
 
     self.DataProvider:Insert(elementData);

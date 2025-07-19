@@ -7,7 +7,11 @@ function KrowiV_ScrollableListItemMixin:Init(elementData)
     self.ElementData = elementData;
     self.Icon:SetTexture(elementData.Icon);
     self.IconBorder:SetVertexColor(elementData.Color:GetRGBA());
-    self.Name:SetText(elementData.Name);
+    if elementData.IsSellable then
+        self.Name:SetText(elementData.Name);
+    else
+        self.Name:SetText("|T136813:0|t" .. elementData.Link);
+    end
     self.Name:SetTextColor(elementData.Color:GetRGBA());
     if elementData.MouseButtons then
         self:RegisterForClicks(unpack(elementData.MouseButtons));

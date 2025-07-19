@@ -209,7 +209,9 @@
         "KrowiEVU_MerchantItemsContainer",
         "NORMAL_FONT_COLOR_CODE",
         "IsCosmeticItem",
-        "C_AddOns"
+        "C_AddOns",
+        "CursorHasItem",
+        "DeleteCursorItem"
     ],
     "fsdeploy.nodes": [
         {
