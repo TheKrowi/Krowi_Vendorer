@@ -10,11 +10,11 @@ function KrowiV_ScrollableListMixin:OnLoad()
     local elementExtent = 30; -- Better performance if hardcoded, must be same height as KrowiV_ScrollableListItem_Template
 
     self.ScrollView = CreateScrollBoxListLinearView();
-    self.ScrollView:SetDataProvider(self.DataProvider);
     self.ScrollView:SetElementExtent(elementExtent);
     self.ScrollView:SetElementInitializer("KrowiV_ScrollableListItem_Template", function(frame, elementData)
         frame:Init(elementData);
     end);
+    self.ScrollView:SetDataProvider(self.DataProvider);
 
     local paddingT = 0;
     local paddingB = 0;

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.22 - 2024-10-27
+### Fixed
+- Initialization order bug
+
 ## 0.10 - 2024-07-24
 ### Fixed
 - Several bugs due to The War Within changes

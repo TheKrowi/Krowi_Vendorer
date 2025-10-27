@@ -175,7 +175,7 @@ function EvaluateSellRound(event)
                 itemRetryCounts[id] = itemRetryCounts[id] + 1;
                 table.insert(remaining, item);
                 if isBusy and addon.Options.db.profile.AutoSell.PrintChatMessage then
-                    print("Retry " .. itemRetryCounts[id] .. " for busy item: " .. item.Link);
+                    -- print("Retry " .. itemRetryCounts[id] .. " for busy item: " .. item.Link);
                 end
             end
         end

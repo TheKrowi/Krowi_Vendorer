@@ -216,7 +216,7 @@
     "fsdeploy.nodes": [
         {
             "source":"E:\\World of Warcraft Addon Development\\Krowi_Vendorer",
-            "target":"F:\\World of Warcraft\\_retail_\\Interface\\AddOns\\Krowi_Vendorer",
+            "target":"H:\\World of Warcraft\\_retail_\\Interface\\AddOns\\Krowi_Vendorer",
             "include":"**/*.{lua,toc,blp,tga,xml,md}",
             "exclude":"**/{.git,.github,.vscode,Changelogs,Descriptions}/**",
             "deleteTargetOnDeploy": true
