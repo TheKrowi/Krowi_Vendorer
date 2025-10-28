@@ -39,7 +39,7 @@ StaticPopupDialogs["CONFIRM_CURSOR_CLEAR"] = {
             StaticPopup_Show("CONFIRM_CURSOR_CLEAR", self.data.Name, nil, self.data);
         else
             DestroyInProgress = false;
-            ProcessDestroyQueue(); -- Resume flow
+            addon.Util.DelayFunction("ProcessDestroyQueue", 0.2, ProcessDestroyQueue); -- Resume flow
         end
     end,
     OnCancel = function()
@@ -64,11 +64,11 @@ StaticPopupDialogs["CONFIRM_DESTROY_ITEM"] = {
         C_Container.PickupContainerItem(self.data.Bag, self.data.Slot);
         DeleteCursorItem();
         DestroyInProgress = false;
-        ProcessDestroyQueue(); -- Move to next item
+        addon.Util.DelayFunction("ProcessDestroyQueue", 0.2, ProcessDestroyQueue); -- Move to next item
     end,
     OnCancel = function()
         DestroyInProgress = false;
-        ProcessDestroyQueue(); -- Move to next item anyway
+        addon.Util.DelayFunction("ProcessDestroyQueue", 0.2, ProcessDestroyQueue); -- Move to next item anyway
     end,
     timeout = 0,
     whileDead = true,
@@ -103,7 +103,7 @@ function TriggerSellRound()
         -- print(item.Link, info and info.hyperlink == item.Link, info and not info.isLocked)
         if not item.IsSellable then
             table.insert(DestroyQueue, item);
-            ProcessDestroyQueue();
+            addon.Util.DelayFunction("ProcessDestroyQueue", 0.2, ProcessDestroyQueue);
         end
         if item.IsSellable and info and info.hyperlink == item.Link and not info.isLocked then
             C_Container.UseContainerItem(item.Bag, item.Slot);

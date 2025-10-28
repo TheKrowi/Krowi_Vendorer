@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.23 - 2024-10-28
+### Fixed
+- Destroying multiple items in a single loop should now be resumed without having to press the sell button again
+
 ## 0.22 - 2024-10-27
 ### Fixed
 - Initialization order bug
