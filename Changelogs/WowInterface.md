@@ -9,7 +9,22 @@
 [*]Lots of backend code is now shared between all my addons
 [/LIST]
 
-[B]Changed (2.1)[/B]
+[B]Fixed (0.1)[/B]
 [LIST]
-[*]Updated Util lib
+[*]Several bugs due to The War Within changes
+[/LIST]
+
+[B]Fixed (0.2)[/B]
+[LIST]
+[*]Initialization order bug
+[/LIST]
+
+[B]Fixed (0.2)[/B]
+[LIST]
+[*]Destroying multiple items in a single loop should now be resumed without having to press the sell button again
+[/LIST]
+
+[B]Fixed (0.2)[/B]
+[LIST]
+[*]Links in the pop up window should once again be full length
 [/LIST]
