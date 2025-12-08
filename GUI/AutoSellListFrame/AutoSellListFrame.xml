@@ -1,0 +1,12 @@
+<Ui>
+    <Script file="AutoSellListFrameMixin.lua"/>
+
+    <Frame name="KrowiV_AutoSellListFrame" mixin="KrowiV_AutoSellListFrameMixin" inherits="KrowiV_SingleItemListFrame_Template" hidden="true">
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+			<OnEvent method="OnEvent"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+        </Scripts>
+    </Frame>
+</Ui>

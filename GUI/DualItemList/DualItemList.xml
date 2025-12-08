@@ -1,0 +1,31 @@
+<Ui>
+    <Script file="DualItemListMixin.lua"/>
+
+    <Frame name="KrowiV_DualItemList_Template" mixin="KrowiV_DualItemListMixin" virtual="true">
+        <Frames>
+            <Frame parentKey="LeftFrame" inherits="InsetFrameTemplate">
+                <Size x="300" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Inset"/>
+                    <Anchor point="BOTTOMLEFT" relativeKey="$parent.Inset"/>
+                </Anchors>
+                <Frames>
+                    <Frame parentKey="ListFrame" inherits="KrowiV_ScrollableList_Template" setAllPoints="true"/>
+                </Frames>
+            </Frame>
+            <Frame parentKey="RightFrame" inherits="InsetFrameTemplate">
+                <Size x="300" />
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeKey="$parent.Inset"/>
+                    <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset"/>
+                </Anchors>
+                <Frames>
+                    <Frame parentKey="ListFrame" inherits="KrowiV_ScrollableList_Template" setAllPoints="true"/>
+                </Frames>
+            </Frame>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Frame>
+</Ui>

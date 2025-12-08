@@ -1,0 +1,12 @@
+<Ui>
+    <!-- The order of these items is important !!! -->
+    <Script file="ItemTooltip.lua" />
+
+    <!-- <Script file="NotObtainable.lua" />
+    <Script file="BlizzardDefault.lua" />
+    <Script file="PartOfAChain.lua" />
+    <Script file="RequiredFor.lua" />
+    <Script file="OtherFaction.lua" />
+    <Script file="Objectives.lua" />
+    <Script file="MostProgress.lua" /> -->
+</Ui>

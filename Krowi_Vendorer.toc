@@ -1,0 +1,51 @@
+## Interface: 110207
+## Title: Krowi's |cFF1D92C2Vendorer|r
+## X-Prefix: KrowiV
+## X-Acronym: KV
+## Version: 0.25
+## Author: Krowi-Frostmane EU
+## LoadWith: Blizzard_MerchantFrame
+## SavedVariables: KrowiV_Options, KrowiV_SavedData
+## Notes: Manage your inventory when selling to vendors with ignore lists, junk lists, and powerful auto-sell rules
+## AddonCompartmentFuncOnEnter: KrowiV_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: KrowiV_OnAddonCompartmentLeave
+## AddonCompartmentFunc: KrowiV_OnAddonCompartmentClick
+## IconTexture: interface/icons/inv_enchant_disenchant
+## Category-enUS: Inventory
+## Category-deDE: Inventar
+## Category-esES: Inventario
+## Category-esMX: Inventario
+## Category-frFR: Inventaire
+## Category-itIT: Inventario
+## Category-koKR: 소지품
+## Category-ptBR: Inventário
+## Category-ruRU: Предметы
+## Category-zhCN: 物品栏
+## Category-zhTW: 物品欄
+## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
+## X-Discord-Server-Name: Krowi's Addons
+## X-CurseForge: https://legacy.curseforge.com/wow/addons/krowi-vendorer
+## X-Curse-Project-ID: 1070840
+## X-Wago: https://addons.wago.io/addons/krowi-vendorer
+## X-Wago-ID: QNlqX36e
+
+Libs\Files.xml
+
+API.lua
+
+Plugins\Files.xml
+
+Localization\Files.xml
+
+Krowi_Vendorer.lua
+Globals.lua
+
+Objects\Files.xml
+
+Options\Files.xml
+Libs\Krowi_Util\Icon.lua
+Icon.lua
+
+Data\Files.xml
+
+GUI\Files.xml
