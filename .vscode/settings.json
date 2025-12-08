@@ -217,10 +217,25 @@
         {
             "source":"E:\\World of Warcraft Addon Development\\Krowi_Vendorer",
             "target":"H:\\World of Warcraft\\_retail_\\Interface\\AddOns\\Krowi_Vendorer",
-            "include":"**/*.{lua,toc,blp,tga,xml,md}",
-            "exclude":"**/{.git,.github,.vscode,Changelogs,Descriptions}/**",
+            "include":"**/*.{lua,blp,tga,xml}",
+            "exclude":"**/{.git,.vscode,_Packaging}/**",
             "deleteTargetOnDeploy": true
-        }
+        },
+        {
+            "source":"E:\\World of Warcraft Addon Development\\Krowi_Vendorer",
+            "target":"H:\\World of Warcraft\\_retail_\\Interface\\AddOns\\Krowi_Vendorer",
+            "include":"LICENSE",
+            "deleteTargetOnDeploy": false
+        },
+        {
+            "source":"E:\\World of Warcraft Addon Development\\Krowi_Vendorer",
+            "target":"H:\\World of Warcraft\\_retail_\\Interface\\AddOns\\Krowi_Vendorer",
+            "include":"*.toc",
+            "deleteTargetOnDeploy": false
+        },
+        // _classic_
+        // _beta_
+        // _xptr_
     ],
     "fsdeploy.deployWorkspaceOnSave": true,
     "Lua.diagnostics.disable": [

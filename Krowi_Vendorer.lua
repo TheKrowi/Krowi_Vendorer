@@ -10,11 +10,11 @@ addon.IsDragonflightRetail = major == "10";
 -- [[ Ace ]] --
 addon.L = LibStub(addon.Libs.AceLocale):GetLocale(addonName);
 
-print(addon.Metadata.Title, "loaded");
+-- print(addon.Metadata.Title, "loaded");
 
-if MerchantFrame then
-    print("already loaded")
-end
+-- if MerchantFrame then
+--     print("already loaded")
+-- end
 
 -- [[ Load addon ]] --
 local loadHelper = CreateFrame("Frame");

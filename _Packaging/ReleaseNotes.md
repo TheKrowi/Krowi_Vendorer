@@ -5,14 +5,17 @@
 ### Changed
 - Lots of backend code is now shared between all my addons
 
-### Fixed (0.1)
+### Fixed (0.10)
 - Several bugs due to The War Within changes
 
-### Fixed (0.2)
+### Fixed (0.22)
 - Initialization order bug
 
-### Fixed (0.2)
+### Fixed (0.23)
 - Destroying multiple items in a single loop should now be resumed without having to press the sell button again
 
-### Fixed (0.2)
+### Fixed (0.24)
 - Links in the pop up window should once again be full length
+
+### Changed (0.25)
+- Packaging

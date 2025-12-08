@@ -50,6 +50,10 @@ local function PopulateLeftListFrame()
                     if KrowiV_SavedData.JunkItems[itemId] then
                         return;
                     end
+                    -- make this an option later
+                    if KrowiV_SavedData.IgnoredItems[itemId] then
+                        return;
+                    end
                     local link = item:GetItemLink();
                     local icon = item:GetItemIcon();
                     local color = item:GetItemQualityColor();

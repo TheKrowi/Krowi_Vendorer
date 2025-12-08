@@ -1,7 +1,3 @@
-![Retail](https://img.shields.io/badge/Retail-11.2.7-008833?style=for-the-badge)<br>
-[![CurseForge](https://img.shields.io/badge/curseforge-download-F16436?style=for-the-badge&logo=curseforge&logoColor=white)](https://legacy.curseforge.com/wow/addons/krowi-vendorer)<br>
-[![Discord](https://img.shields.io/badge/discord-join-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/mdBFQJYeQZ) [![PayPal](https://img.shields.io/badge/paypal-donate-002991.svg?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=9QEDV37APQ6YJ)
-
 Vendorer helps you manage your inventory when selling to vendors by giving you control over what to sell and what to keep.
 
 ### Features

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.25 - 2025-12-08
+### Changed
+- Packaging
+
 ## 0.24 - 2025-11-03
 ### Fixed
 - Links in the pop up window should once again be full length
