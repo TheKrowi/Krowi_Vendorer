@@ -55,7 +55,7 @@ options.OptionsTable.args["General"] = {
                             order = OrderPP(), type = "execute", width = AdjustedWidth(),
                             name = addon.L["Discord"],
                             desc = addon.L["Discord Desc"]:K_ReplaceVars(addon.Metadata.DiscordServerName),
-                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.Metadata.DiscordInviteLink); end
+                            func = function() LibStub("Krowi_PopupDialog-1.0").ShowExternalLink(addon.Metadata.DiscordInviteLink); end
                         }
                     }
                 },
@@ -67,19 +67,13 @@ options.OptionsTable.args["General"] = {
                             order = OrderPP(), type = "execute", width = AdjustedWidth(),
                             name = addon.L["CurseForge"],
                             desc = addon.L["CurseForge Desc"]:KV_InjectAddonName():K_ReplaceVars(addon.L["CurseForge"]),
-                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.Metadata.CurseForge); end
+                            func = function() LibStub("Krowi_PopupDialog-1.0").ShowExternalLink(addon.Metadata.CurseForge); end
                         },
                         Wago = {
                             order = OrderPP(), type = "execute", width = AdjustedWidth(),
                             name = addon.L["Wago"],
                             desc = addon.L["Wago Desc"]:KV_InjectAddonName():K_ReplaceVars(addon.L["Wago"]),
-                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.Metadata.Wago); end
-                        },
-                        WoWInterface = {
-                            order = OrderPP(), type = "execute", width = AdjustedWidth(),
-                            name = addon.L["WoWInterface"],
-                            desc = addon.L["WoWInterface Desc"]:KV_InjectAddonName():K_ReplaceVars(addon.L["WoWInterface"]),
-                            func = function() LibStub("Krowi_PopopDialog-1.0").ShowExternalLink(addon.Metadata.WoWInterface); end
+                            func = function() LibStub("Krowi_PopupDialog-1.0").ShowExternalLink(addon.Metadata.Wago); end
                         }
                     }
                 }

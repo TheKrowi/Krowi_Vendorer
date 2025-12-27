@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.26 - 2025-12-27
+### Fixed
+- Pop up dialogs should work again
+
 ## 0.25 - 2025-12-08
 ### Changed
 - Packaging

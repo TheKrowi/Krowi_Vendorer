@@ -19,3 +19,6 @@
 
 ### Changed (0.25)
 - Packaging
+
+### Fixed (0.26)
+- Pop up dialogs should work again
