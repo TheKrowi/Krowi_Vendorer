@@ -133,7 +133,7 @@ local function ProcessItem(_tooltip, bag, slot, item)
             end
         end
     end
-    
+
     -- local playerKnowsTransmogFromItem, isValidAppearanceForCharacter, playerKnowsTransmog, characterCanLearnTransmog;
     -- local canIMogIt = CanIMogIt; --LibStub("AceAddon-3.0"):GetAddon("CanIMogIt");
     -- if canIMogIt then

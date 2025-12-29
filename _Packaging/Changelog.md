@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.27 - 2025-12-29
+### Changed
+- Menu generation and handling (dev note: for classic user this should be an invisible change; for mainline users this should reflect in modern looking drop down menus)
+
+## 0.26 - 2025-12-27
+### Fixed
+- Pop up dialogs should work again
+
 ## 0.25 - 2025-12-08
 ### Changed
 - Packaging

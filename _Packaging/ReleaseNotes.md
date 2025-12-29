@@ -19,3 +19,9 @@
 
 ### Changed (0.25)
 - Packaging
+
+### Fixed (0.26)
+- Pop up dialogs should work again
+
+### Changed (0.27)
+- Menu generation and handling (dev note: for classic user this should be an invisible change; for mainline users this should reflect in modern looking drop down menus)

@@ -144,7 +144,7 @@ local function LoadTheBurningCrusade()
     RegisterAutoJunkOptions(1, instanceType.Dungeon, 258, 554) -- The Mechanar
     RegisterAutoJunkOptions(1, instanceType.Dungeon, 261, 545) -- The Steamvault
     RegisterAutoJunkOptions(1, instanceType.Dungeon, 249, 585) -- Magisters' Terrace
-    RegisterAutoJunkOptions(1, instanceType.Dungeon, 255, 269) -- The Black Morass    
+    RegisterAutoJunkOptions(1, instanceType.Dungeon, 255, 269) -- The Black Morass
     RegisterAutoJunkOptions(1, instanceType.Dungeon, 254, 552) -- The Arcatraz
     RegisterDeSelectAllEventOptions();
 end
