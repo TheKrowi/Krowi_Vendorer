@@ -1,0 +1,98 @@
+-- [[ Russian translation by ZamestoTV, 28/12/2025 ]] --
+
+-- [[ Namespaces ]] --
+local addonName, addon = ...;
+local L = LibStub(addon.Libs.AceLocale):NewLocale(addonName, "ruRU");
+if not L then return end
+
+local tab = "|T:1:8|t";
+L["TAB"] = tab;
+
+-- Load strings into the localization that are already localized by Blizzard
+addon.PluginStrings.ruRU.Load(L);
+addon.GlobalStrings.Load(L);
+addon.Plugins:LoadLocalization(L);
+
+L["Default value"] = "Значение по умолчанию";
+L["Checked"] = "Включено";
+L["Unchecked"] = "Выключено";
+L["Build"] = "Сборка";
+L["Author"] = "Автор";
+L["Discord"] = "Discord";
+L["Discord Desc"] = "Открывает диалог со ссылкой на Discord-сервер {serverName}. Здесь можно оставлять комментарии, отчёты, замечания, идеи или что угодно ещё.";
+L["CurseForge"] = "CurseForge";
+L["CurseForge Desc"] = "Открывает диалог со ссылкой на страницу {addonName} на {curseForge}.";
+L["Wago"] = "Wago";
+L["Wago Desc"] = "Открывает диалог со ссылкой на страницу {addonName} на {wago}.";
+L["WoWInterface"] = "WoWInterface";
+L["WoWInterface Desc"] = "Открывает диалог со ссылкой на страницу {addonName} на {woWInterface}.";
+L["Show minimap icon"] = "Показывать иконку у миникарты";
+L["Show minimap icon Desc"] = "Показывать / скрывать иконку у миникарты.";
+L["Auto Sell"] = "Автопродажа";
+L["Preset Rules"] = "Готовые правила";
+L["Preset Rules Desc"] = "При добавлении одного из правил ниже оно будет добавлено в соответствующий список правил.";
+L["Account Rules"] = "Правила аккаунта";
+L["Character Rules"] = "Правила персонажа";
+L["Add new rule"] = "Добавить новое правило";
+L["Add new rule Desc"] = "Добавить новое правило. Правила оцениваются по ИЛИ. Предмет будет продан, если соответствует хотя бы одному правилу.";
+L["Open inventory"] = "Открыть инвентарь";
+L["Open inventory Desc"] = "Открывает ваш инвентарь.";
+L["Open auto sell list"] = "Открыть список автопродажи";
+L["Open auto sell list Desc"] = "Открывает список автопродажи. Изменения правил будут сразу видны.";
+L["Delete rule"] = "Удалить правило";
+L["Delete rule Desc"] = "Удалить это правило.";
+L["Enabled Desc"] = "Включить / отключить это правило. Отключённые правила не оцениваются.";
+L["Invalid Rule"] = "Это правило недействительно. Проверьте ошибки ниже.";
+L["Item types and sub types"] = "Типы и подтипы предметов";
+L["No item types"] = "Типы или подтипы предметов не определены. Это правило будет применяться ко всем предметам.";
+L["Item Types are read only"] = "Это готовое правило. Типы и подтипы предметов только для чтения. Любые изменения в списках будут отменены.";
+L["Add new item type"] = "Добавить новый тип предмета";
+L["Add new item type Desc"] = "Добавить новый тип предмета с возможностью добавить подтипы к этому правилу. Оцениваются по ИЛИ. Предмет будет продан, если соответствует хотя бы одному типу или подтипу.";
+L["Conditions"] = "Условия";
+L["No conditions"] = "Условия не определены. Это правило будет применяться ко всем предметам на основе типа и/или подтипа (если определены).";
+L["Add new condition"] = "Добавить новое условие";
+L["Add new condition Desc"] = "Добавить новое условие к этому правилу. Оцениваются по И. Предмет будет продан только если соответствует всем условиям.";
+L["Select sub type"] = "Выбрать подтип";
+L["Select sub type Desc"] = "Если включено, предметы будут проверяться по типу и подтипу. Это позволяет более точный контроль.";
+L["Delete type Desc"] = "Удалить этот тип и подтипы.";
+L["No item type selected"] = "Тип предмета не выбран. Выберите тип или удалите его.";
+L["At least one item sub type must be selected"] = "Должен быть выбран хотя бы один подтип предмета.";
+L["If"] = "Если";
+L["Delete Condition Desc"] = "Удалить это условие и критерии.";
+L["Invalid condition"] = "Недействительное условие";
+L["No criteria type selected"] = "Тип критерия не выбран. Выберите критерий или удалите его.";
+L["No valid criteria type selected"] = "Выбран недействительный тип критерия. Выберите новый.";
+L["No equality operator selected"] = "Оператор равенства не выбран. Выберите один.";
+L["No valid equality operator selected"] = "Выбран недействительный оператор равенства. Выберите новый.";
+L["No item level value entered"] = "Значение уровня предмета не введено. Введите число.";
+L["ItemLevel is not a valid item level."] = "'{itemLevel}' — недействительный уровень предмета.";
+L["At least one quality must be selected"] = "Должно быть выбрано хотя бы одно качество.";
+L["Auto Repair"] = "Авторемонт";
+L["Auto Repair Is Enabled"] = "Автоматически ремонтировать все предметы у торговца, если это возможно.";
+L["Auto Repair Is Guild Enabled"] = "Предпочитать средства гильдии для ремонта, если доступны.";
+L["Auto Repair Print Chat Message"] = "Включить вывод сообщений авторемонта в чат.";
+L["Right click"] = "ПКМ";
+L["Icon Right click"] = "для настроек.";
+L["Rows first"] = "Строки сначала";
+L["Columns first"] = "Столбцы сначала";
+L["Rows"] = "Строки";
+L["Columns"] = "Столбцы";
+L["Ignore List"] = "Список игнора";
+L["Auto Sell List"] = "Список автопродажи";
+L["Auto Sell List Info"] = "ЛКМ: продать отдельный предмет\nПКМ: игнорировать предмет";
+L["Sell All Items"] = "Продать все предметы";
+L["Sell 12 Items"] = "Продать 12 предметов";
+L["Selling item"] = "[KV] Продажа предмета {item}";
+L["x of y items sold"] = "[KV] Продано предметов: {x} из {y}";
+L["x of y items sold in safe mode"] = "[KV] Продано предметов в безопасном режиме: {x} из {y}";
+L["Auto Repair No Guild Funds Use Personal"] = "[KV] Недостаточно средств гильдии для ремонта, пробуем личные.";
+L["Auto Repair No Personal"] = "[KV] Недостаточно личных средств для ремонта.";
+L["Auto Repair Repaired"] = "[KV] Отремонтировано за {g}г {s}с {c}м.";
+L["Junk List"] = "Список хлама";
+L["Junk"] = "Хлам";
+L["Artifact Relic"] = "Реликвия артефакта";
+L["Unusable Equipment"] = "Непригодная экипировка";
+L["Selling in progress"] = "[KV] Автопродажа уже идёт. Подождите.";
+L["Auto-sell complete"] = "[KV] Автопродажа завершена.";
+L["Sold item"] = "[KV] Продан предмет: {item}";
+L["Selling started"] = "[KV] Автопродажа начата.";
