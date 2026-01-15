@@ -1,0 +1,51 @@
+-- [[ https://legacy.curseforge.com/wow/addons/krowi-vendorer/localization ]] --
+
+local _, addon = ...
+local L = addon.L
+
+function addon.GetInstanceInfoName(journalInstanceId)
+    local name = EJ_GetInstanceInfo and (EJ_GetInstanceInfo(journalInstanceId)) or nil
+    if name then
+        return name
+    end
+    name = addon.L['EJ_GetInstanceInfo' .. journalInstanceId]
+    if name then
+        return name
+    end
+    return journalInstanceId
+end
+
+function addon.GetCategoryInfoTitle(categoryId)
+    local title = (GetCategoryInfo(categoryId))
+    if title then
+        return title
+    end
+    title = addon.L['GetCategoryInfo' .. categoryId]
+    if title then
+        return title
+    end
+    return categoryId
+end
+
+local tab = '|T:1:8|t'
+L['TAB'] = tab
+
+L['Classic'] = EXPANSION_NAME0
+L['The Burning Crusade'] = EXPANSION_NAME1
+L['Wrath of the Lich King'] = EXPANSION_NAME2
+L['Cataclysm'] = EXPANSION_NAME3
+L['Mists of Pandaria'] = EXPANSION_NAME4
+L['Warlords of Draenor'] = EXPANSION_NAME5
+L['Legion'] = EXPANSION_NAME6
+L['Battle for Azeroth'] = EXPANSION_NAME7
+L['Shadowlands'] = EXPANSION_NAME8
+L['Dragonflight'] = EXPANSION_NAME9
+L['Item Level'] = STAT_AVERAGE_ITEM_LEVEL
+L['Soulbound'] = ITEM_SOULBOUND
+L['Quality'] = QUALITY
+L['Name'] = NAME
+L['Delete'] = DELETE
+L['Enabled'] = VIDEO_OPTIONS_ENABLED
+L['Quality'] = QUALITY
+
+addon.L = addon.Localization.GetLocale(addon)

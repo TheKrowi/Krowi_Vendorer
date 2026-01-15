@@ -1,8 +1,8 @@
-## Interface: 110207
+## Interface: 120000, 110207
 ## Title: Krowi's |cFF1D92C2Vendorer|r
 ## X-Prefix: KrowiV
 ## X-Acronym: KV
-## Version: 0.27
+## Version: 0.28
 ## Author: Krowi-Frostmane EU
 ## LoadWith: Blizzard_MerchantFrame
 ## SavedVariables: KrowiV_Options, KrowiV_SavedData
@@ -22,11 +22,8 @@
 ## Category-ruRU: Предметы
 ## Category-zhCN: 物品栏
 ## Category-zhTW: 物品欄
-## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
-## X-Discord-Server-Name: Krowi's Addons
-## X-CurseForge: https://curseforge.com/wow/addons/krowi-vendorer
-## X-Curse-Project-ID: 1070840
-## X-Wago: https://addons.wago.io/addons/krowi-vendorer
+## X-Slug: krowi-vendorer
+## X-CurseForge-ID: 1070840
 ## X-Wago-ID: QNlqX36e
 
 Libs\Files.xml

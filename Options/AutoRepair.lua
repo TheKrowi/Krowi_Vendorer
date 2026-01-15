@@ -23,7 +23,7 @@ options.OptionsTable.args["AutoRepair"] = {
     args = {
         General = {
             order = OrderPP(), type = "group",
-            name = addon.L["General"],
+            name = addon.Util.L["General"],
             args = {
                 IsEnabled = {
                     order = OrderPP(), type = "toggle", width = "full",

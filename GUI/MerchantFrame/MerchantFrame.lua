@@ -109,22 +109,32 @@ function KrowiV_ShowJunkList_OnLoad(self)
 	PanelTemplates_SetNumTabs(MerchantFrame, MerchantFrame.numTabs + 1);
 end
 
-function MerchantFrame_Update()
-	if MerchantFrame.lastTab ~= MerchantFrame.selectedTab then
-		MerchantFrame_CloseStackSplitFrame();
-		MerchantFrame.lastTab = MerchantFrame.selectedTab;
-	end
-	MerchantFrame.FilterDropdown:Update();
-	if MerchantFrame.selectedTab == 1 then
+hooksecurefunc("MerchantFrame_UpdateBuybackInfo", function()
+	if MerchantFrame.selectedTab == 3 then
 		MerchantFrame_UpdateMerchantInfo();
-	elseif MerchantFrame.selectedTab == 3 then
 		merchantFrame.UpdateIgnoreInfo();
 	elseif MerchantFrame.selectedTab == 4 then
+		MerchantFrame_UpdateMerchantInfo();
 		merchantFrame.UpdateJunkInfo();
-	else
-		MerchantFrame_UpdateBuybackInfo();
 	end
-end
+end);
+
+-- function MerchantFrame_Update()
+-- 	if MerchantFrame.lastTab ~= MerchantFrame.selectedTab then
+-- 		MerchantFrame_CloseStackSplitFrame();
+-- 		MerchantFrame.lastTab = MerchantFrame.selectedTab;
+-- 	end
+-- 	MerchantFrame.FilterDropdown:Update();
+-- 	if MerchantFrame.selectedTab == 1 then
+-- 		MerchantFrame_UpdateMerchantInfo();
+-- 	elseif MerchantFrame.selectedTab == 3 then
+-- 		merchantFrame.UpdateIgnoreInfo();
+-- 	elseif MerchantFrame.selectedTab == 4 then
+-- 		merchantFrame.UpdateJunkInfo();
+-- 	else
+-- 		MerchantFrame_UpdateBuybackInfo();
+-- 	end
+-- end
 
 function merchantFrame.UpdateIgnoreInfo()
 	if KrowiEVU_MerchantItemsContainer then

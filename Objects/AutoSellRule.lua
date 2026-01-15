@@ -7,19 +7,32 @@ autoSellRule.TooltipDetails = {};
 local tooltipDetails = autoSellRule.TooltipDetails;
 local criteriaType = addon.Objects.CriteriaType;
 
-tooltipDetails.List = {
-    addon.L["None"],
-    addon.L["Basic"],
-    addon.L["Rules"],
-    addon.L["Detailed"]
-};
-
 tooltipDetails.Enum = addon.Util.Enum2{
     "None",
     "Basic",
     "Rules",
     "Detailed"
 };
+
+local tooltipDetailsList
+local function GetTooltipDetailsText(_tooltipDetails)
+    if not tooltipDetailsList then
+        tooltipDetailsList = {
+            [tooltipDetails.Enum.None] = addon.L["None"],
+            [tooltipDetails.Enum.Basic] = addon.L["Basic"],
+            [tooltipDetails.Enum.Rules] = addon.L["Rules"],
+            [tooltipDetails.Enum.Detailed] = addon.L["Detailed"],
+        };
+    end
+    return tooltipDetailsList[_tooltipDetails];
+end
+
+function tooltipDetails.GetTooltipDetailsList()
+    if not tooltipDetailsList then
+        GetTooltipDetailsText(nil);
+    end
+    return tooltipDetailsList;
+end
 
 -- We can't work with instances because we need to save the rules to the SavedVariables
 -- and don't want to pollute the object with references to functions

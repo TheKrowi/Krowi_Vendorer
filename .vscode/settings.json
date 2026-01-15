@@ -57,7 +57,6 @@
         "CreateFromMixins",
         "CallbackRegistryMixin",
         "GenerateClosure",
-        "SetPortraitToTexture",
         "ButtonFrameTemplate_HidePortrait",
         "CreateAnchor",
         "ScrollBoxConstants",
@@ -182,7 +181,6 @@
         "STAT_AVERAGE_ITEM_LEVEL",
         "ITEM_SOULBOUND",
         "QUALITY",
-        "HUD_EDIT_MODE_SETTING_BAGS_DIRECTION",
         "GENERAL",
         "INFO",
         "GAME_VERSION_LABEL",
@@ -211,7 +209,8 @@
         "IsCosmeticItem",
         "C_AddOns",
         "CursorHasItem",
-        "DeleteCursorItem"
+        "DeleteCursorItem",
+        "KROWI_LIBMAN"
     ],
     "fsdeploy.nodes": [
         {
@@ -230,6 +229,25 @@
         {
             "source":"E:\\World of Warcraft Addon Development\\Krowi_Vendorer",
             "target":"H:\\World of Warcraft\\_retail_\\Interface\\AddOns\\Krowi_Vendorer",
+            "include":"*.toc",
+            "deleteTargetOnDeploy": false
+        },
+        {
+            "source":"E:\\World of Warcraft Addon Development\\Krowi_Vendorer",
+            "target":"H:\\World of Warcraft\\_ptr_\\Interface\\AddOns\\Krowi_Vendorer",
+            "include":"**/*.{lua,blp,tga,xml}",
+            "exclude":"**/{.git,.vscode,_Packaging}/**",
+            "deleteTargetOnDeploy": true
+        },
+        {
+            "source":"E:\\World of Warcraft Addon Development\\Krowi_Vendorer",
+            "target":"H:\\World of Warcraft\\_ptr_\\Interface\\AddOns\\Krowi_Vendorer",
+            "include":"LICENSE",
+            "deleteTargetOnDeploy": false
+        },
+        {
+            "source":"E:\\World of Warcraft Addon Development\\Krowi_Vendorer",
+            "target":"H:\\World of Warcraft\\_ptr_\\Interface\\AddOns\\Krowi_Vendorer",
             "include":"*.toc",
             "deleteTargetOnDeploy": false
         },

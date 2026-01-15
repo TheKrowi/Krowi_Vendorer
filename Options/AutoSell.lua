@@ -384,7 +384,7 @@ do -- [[ Condition ]]
                 CriteriaType = {
                     order = OrderPP(), type = "select", width = AdjustedWidth(0.6),
                     name = "",
-                    values = criteriaType.List,
+                    values = criteriaType.GetCriteriaTypeList(),
                     get = function() return condition.CriteriaType; end,
                     set = function(_, value)
                         if not rule.IsPreset then
@@ -605,7 +605,7 @@ options.OptionsTable.args["AutoSell"] = {
                     order = OrderPP(), type = "select", width = AdjustedWidth(),
                     name = addon.L["Levels of details"],
                     desc = addon.L["Levels of details Desc"]:KV_AddDefaultValueText("AutoSell.TooltipDetails", autoSellRule.TooltipDetails.List),
-                    values = autoSellRule.TooltipDetails.List,
+                    values = autoSellRule.TooltipDetails.GetTooltipDetailsList(),
                     get = function() return addon.Options.db.profile.AutoSell.TooltipDetails; end,
                     set = function(_, value) addon.Options.db.profile.AutoSell.TooltipDetails = value; end
                 },
