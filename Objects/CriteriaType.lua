@@ -8,19 +8,32 @@ local itemQuality = addon.Objects.ItemQuality;
 local inventoryType = addon.Objects.InventoryType;
 local itemLocation = ItemLocation:CreateEmpty();
 
-criteriaType.List = {
-    addon.L["Item Level"],
-    addon.L["Soulbound"],
-    addon.L["Quality"],
-    addon.L["Inventory Type"]
-};
-
 criteriaType.Enum = addon.Util.Enum2{
     "ItemLevel",
     "Soulbound",
     "Quality",
     "InventoryType"
 };
+
+local criteriaTypeList
+local function GetCriteriaTypeText(_criteriaType)
+    if not criteriaTypeList then
+        criteriaTypeList = {
+            [criteriaType.Enum.ItemLevel] = addon.L["Item Level"],
+            [criteriaType.Enum.Soulbound] = addon.L["Soulbound"],
+            [criteriaType.Enum.Quality] = addon.L["Quality"],
+            [criteriaType.Enum.InventoryType] = addon.L["Inventory Type"],
+        };
+    end
+    return criteriaTypeList[_criteriaType];
+end
+
+function criteriaType.GetCriteriaTypeList()
+    if not criteriaTypeList then
+        GetCriteriaTypeText(nil);
+    end
+    return criteriaTypeList;
+end
 
 do --[[ Rule evaluation functions ]]
     local function ItemLevel_Func(itemLevel, operator, value)
@@ -76,7 +89,7 @@ do --[[ Rule validity checking ]]
         if not condition.CriteriaType then
             return false, desc .. addon.L["No criteria type selected"];
         end
-        if not criteriaType.List[condition.CriteriaType] then
+        if not GetCriteriaTypeText(condition.CriteriaType) then
             return false, desc .. addon.L["No valid criteria type selected"];
         end
         if condition.CriteriaType == criteriaType.Enum.ItemLevel then

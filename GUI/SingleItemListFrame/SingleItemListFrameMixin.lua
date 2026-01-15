@@ -10,7 +10,7 @@ end
 
 function KrowiV_SingleItemListFrameMixin:SetIcon(icon)
     ButtonFrameTemplate_ShowPortrait(self);
-    SetPortraitToTexture(self.PortraitContainer.portrait, icon);
+    self:SetPortraitToAsset(icon)
 end
 
 function KrowiV_SingleItemListFrameMixin:AppendListItem(link, icon, color, name, onClick, ...)
