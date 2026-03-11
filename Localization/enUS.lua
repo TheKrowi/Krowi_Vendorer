@@ -88,3 +88,4 @@ L["None"] = true
 L["Basic"] = true
 L["Detailed"] = true
 L["Rules"] = true
+L["At least one inventory type must be selected"] = true

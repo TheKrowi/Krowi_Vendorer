@@ -1,8 +1,8 @@
-## Interface: 120000, 110207
+## Interface: 120001, 110207
 ## Title: Krowi's |cFF1D92C2Vendorer|r
 ## X-Prefix: KrowiV
 ## X-Acronym: KV
-## Version: 0.28
+## Version: 0.29
 ## Author: Krowi-Frostmane EU
 ## LoadWith: Blizzard_MerchantFrame
 ## SavedVariables: KrowiV_Options, KrowiV_SavedData
