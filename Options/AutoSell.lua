@@ -263,7 +263,11 @@ do -- [[ Condition ]]
     local function CheckIfConditionIsValid(scopeName, rule, condition)
         local description = autoSellRule.CheckIfConditionIsInalid(condition);
         local invalidConditionTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
-        invalidConditionTable.name = description:SetColorLightRed();
+        if description then
+            invalidConditionTable.name = description:SetColorLightRed();
+        else
+            invalidConditionTable.name = "";
+        end
         autoSell.CheckIfRuleIsValid(rule);
     end
 
@@ -303,6 +307,7 @@ do -- [[ Condition ]]
         args.GoldValue = nil;
         args.SilverValue = nil;
         args.CopperValue = nil;
+        args.TransmogStatus = nil;
     end
 
     local function ConditionCriteriaTypeSet_VendorPrice(scopeName, rule, condition)
@@ -367,6 +372,30 @@ do -- [[ Condition ]]
         });
     end
 
+    local function ConditionCriteriaTypeSet_TransmogKnown(scopeName, rule, condition)
+        -- Initialisiere TransmogStatus falls nicht vorhanden
+        condition.TransmogStatus = condition.TransmogStatus or 1;  -- Default: Known (1)
+        
+        -- Statuses: 1=Known, 2=Unknown
+        local transmogStatusList = {
+            [1] = addon.L["Transmog Known"],
+            [2] = addon.L["Transmog Unknown"]
+        };
+        
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "TransmogStatus", {
+            order = OrderPP(), type = "select", width = AdjustedWidth(0.9),
+            name = "",
+            values = transmogStatusList,
+            get = function() return condition.TransmogStatus; end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    condition.TransmogStatus = value;
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
+        });
+    end
+
     local function ConditionCriteriaTypeSet_Quality(scopeName, rule, condition)
         condition.Qualities = condition.Qualities or {};
         condition.NumSelectedQualities = condition.NumSelectedQualities or 0;
@@ -419,6 +448,8 @@ do -- [[ Condition ]]
             ConditionCriteriaTypeSet_InventoryType(scopeName, rule, condition);
         elseif value == criteriaType.Enum.VendorPrice then
             ConditionCriteriaTypeSet_VendorPrice(scopeName, rule, condition);
+        elseif value == criteriaType.Enum.TransmogKnown then
+            ConditionCriteriaTypeSet_TransmogKnown(scopeName, rule, condition);  -- ← eigene Funktion mit Checkboxes
         end
         local deleteConditionTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.DeleteCondition");
         deleteConditionTable.order = OrderPP();

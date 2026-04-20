@@ -53,11 +53,11 @@ function addon.GetItemInfo(bag, slot, item)
     vendorPrice = vendorPrice or sellPrice;
 
     -- DEBUG: Auskommentieren wenn nicht mehr gebraucht
-    if vendorPrice == nil then
-        print("[KV DEBUG] VendorPrice NIL für: " .. tostring(link));
-    else
-        print("[KV DEBUG] VendorPrice=" .. vendorPrice .. " für " .. tostring(link));
-    end
+    --if vendorPrice == nil then
+      --  print("[KV DEBUG] VendorPrice NIL für: " .. tostring(link));
+   -- else
+   --     print("[KV DEBUG] VendorPrice=" .. vendorPrice .. " für " .. tostring(link));
+   -- end
 
     return {
         Bag = bag,

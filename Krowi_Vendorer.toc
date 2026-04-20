@@ -40,6 +40,7 @@ Globals.lua
 Objects\Files.xml
 
 Options\Files.xml
+Options\TransmogChecker.lua
 Libs\Krowi_Util\Icon.lua
 Icon.lua
 

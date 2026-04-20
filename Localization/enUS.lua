@@ -89,6 +89,13 @@ L["Basic"] = true
 L["Detailed"] = true
 L["Rules"] = true
 L["At least one inventory type must be selected"] = true
+
+-- Criteria Types (base)
+L["Item Level"] = "Item Level"
+L["Soulbound"] = "Soulbound"
+L["Quality"] = "Quality"
+
+-- Vendor Price & Transmog Known Conditions (new)
 L["Vendor Price"] = "Vendor Price"
 L["No vendor price value entered"] = "No vendor price value entered"
 L["Vendor price must be a number"] = "Vendor price must be a number"
@@ -96,3 +103,14 @@ L["Vendor price must be a valid number."] = "Vendor price must be a valid number
 L["Gold"] = "Gold"
 L["Silver"] = "Silver"
 L["Copper"] = "Copper"
+L["Transmog Known"] = "Known"
+L["Transmog Unknown"] = "Unknown"
+L["At least one transmog status must be selected"] = "At least one transmog status must be selected"
+L["Transmog status unknown"] = "Transmog status unknown"
+L["CanIMogIt not loaded"] = "CanIMogIt is not installed or loaded"
+L["ToDebugString"] = "Debug"
+L["Invalid condition"] = "Invalid condition"
+L["No criteria type selected"] = "No criteria type selected"
+L["No valid criteria type selected"] = "No valid criteria type selected"
+L["At least one quality must be selected"] = "At least one quality must be selected"
+L["At least one inventory type must be selected"] = "At least one inventory type must be selected"
