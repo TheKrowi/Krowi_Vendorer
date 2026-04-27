@@ -372,6 +372,42 @@ do -- [[ Condition ]]
         });
     end
 
+    local function ConditionCriteriaTypeSet_ItemLevelVsEquipped(scopeName, rule, condition)
+        condition.Operator = condition.Operator or 1;
+        condition.Value = condition.Value or 0;
+        
+        local path = "AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args";
+        
+        -- Operator Dropdown
+        addon.InjectOptions:AddTable(path, "Operator", {
+            order = OrderPP(), type = "select", width = AdjustedWidth(0.4),
+            name = "",
+            values = equalityOperator.List,
+            get = function() return condition.Operator; end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    condition.Operator = value;
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
+        });
+        
+        -- Value Field (Abstand in ganzen Zahlen)
+        addon.InjectOptions:AddTable(path, "Value", {
+            order = OrderPP(), type = "input", width = AdjustedWidth(0.5),
+            name = "",
+            get = function() return tostring(condition.Value or 0); end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    condition.Value = tonumber(strtrim(value)) or 0;
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
+        });
+    end
+
     local function ConditionCriteriaTypeSet_TransmogKnown(scopeName, rule, condition)
         -- Initialisiere TransmogStatus falls nicht vorhanden
         condition.TransmogStatus = condition.TransmogStatus or 1;  -- Default: Known (1)
@@ -449,7 +485,9 @@ do -- [[ Condition ]]
         elseif value == criteriaType.Enum.VendorPrice then
             ConditionCriteriaTypeSet_VendorPrice(scopeName, rule, condition);
         elseif value == criteriaType.Enum.TransmogKnown then
-            ConditionCriteriaTypeSet_TransmogKnown(scopeName, rule, condition);  -- ← eigene Funktion mit Checkboxes
+            ConditionCriteriaTypeSet_TransmogKnown(scopeName, rule, condition);
+        elseif value == criteriaType.Enum.ItemLevelVsEquipped then
+            ConditionCriteriaTypeSet_ItemLevelVsEquipped(scopeName, rule, condition);
         end
         local deleteConditionTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.DeleteCondition");
         deleteConditionTable.order = OrderPP();
