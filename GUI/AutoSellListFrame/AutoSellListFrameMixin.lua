@@ -229,10 +229,11 @@ local function ProcessItem(bag, slot, item)
         for _, ruleResult in next, feedback do
             local ruleName, ruleMatches, conditions = ruleResult[1], ruleResult[2], ruleResult[3];
             if ruleMatches then
-                print("[KV] '" .. item:GetItemName() .. "' matched by rule: '" .. ruleName .. "'");
+                print("[KV] |T136814:0|t '" .. item:GetItemName() .. "' matched by rule: '" .. ruleName .. "'");
                 print("     VendorPrice=" .. tostring(itemInfo.VendorPrice));
                 for _, cond in next, conditions do
-                    print("     " .. (cond[1] and "✓" or "✗") .. " " .. tostring(cond[2]));
+                    local conditionText = "|T13681" .. (cond[1] and "4" or "3") .. ":0|t " .. tostring(cond[2]);
+                    print("     " .. (cond[1] and conditionText:SetColorLightGreen() or conditionText:SetColorLightRed()));
                 end
             end
         end
