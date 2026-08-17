@@ -126,15 +126,22 @@ do -- [[ Creation and modification ]]
 
     function autoSellRule.SetCriteriaType(condition, value)
         condition.CriteriaType = value;
-        if value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.Quality or value == criteriaType.Enum.InventoryType then
+        
+        -- Operator/Value nur für Vergleich-Conditions
+        if value ~= criteriaType.Enum.ItemLevel and
+           value ~= criteriaType.Enum.VendorPrice then
             condition.Operator = nil;
             condition.Value = nil;
         end
-        if value == criteriaType.Enum.ItemLevel or value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.InventoryType then
+        
+        -- Qualities nur für Quality
+        if value ~= criteriaType.Enum.Quality then
             condition.Qualities = nil;
             condition.NumSelectedQualities = nil;
         end
-        if value == criteriaType.Enum.ItemLevel or value == criteriaType.Enum.Soulbound or value == criteriaType.Enum.Quality then
+        
+        -- InventoryTypes nur für InventoryType
+        if value ~= criteriaType.Enum.InventoryType then
             condition.InventoryTypes = nil;
             condition.NumSelectedInventoryTypes = nil;
         end
@@ -152,6 +159,41 @@ do -- [[ Creation and modification ]]
         tinsert(rule.Conditions, condition);
         return condition;
     end
+
+    -- ← NEUE SETTER-FUNKTIONEN:
+    local function ShowAlert(message)
+        StaticPopupDialogs["KROWIV_ALERT"] = {
+            text = message,
+            button1 = OKAY,
+            hideOnEscape = true,
+            timeout = 0,
+            exclusive = true,
+            whileDead = true,
+        }
+        StaticPopup_Show("KROWIV_ALERT")
+    end
+
+    function autoSellRule.SetVendorPriceGold(condition, value)
+        local gold = math.max(0, math.floor(tonumber(strtrim(value)) or 0));
+        local silver = math.floor(((condition.Value or 0) % 10000) / 100);
+        local copper = (condition.Value or 0) % 100;
+        condition.Value = gold * 10000 + silver * 100 + copper;
+    end
+
+    function autoSellRule.SetVendorPriceSilver(condition, value)
+        local silver = math.max(0, math.min(99, math.floor(tonumber(strtrim(value)) or 0)));
+        local gold = math.floor((condition.Value or 0) / 10000);
+        local copper = (condition.Value or 0) % 100;
+        condition.Value = gold * 10000 + silver * 100 + copper;
+    end
+
+    function autoSellRule.SetVendorPriceCopper(condition, value)
+        local copper = math.max(0, math.min(99, math.floor(tonumber(strtrim(value)) or 0)));
+        local gold = math.floor((condition.Value or 0) / 10000);
+        local silver = math.floor(((condition.Value or 0) % 10000) / 100);
+        condition.Value = gold * 10000 + silver * 100 + copper;
+    end
+
 end
 
 do -- [[ Validation ]]

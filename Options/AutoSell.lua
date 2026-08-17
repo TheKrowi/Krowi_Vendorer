@@ -190,7 +190,7 @@ do -- [[ ItemType ]]
             name = "",
             args = {
                 Type = {
-                    order = OrderPP(), type = "select", width = AdjustedWidth(0.8),
+                    order = OrderPP(), type = "select", width = AdjustedWidth(0.9),
                     name = "",
                     values = itemType.List,
                     get = function() return _itemType.Type; end,
@@ -202,7 +202,7 @@ do -- [[ ItemType ]]
                     -- disabled = function() return rule.IsPreset; end
                 },
                 CheckSubType = {
-                    order = OrderPP(), type = "toggle", width = AdjustedWidth(0.8),
+                    order = OrderPP(), type = "toggle", width = AdjustedWidth(0.65),
                     name = addon.L["Select sub type"],
                     desc = addon.L["Select sub type Desc"],
                     get = function() return _itemType.SubTypes; end,
@@ -210,7 +210,7 @@ do -- [[ ItemType ]]
                     hidden = function() return rule.IsPreset; end
                 },
                 DeleteItemType = {
-                    order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
+                    order = OrderPP(), type = "execute", width = AdjustedWidth(0.35),
                     name = addon.L["Delete"],
                     desc = addon.L["Delete type Desc"],
                     func = function() DeleteItemType(scopeName, rule, _itemType); end,
@@ -263,7 +263,11 @@ do -- [[ Condition ]]
     local function CheckIfConditionIsValid(scopeName, rule, condition)
         local description = autoSellRule.CheckIfConditionIsInalid(condition);
         local invalidConditionTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.InvalidCondition");
-        invalidConditionTable.name = description:SetColorLightRed();
+        if description then
+            invalidConditionTable.name = description:SetColorLightRed();
+        else
+            invalidConditionTable.name = "";
+        end
         autoSell.CheckIfRuleIsValid(rule);
     end
 
@@ -296,14 +300,135 @@ do -- [[ Condition ]]
     end
 
     local function ConditionCriteriaTypeSet_Reset(scopeName, rule, condition)
-        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Operator = nil;
-        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Value = nil;
-        options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args.Blank1 = nil;
+        local args = options.OptionsTable.args["AutoSell"].args[scopeName .. "Rules"].args[rule.Guid].args.Conditions.args[condition.Guid].args;
+        args.Operator = nil;
+        args.Value = nil;
+        args.Blank1 = nil;
+        args.GoldValue = nil;
+        args.SilverValue = nil;
+        args.CopperValue = nil;
+        args.TransmogStatus = nil;
+    end
+
+    local function ConditionCriteriaTypeSet_VendorPrice(scopeName, rule, condition)
+        condition.Value = condition.Value or 0;  -- 0 ist ein valider Preis (kein Händlerpreis)
+        local path = "AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args";
+        -- Zeile 1: Operator (volle Breite damit Zeile 2 darunter beginnt)
+        addon.InjectOptions:AddTable(path, "Operator", {
+            order = OrderPP(), type = "select", width = AdjustedWidth(0.9),
+            name = "",
+            values = equalityOperator.List,
+            get = function() return condition.Operator; end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    condition.Operator = value;
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
+        });
+        -- Zeile 2: Gold / Silber / Kupfer – breite Felder damit kein OK-Button erscheint
+        addon.InjectOptions:AddTable(path, "GoldValue", {
+            order = OrderPP(), type = "input", width = AdjustedWidth(0.3),
+            name = addon.L["Gold"],
+            get = function() return tostring(math.floor((condition.Value or 0) / 10000)); end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    autoSellRule.SetVendorPriceGold(condition, value);
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
+        });
+        addon.InjectOptions:AddTable(path, "SilverValue", {
+            order = OrderPP(), type = "input", width = AdjustedWidth(0.3),
+            name = addon.L["Silver"],
+            get = function() return tostring(math.floor(((condition.Value or 0) % 10000) / 100)); end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    autoSellRule.SetVendorPriceSilver(condition, value);
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
+        });
+        addon.InjectOptions:AddTable(path, "CopperValue", {
+            order = OrderPP(), type = "input", width = AdjustedWidth(0.3),
+            name = addon.L["Copper"],
+            get = function() return tostring((condition.Value or 0) % 100); end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    autoSellRule.SetVendorPriceCopper(condition, value);
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
+        });
     end
 
     local function ConditionCriteriaTypeSet_Soulbound(scopeName, rule, condition)
         addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "Blank1", {
             order = OrderPP(), type = "description", width = AdjustedWidth(0.9), name = ""
+        });
+    end
+
+    local function ConditionCriteriaTypeSet_ItemLevelVsEquipped(scopeName, rule, condition)
+        condition.Operator = condition.Operator or 1;
+        condition.Value = condition.Value or 0;
+        
+        local path = "AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args";
+        
+        -- Operator Dropdown
+        addon.InjectOptions:AddTable(path, "Operator", {
+            order = OrderPP(), type = "select", width = AdjustedWidth(0.4),
+            name = "",
+            values = equalityOperator.List,
+            get = function() return condition.Operator; end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    condition.Operator = value;
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
+        });
+        
+        -- Value Field (Abstand in ganzen Zahlen)
+        addon.InjectOptions:AddTable(path, "Value", {
+            order = OrderPP(), type = "input", width = AdjustedWidth(0.5),
+            name = "",
+            get = function() return tostring(condition.Value or 0); end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    condition.Value = tonumber(strtrim(value)) or 0;
+                    CheckIfConditionIsValid(scopeName, rule, condition);
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
+        });
+    end
+
+    local function ConditionCriteriaTypeSet_TransmogKnown(scopeName, rule, condition)
+        -- Initialisiere TransmogStatus falls nicht vorhanden
+        condition.TransmogStatus = condition.TransmogStatus or 1;  -- Default: Known (1)
+        
+        -- Statuses: 1=Known, 2=Unknown
+        local transmogStatusList = {
+            [1] = addon.L["Transmog Known"],
+            [2] = addon.L["Transmog Unknown"]
+        };
+        
+        addon.InjectOptions:AddTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args", "TransmogStatus", {
+            order = OrderPP(), type = "select", width = AdjustedWidth(0.9),
+            name = "",
+            values = transmogStatusList,
+            get = function() return condition.TransmogStatus; end,
+            set = function(_, value)
+                if not rule.IsPreset then
+                    condition.TransmogStatus = value;
+                end
+            end,
+            disabled = function() return rule.IsPreset; end
         });
     end
 
@@ -357,6 +482,12 @@ do -- [[ Condition ]]
             ConditionCriteriaTypeSet_Quality(scopeName, rule, condition);
         elseif value == criteriaType.Enum.InventoryType then
             ConditionCriteriaTypeSet_InventoryType(scopeName, rule, condition);
+        elseif value == criteriaType.Enum.VendorPrice then
+            ConditionCriteriaTypeSet_VendorPrice(scopeName, rule, condition);
+        elseif value == criteriaType.Enum.TransmogKnown then
+            ConditionCriteriaTypeSet_TransmogKnown(scopeName, rule, condition);
+        elseif value == criteriaType.Enum.ItemLevelVsEquipped then
+            ConditionCriteriaTypeSet_ItemLevelVsEquipped(scopeName, rule, condition);
         end
         local deleteConditionTable = addon.InjectOptions:GetTable("AutoSell.args." .. scopeName .. "Rules.args." .. rule.Guid .. ".args.Conditions.args." .. condition.Guid .. ".args.DeleteCondition");
         deleteConditionTable.order = OrderPP();
@@ -382,7 +513,7 @@ do -- [[ Condition ]]
                     name = addon.L["If"]
                 },
                 CriteriaType = {
-                    order = OrderPP(), type = "select", width = AdjustedWidth(0.6),
+                    order = OrderPP(), type = "select", width = AdjustedWidth(0.75),
                     name = "",
                     values = criteriaType.GetCriteriaTypeList(),
                     get = function() return condition.CriteriaType; end,
@@ -394,7 +525,7 @@ do -- [[ Condition ]]
                     -- disabled = function() return rule.IsPreset; end
                 },
                 DeleteCondition = {
-                    order = OrderPP(), type = "execute", width = AdjustedWidth(0.4),
+                    order = OrderPP(), type = "execute", width = AdjustedWidth(0.35),
                     name = addon.L["Delete"],
                     desc = addon.L["Delete Condition Desc"],
                     func = function() DeleteCondition(scopeName, rule, condition); end,

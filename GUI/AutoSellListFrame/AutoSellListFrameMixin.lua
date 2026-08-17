@@ -224,6 +224,21 @@ local function ProcessItem(bag, slot, item)
     local itemInfo = addon.GetItemInfo(bag, slot, item);
 
     if autoSell.CheckRules(itemInfo) then
+        -- DEBUG: Zeigt welche Regel das Item auf die Liste setzt
+        local _, feedback = autoSell.CheckRulesWithFeedback(itemInfo);
+        for _, ruleResult in next, feedback do
+            local ruleName, ruleMatches, conditions = ruleResult[1], ruleResult[2], ruleResult[3];
+            if ruleMatches then
+                print("[KV] |T136814:0|t '" .. item:GetItemName() .. "' matched by rule: '" .. ruleName .. "'");
+                print("     VendorPrice=" .. tostring(itemInfo.VendorPrice));
+                for _, cond in next, conditions do
+                    local conditionText = "|T13681" .. (cond[1] and "4" or "3") .. ":0|t " .. tostring(cond[2]);
+                    print("     " .. (cond[1] and conditionText:SetColorLightGreen() or conditionText:SetColorLightRed()));
+                end
+            end
+        end
+        -- DEBUG ENDE
+
         local icon = item:GetItemIcon();
         local color = item:GetItemQualityColor();
         local name = item:GetItemName();

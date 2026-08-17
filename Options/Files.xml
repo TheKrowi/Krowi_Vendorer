@@ -8,4 +8,5 @@
     <Script file="AutoJunk.lua" />
     <Script file="AutoRepair.lua" />
     <Script file="..\Libs\Krowi_Util\Options\Profiles.lua" />
+    <Script file="TransmogChecker.lua" />
 </Ui>
