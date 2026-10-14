@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.30
+## 0.30 - 2026-10-14
 ### Changed
 - Support for WoW 12.1.5
 
