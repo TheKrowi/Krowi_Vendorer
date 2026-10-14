@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 - Support for WoW 12.1.5
 
 ### Fixed
-- Errors on WoW 12.1.5 that stopped the addon from loading and broke the auto sell list
+- The addon no longer gives errors on WoW 12.1.5, and the auto sell list works again
 
 ## 0.29 - 2026-03-11
 ### Changed
