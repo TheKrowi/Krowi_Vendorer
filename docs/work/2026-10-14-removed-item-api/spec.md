@@ -6,6 +6,7 @@ Intent: [intent.md](intent.md). Status: accepted
 2. After a `/reload` on Retail 12.1.5, `Read-GameErrors.ps1` shows no new Vendorer error and no bumped count on the two errors below.
 3. At a merchant, the auto-sell list fills, and right-click ignore, the junk list and the ignore list still work.
 4. Behaviour is otherwise unchanged: every replacement is the function the removed global pointed to.
+5. The TOC lists the live client: `## Interface: 120105` (added at the follow-up gate, see Decision).
 
 ## Root cause
 12.1.5 deleted `Blizzard_DeprecatedItemScript` together with nine other deprecation addons (present in `wow-ui-source\ptr` at 12.1.0 (69587), absent in `wow-ui-source\live` at 12.1.5 (70391)). Its `Deprecated_ItemScript.lua:9-54` was a list of plain aliases, such as `GetItemInfo = C_Item.GetItemInfo;`, which loaded only while the `loadDeprecationFallbacks` CVar was on (line 4). Vendorer still called six of those names, 20 times in seven files:
@@ -29,13 +30,13 @@ Call the `C_Item` function at every one of the 20 call sites: `C_Item.GetItemInf
 
 ## Areas of concern
 - Taint and secret values: no Blizzard frame, hook or protected action changes; the calls are the same C functions as before (`SecretArguments = "AllowedWhenUntainted"` in the docs, unchanged). The auto-sell list file is on the repo's taint-sensitive list, so `krowi:taint-reviewer` reviews the diff.
-- Clients: Retail only (`## Interface: 120001, 110207`); `C_Item` has all six functions on both. The TOC's interface numbers predate 12.1.5; bumping them belongs to the release, not to this fix.
+- Clients: Retail only (`## Interface: 120001, 110207`); `C_Item` has all six functions on both. The interface numbers predated 12.1.5; requirement 5 replaces them with `120105` (11.2.7 no longer exists).
 - Blizzard API changes: this is one. The other nine deleted deprecation addons are not used by Vendorer (`Find-DeprecatedApi.ps1` shows nothing else removed, and nothing deprecated outside `Libs/`).
 - Other addons and skins: none; no frame changes.
 - Saved variables and migrations: none. The aborted load never wrote `KrowiV_Options` or `KrowiV_SavedData`, so players' settings and lists are intact and load normally once the handler runs to the end.
 - Localization: none.
-- Embedded libraries: none changed. The bundled AceGUI-3.0 (`Libs/AceGUI-3.0/widgets/AceGUIWidget-EditBox.lua:24`, `AceGUIWidget-MultiLineEditBox.lua:21`) reads `ChatEdit_InsertLink`, deprecated on live but still present; deferred (update AceGUI when upstream does).
-- Player-facing text: one changelog line under `## 0.30` in `_Packaging/Changelog.md`, dated on release day.
+- Embedded libraries: none changed. The bundled AceGUI-3.0 (`Libs/AceGUI-3.0/widgets/AceGUIWidget-EditBox.lua:24`, `AceGUIWidget-MultiLineEditBox.lua:21`) is upstream's current widget (EditBox version 29): it hooks `ChatFrameUtil.InsertLink` and reads `ChatEdit_InsertLink` only in an `elseif` for clients without it. Nothing to change.
+- Player-facing text: two changelog lines under `## 0.30` in `_Packaging/Changelog.md` (the fix, and 12.1.5 support), dated on release day.
 
 ## Verification
 - Permanent test: `Krowi_ClaudeKit\tools\Find-DeprecatedApi.ps1` (kit `c451d14`), red before the fix (20 removed uses), clean after.
@@ -45,3 +46,5 @@ Call the `C_Item` function at every one of the 20 call sites: `C_Item.GetItemInf
 
 ## Decision
 Option 1, every call site: chosen by Krowi on 2026-10-14 (the intent gate folded into this question).
+
+Follow-up, 2026-10-14: after the in-game check Krowi asked to fix the other findings too. For Vendorer that is the TOC: `120105` only, chosen over `120105, 110207` (requirement 5).

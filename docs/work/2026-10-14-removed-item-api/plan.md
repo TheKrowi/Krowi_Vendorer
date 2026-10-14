@@ -5,7 +5,8 @@ Spec: [spec.md](spec.md). Status: accepted
 - `Objects/ItemType.lua`: `GetItemClassInfo` and `GetItemSubClassInfo` become `C_Item.GetItemClassInfo` and `C_Item.GetItemSubClassInfo` (lines 32, 39; the commented-out lines 13 and 18 stay as they are).
 - `Globals.lua`: `GetItemInfo` (5, 41), `GetItemQualityColor` (6) and `IsCosmeticItem` (53) get the `C_Item.` prefix.
 - `GUI/AutoSellListFrame/AutoSellListFrameMixin.lua` (219, 230, 255, 256), `GUI/JunkListFrame/JunkListFrameMixin.lua` (29, 30, 37), `GUI/IgnoreListFrame/IgnoreListFrameMixin.lua` (33, 34, 41), `GUI/ItemTooltip/ItemTooltip.lua` (109, 157), `Data/AutoJunk.lua` (46, 51): `GetItemInfo` and `GetItemInfoInstant` get the `C_Item.` prefix. The commented-out calls in `ItemTooltip.lua` (33, 41) stay.
-- `_Packaging/Changelog.md`: a `## 0.30` entry with one `### Fixed` line.
+- `_Packaging/Changelog.md`: a `## 0.30` entry with one `### Fixed` line, and (follow-up) a `### Changed` line for 12.1.5 support.
+- `Krowi_Vendorer.toc` (follow-up): `## Interface: 120105`.
 
 Routine plan: a one-to-one rename to the functions the removed globals were aliases of; no hooks, protected actions, saved variables or frames change.
 
