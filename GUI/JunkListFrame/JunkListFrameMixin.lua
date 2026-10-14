@@ -26,15 +26,15 @@ function KrowiV_JunkListFrameMixin:OnHide()
 end
 
 local function LeftItemOnClick(self)
-    KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = true;
-    KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
+    KrowiV_SavedData.JunkItems[(C_Item.GetItemInfoInstant(self.ElementData.Link))] = true;
+    KrowiV_SavedData.IgnoredItems[(C_Item.GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.LeftItemOnClick(self, frame);
     KrowiV_EmbeddedIgnoreListFrame:Update();
     KrowiV_AutoSellListFrame:Update();
 end
 
 local function RightItemOnClick(self)
-    KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
+    KrowiV_SavedData.JunkItems[(C_Item.GetItemInfoInstant(self.ElementData.Link))] = nil;
     itemListFrame.RightItemOnClick(self, frame);
     KrowiV_EmbeddedIgnoreListFrame:Update();
     KrowiV_AutoSellListFrame:Update();

@@ -6,7 +6,7 @@ There is no build, lint or test step: the game is the test harness. The `krowi` 
 
 ## Clients and loading
 
-- One TOC, `Krowi_Vendorer.toc`, Retail only: `## Interface: 120001, 110207`. No Classic support.
+- One TOC, `Krowi_Vendorer.toc`, Retail only: `## Interface: 120105` (12.1.5; 11.2.7 no longer exists). No Classic support.
 - `## LoadWith: Blizzard_MerchantFrame`; saved variables `KrowiV_Options, KrowiV_SavedData` (account-wide). A new saved variable must be added to that line or it is lost on logout.
 - Load order is the TOC: `Libs\Files.xml` (submodules, then bundled Ace libs, then `Libs.lua`), `API.lua`, `Plugins\Files.xml`, `Localization\Files.xml`, `Krowi_Vendorer.lua`, `Globals.lua`, `Objects\Files.xml`, `Options\Files.xml`, `Libs\Krowi_Util\Icon.lua`, `Icon.lua`, `Data\Files.xml`, `GUI\Files.xml`. A file only sees what earlier files defined, and a new `.lua` must be listed in its folder's `Files.xml` or it never loads.
 - Boot is a single `ADDON_LOADED` for `Krowi_Vendorer` in `Krowi_Vendorer.lua`: `Objects.ItemType.Load()`, then `addon.Options:Load()` (AceDB, then each options page's `RegisterOptionsTable` and `PostLoad`), then the `KrowiV_SavedData` tables, `addon.Icon:Load()`, `addon.GUI.ItemTooltip.Load()`. The other events it registers do nothing. `MERCHANT_SHOW` is handled only by `Data/AutoRepair.lua`.
@@ -48,7 +48,7 @@ Match the file you are editing; this repo's style is older than Krowi_Achievemen
 
 ## Testing in game
 
-`.vscode/settings.json` fsdeploys on every save to `_retail_` and `_ptr_` (`deployWorkspaceOnSave`). Before an in-game check, run the kit's `Deploy.ps1 -WhatIf` and deploy, then `/reload` and `Read-GameErrors.ps1` (see `WowAddons.md`, Closing the loop with the game). Open a merchant to exercise everything; selling and destroying are real actions, so test with junk.
+`.vscode/settings.json` fsdeploys on every save to `_retail_` and `_ptr_` (`deployWorkspaceOnSave`). Its nodes exclude `.claude` and `docs`, so a save no longer copies a worktree's files into the AddOns folder, but it still redeploys the main checkout over a worktree deploy. Before an in-game check, run the kit's `Deploy.ps1 -WhatIf` and deploy, then `/reload` and `Read-GameErrors.ps1` (see `WowAddons.md`, Closing the loop with the game). Open a merchant to exercise everything; selling and destroying are real actions, so test with junk.
 
 ## Git and release
 
