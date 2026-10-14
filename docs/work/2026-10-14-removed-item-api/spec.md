@@ -1,5 +1,5 @@
 # Spec: Vendorer breaks on WoW 12.1.5
-Intent: [intent.md](intent.md). Status: accepted
+Intent: [intent.md](intent.md). Status: done
 
 ## Requirements
 1. Vendorer reads no Blizzard global that 12.1.5 removed: `Find-DeprecatedApi.ps1` reports no `removed` use outside `Libs/`.

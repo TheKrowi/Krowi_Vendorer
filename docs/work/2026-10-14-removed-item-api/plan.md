@@ -1,5 +1,5 @@
 # Plan: Vendorer breaks on WoW 12.1.5
-Spec: [spec.md](spec.md). Status: accepted
+Spec: [spec.md](spec.md). Status: done
 
 ## Files that change
 - `Objects/ItemType.lua`: `GetItemClassInfo` and `GetItemSubClassInfo` become `C_Item.GetItemClassInfo` and `C_Item.GetItemSubClassInfo` (lines 32, 39; the commented-out lines 13 and 18 stay as they are).
@@ -7,6 +7,7 @@ Spec: [spec.md](spec.md). Status: accepted
 - `GUI/AutoSellListFrame/AutoSellListFrameMixin.lua` (219, 230, 255, 256), `GUI/JunkListFrame/JunkListFrameMixin.lua` (29, 30, 37), `GUI/IgnoreListFrame/IgnoreListFrameMixin.lua` (33, 34, 41), `GUI/ItemTooltip/ItemTooltip.lua` (109, 157), `Data/AutoJunk.lua` (46, 51): `GetItemInfo` and `GetItemInfoInstant` get the `C_Item.` prefix. The commented-out calls in `ItemTooltip.lua` (33, 41) stay.
 - `_Packaging/Changelog.md`: a `## 0.30` entry with one `### Fixed` line, and (follow-up) a `### Changed` line for 12.1.5 support.
 - `Krowi_Vendorer.toc` (follow-up): `## Interface: 120105`.
+- `.vscode/settings.json` (follow-up, Krowi's choice on 2026-10-14): the fsdeploy nodes exclude `.claude` and `docs`. At 09:37 a save in the main window had redeployed `dev` over the worktree deploy and copied the worktree's `.lua` files into the AddOns folder.
 
 Routine plan: a one-to-one rename to the functions the removed globals were aliases of; no hooks, protected actions, saved variables or frames change.
 

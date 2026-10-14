@@ -1,5 +1,5 @@
 # Intent: Vendorer breaks on WoW 12.1.5
-Author: Krowi (maintainer), from their own in-game errors. Source: in-game error (BugGrabber, Retail, 2026-10-14). Status: accepted
+Author: Krowi (maintainer), from their own in-game errors. Source: in-game error (BugGrabber, Retail, 2026-10-14). Status: done
 
 ## Problem
 Since WoW 12.1.5, Vendorer errors on Retail. One error fires once at login, inside the addon's load (`Objects/ItemType.lua:32: attempt to call a nil value`), and another fires for every bag item each time the auto-sell list fills at a merchant (`Globals.lua:41: attempt to call a nil value`, 70 times in one session). Players get error popups, the auto-sell list stays empty, and whatever the addon sets up after the failing line at login is missing.
