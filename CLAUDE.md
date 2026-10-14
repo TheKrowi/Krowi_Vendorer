@@ -53,8 +53,7 @@ Match the file you are editing; this repo's style is older than Krowi_Achievemen
 ## Git and release
 
 - `dev` is the integration branch: releases 0.24 to 0.28 were cut on `dev` and merged to `main` through PRs. 0.29 was committed directly on `main`; `dev` was fast-forwarded to it on 2026-10-14. Branch new work from `dev`.
-- `_Packaging/Changelog.md` has no 0.29 entry although the TOC and tag are at 0.29; the next release needs the 0.29 changes listed (TOC interface bump, library updates, one new string).
-- Release only with the plugin's `krowi:release` skill. Its preflight detects the release branch from the last `Release` commit (`main` right now); confirm the branch with Krowi before packaging.
+- Release only with the plugin's `krowi:release` skill. Its preflight detects the release branch from the last `Release` commit (`dev` since the fast-forward, as it checks `dev` before `main` on a tie); confirm the branch with Krowi before packaging.
 - Branches `master`, `new-rules-window` (unmerged, 2023) and `10-auto-repair-when-visiting-vendor` (merged) are old.
 
 ## Known debt (verified 2026-10-14)
