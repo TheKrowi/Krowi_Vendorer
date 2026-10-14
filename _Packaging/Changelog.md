@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.30 - 2026-10-14
+### Changed
+- Support for WoW 12.1.5
+
+### Fixed
+- The addon no longer gives errors on WoW 12.1.5, and the auto sell list works again
+
+## 0.29 - 2026-03-11
+### Changed
+- Support for WoW 12.0.1
+- Updated Krowi_Util and Krowi_Menu libraries
+
 ## 0.28 - 2026-01-15
 ### Changed
 - Support for WoW 12.0.0 (Midnight)

@@ -106,7 +106,7 @@ local function ProcessItem(_tooltip, bag, slot, item)
     end
 
     local link = item:GetItemLink();
-    local classID, subclassID, bindType = select(12, GetItemInfo(link));
+    local classID, subclassID, bindType = select(12, C_Item.GetItemInfo(link));
     if classID == nil then
         return; -- Temporary solution to handle items that return nothing from GetItemInfo like M+ Keystones
     end
@@ -154,7 +154,7 @@ local function ProcessItem(_tooltip, bag, slot, item)
 
     local itemName, _, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
     itemStackCount, itemEquipLoc, itemTexture, sellPrice, _, _, _,
-    expacID, setID, isCraftingReagent = GetItemInfo(link);
+    expacID, setID, isCraftingReagent = C_Item.GetItemInfo(link);
     GameTooltip_AddBlankLinesToTooltip(_tooltip, 1);
     _tooltip:AddDoubleLine("itemName", itemName);
     _tooltip:AddDoubleLine("itemLink", link);

@@ -29,3 +29,13 @@
 ### Changed (0.28)
 - Support for WoW 12.0.0 (Midnight)
 - Library rework changes integrated (dev note: this change affects all addons and is a preparation for a better unified system for long term support)
+
+### Changed (0.29)
+- Support for WoW 12.0.1
+- Updated Krowi_Util and Krowi_Menu libraries
+
+### Changed (0.30)
+- Support for WoW 12.1.5
+
+### Fixed (0.30)
+- Errors on WoW 12.1.5 that stopped the addon from loading and broke the auto sell list

@@ -216,7 +216,7 @@ local function ProcessItem(bag, slot, item)
         local icon = item:GetItemIcon();
         local color = item:GetItemQualityColor();
         local name = item:GetItemName();
-        local sellPrice = select(11, GetItemInfo(itemId));
+        local sellPrice = select(11, C_Item.GetItemInfo(itemId));
         frame:AppendListItem(link, icon, color.color, name, nil, bag, slot, sellPrice ~= 0);
         return;
     end
@@ -227,7 +227,7 @@ local function ProcessItem(bag, slot, item)
         local icon = item:GetItemIcon();
         local color = item:GetItemQualityColor();
         local name = item:GetItemName();
-        local sellPrice = select(11, GetItemInfo(itemId));
+        local sellPrice = select(11, C_Item.GetItemInfo(itemId));
         frame:AppendListItem(link, icon, color.color, name, nil, bag, slot, sellPrice ~= 0);
     end
 end
@@ -252,8 +252,8 @@ local function ItemOnClick(self, button)
             frame:RemoveListItem(self.ElementData);
         end
     elseif button == "RightButton" then -- Ignore item
-        KrowiV_SavedData.IgnoredItems[(GetItemInfoInstant(self.ElementData.Link))] = true;
-        KrowiV_SavedData.JunkItems[(GetItemInfoInstant(self.ElementData.Link))] = nil;
+        KrowiV_SavedData.IgnoredItems[(C_Item.GetItemInfoInstant(self.ElementData.Link))] = true;
+        KrowiV_SavedData.JunkItems[(C_Item.GetItemInfoInstant(self.ElementData.Link))] = nil;
         frame:RemoveListItem(self.ElementData);
         KrowiV_EmbeddedIgnoreListFrame:Update();
         KrowiV_EmbeddedJunkListFrame:Update();
