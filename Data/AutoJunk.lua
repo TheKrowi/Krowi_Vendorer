@@ -43,12 +43,12 @@ local function AddToJunkIfComply(loot)
         return 1;
     end
 
-    local itemId = GetItemInfoInstant(loot);
+    local itemId = C_Item.GetItemInfoInstant(loot);
     if not itemId then
         return 2;
     end
 
-    local quality = (select(3, GetItemInfo(itemId)));
+    local quality = (select(3, C_Item.GetItemInfo(itemId)));
     qualityCache = quality;
     for i, validation in next, validations do
         if validation(itemId) then -- If true, DO NOT mark item as junk

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.30
+### Fixed
+- Errors on WoW 12.1.5 that stopped the addon from loading and broke the auto sell list
+
 ## 0.29 - 2026-03-11
 ### Changed
 - Support for WoW 12.0.1

@@ -29,14 +29,14 @@ function itemType.Load()
     local type, subType;
     local i = 0;
     repeat
-        type = GetItemClassInfo(i);
+        type = C_Item.GetItemClassInfo(i);
         if type then
             -- KrowiV_Test[type] = {};
             itemType.List[i] = type;
         end
         local j = 0;
         repeat
-            subType = GetItemSubClassInfo(i, j);
+            subType = C_Item.GetItemSubClassInfo(i, j);
             if subType == "" then
                 subType = nil;
             end
