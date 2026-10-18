@@ -52,8 +52,8 @@ Match the file you are editing; this repo's style is older than Krowi_Achievemen
 
 ## Git and release
 
-- `dev` is the integration branch: releases 0.24 to 0.28 were cut on `dev` and merged to `main` through PRs. 0.29 was committed directly on `main`; `dev` was fast-forwarded to it on 2026-10-14. Branch new work from `dev`.
-- Release only with the plugin's `krowi:release` skill. Its preflight detects the release branch from the last `Release` commit (`dev` since the fast-forward, as it checks `dev` before `main` on a tie); confirm the branch with Krowi before packaging.
+- `main` is the only long-lived branch and the release branch. Releases 0.24 to 0.28 were cut on `dev` and merged to `main` through PRs, 0.29 directly on `main`; `dev` was merged into `main` and removed on 2026-10-18. Branch new work from `main` and open PRs against it.
+- Release only with the plugin's `krowi:release` skill; releases are cut on `main`.
 - Vendorer ships as beta, `--stability beta`: every upload from 0.24 to 0.29 is a Beta file on CurseForge and a pre-release on GitHub. It has never been released as stable.
 - Branches `master`, `new-rules-window` (unmerged, 2023) and `10-auto-repair-when-visiting-vendor` (merged) are old.
 
